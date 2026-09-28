@@ -66,6 +66,7 @@ export type ListicleAsset =
       kind: "image";
       src: string;
       alt: string;
+      /** Hero only. Inside an im8 reason the shared 4:5 frame sets the shape. */
       aspect?: string;
       /** "contain" (default) for renders/PNGs, "cover" for photos */
       fit?: "cover" | "contain";
@@ -84,6 +85,7 @@ export type ListicleAsset =
        * rather than leaving an unlabelled media element for a screen reader.
        */
       alt?: string;
+      /** Ignored in im8 reasons: the shared 4:5 frame sets the shape. */
       aspect?: string;
       fit?: "cover" | "contain";
     }

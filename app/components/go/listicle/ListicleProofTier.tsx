@@ -30,9 +30,10 @@ import ProductComparisonTable, {
 } from "@/app/components/product/ProductComparisonTable";
 
 /**
- * Partner + press logo band, rendered under the hero. Partner logos get the
- * large black section title; the press band (when set) sits under them at the
- * muted eyebrow size, slower, so the two never read as one track.
+ * Partner + press logo band. Under the hero, partner logos get the large black
+ * section title; with `banner` (top of page) the heading is a navy bar instead.
+ * The press band (when set) sits under them at the muted eyebrow size, slower,
+ * so the two never read as one track.
  */
 export function ListicleLogoBand({
   proof,
@@ -53,7 +54,8 @@ export function ListicleLogoBand({
             Fueling High Performers at:
           </p>
           <div className="pt-5">
-            <LogoMarquee heading="" />
+            {/* Above the hero now, so the logos yield to the hero image. */}
+            <LogoMarquee heading="" lowPriority />
           </div>
         </>
       ) : proof.logoBand ? (

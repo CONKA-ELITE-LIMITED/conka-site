@@ -22,41 +22,40 @@ Three reasons people hit the limit:
 
 **Bridge rule** for reasons 3 and 4: condition, then mechanism, then the shared everyday problem, then CONKA. The headline names the shared problem; the body names the condition. Skimmers read headlines, so the productivity reader never feels the page is about someone else.
 
-## Page, top to bottom
+## Page, top to bottom (as built)
 
-**Reasons are doors, not benefits** (Nuropod pattern): each one is a moment the reader hits their limit, so any reader finds their own row and skims the rest. Final copy lives in `app/lib/landings/productivity-v2-listicle.ts`.
+Reasons are **categories of reason to buy** (Grüns pattern): a category eyebrow, a concrete outcome headline, one hard fact as the bold payoff. Final copy lives in `app/lib/landings/productivity-v2-listicle.ts`.
 
-| # | Zone | Visual (existing asset) |
+| # | Zone | Visual |
 |---|---|---|
-| Hero | H1 "Your brain has a limit. Raise it." + subcopy naming load, focus, age. CTA "Save {percent}% and try it risk-free" | v1 hero image, unchanged |
-| - | Proof wall | Partner logo band |
-| - | Reasons header: "7 Moments Your Brain Hits Its Limit" (also `title`) | Text |
-| 1 | When Your To-Do List Outlasts Your Focus | `focusBars` |
-| 2 | When You'd Normally Reach for Another Coffee | `dayEnergyCurve` |
-| 3 | When Starting Is the Hardest Part (ADHD bridge) | Flow neuron video |
-| 4 | When the Same Workload Feels Heavier Than It Used To (ageing bridge) | Shane Corstorphine quote tile |
-| 5 | When a Bad Night Follows You Into the Morning | `researchBacked` |
-| - | Review strip | v1's three reviews |
-| 6 | When You Get Home With Nothing Left | Friends-laughing photo |
-| 7 | When You Want Proof, Not a Feeling | `measureTile` + press marquee |
-| - | Bridge: the 100-day guarantee as the close, CTA "Try CONKA Risk-Free" | Dark CTA card |
-| - | Product, proof tier, FAQ | Unchanged from v1. Sticky CTA "Try it risk-free" |
+| - | Navy "Fueling High Performers at:" bar + logo marquee | Partner logos |
+| Hero | "Discover the natural way to stay sharp all day." (v1 line, stand-in) + subcopy naming load, focus, age; CTA "Save {percent}% and try it risk-free"; avatar proof row | v1 hero image |
+| - | Reasons header: "7 Reasons 5,000+ People Have Made CONKA Part of Their Routine" (also `title`) | Text |
+| 1 | Focus · All-Day Energy and Focus, Without the Crash | Crash chart tile |
+| 2 | Stress · Stay Calm When Everything Lands at Once | Focus bars tile |
+| 3 | Motivation · Start the Tasks You Keep Putting Off (ADHD as one example) | Flow video + Lemon Balm, Rhodiola tiles |
+| - | Review strip | Three customer reviews |
+| 4 | Memory · Stop Losing Words Mid-Sentence (from 30) | Shane quote + Turmeric, Bilberry tiles |
+| 5 | Convenience · Fits Around Your Day, Whatever Time It Starts | `public/listicle/RoutineTwoShotsV1.jpg` |
+| 6 | Value · Costs Less Than Your Daily Coffee | CONKA vs coffee tile |
+| 7 | Proof · See It Work, or Get Your Money Back | App score tile + store buttons, press marquee |
+| - | Bridge band: "Make it part of your routine. 100 days, risk-free." | Navy band |
+| - | Buy box, Jack Willis, comparison table, UGC, FAQ; "button" sticky bar | Shared |
 
-**CTAs are offer plus risk reversal everywhere**, since that fits every door.
+## Still open
 
-**Bridge rule** for reasons 3 and 4: the headline names the shared moment, the body names the condition.
-
-## Next copy lever: a day-to-day anchor
-
-Brain performance is subjective, so the benefit needs grounding in one tangible, everyday thing (Magic Mind's is the to-do list melting). Candidates to decide: the afternoon (get your afternoon back), the end of the list, having something left for the evening. Once chosen, it threads through the hero, CTAs and door bodies. Also considered from teardowns: a Grüns-style switch framing against coffee, and a MASA-style one-line "quick answer" under the reasons header (needs a small type addition).
+- **Hero headline:** the v1 line is a stand-in; the new hero line is not settled.
+- **Founder story:** now only a proof line in reason 5.
+- **"5,000+ people"** in the title reuses the "5,000+ daily users" figure; BRAND_VOICE lists 5,000+ as tests. Confirm before scaling spend.
+- **Inputs to sharpen copy:** Henry's winning ad hooks, AnswerSocrates phrasing.
 
 ## Template for the ADHD and brain-ageing variants
 
 | Part | Shared | Per persona |
 |---|---|---|
-| Thesis, doors 1, 2, 5, 6, 7, guarantee bridge, CTAs | ✓ | |
+| Reasons 1, 2, 5, 6, 7, bridge band, CTAs, tiles | ✓ | |
 | Hero H1 + subcopy | | ADHD leads on focus, brain-ageing on age |
-| Doors 3 and 4 | | The persona's own door gets more detail and moves to door 1; the other door stays |
+| Reasons 3 and 4 | | The persona's own reason gets more detail and moves to reason 1; the other stays |
 | Testimonials, proof feature | | Per persona |
 
 ## Decisions
@@ -64,13 +63,6 @@ Brain performance is subjective, so the benefit needs grounding in one tangible,
 - **New slug** `/go/productivity-v2` (GO_LANDING_PAGES.md: a new iteration is a new slug). v1 stays live, and Meta splits budget between the two.
 - **Design language:** unchanged im8 Simple DTC. No component work.
 - **Seven reasons**, following the agreed outline.
-
-## Open
-
-- **Founder story:** held for review. If kept, it goes next to reason 1 as proof, not in the hero.
-- **Hero image:** v1 image stays for now; any change is a separate decision.
-- **Proof tier feature** (Jack Willis, framed as a high achiever): kept from v1 for now.
-- **Inputs to sharpen copy later:** Henry's winning ad hooks, AnswerSocrates phrasing for the ADHD and ageing bridges.
 
 ## No-gos
 

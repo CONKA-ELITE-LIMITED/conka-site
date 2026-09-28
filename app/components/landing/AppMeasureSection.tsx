@@ -4,30 +4,17 @@ import { useEffect, useId, useRef, useState } from "react";
 import { useInView } from "@/app/hooks/useInView";
 
 /* ============================================================================
- * AppMeasureSection + MeasureTile
+ * MeasureTile
  *
- * "We don't ask if CONKA works. We measure it." — the app proof, ported from
- * the lander (app/lander/sections/Measure) into our patterns: Tailwind + the
- * shared useInView hook + motion-safe inline transitions, no CSS Module. Two
- * scroll-triggered effects on first view: the cognitive-score line draws, and
- * the score counts up 72 -> 89. Both respect prefers-reduced-motion.
- *
- * Shared pieces (MeasureScoreCard / MeasureSteps / MeasureStoreButtons) are
- * composed two ways:
- *   - AppMeasureSection: full dark-band section (header + card + steps +
- *     stores + guarantee).
- *   - MeasureTile: compact dark card (card + steps + stores) for a listicle
- *     reason's media slot on the "measurable" points.
+ * The app proof as a listicle chart tile ("measure it" reason): tinted banner,
+ * the cognitive score counting up 72 -> 89, a score chart with axis and day
+ * marks drawing on first view, and the store buttons. Both effects respect
+ * prefers-reduced-motion. (The file keeps its old name; the full dark
+ * AppMeasureSection it once held had no consumers and was removed.)
  * ========================================================================== */
 
 const FROM = 72;
 const TO = 89;
-
-const STEPS = [
-  { n: "1", title: "Install & test", desc: "Set your baseline" },
-  { n: "2", title: "Take daily", desc: "Flow AM, Clear PM" },
-  { n: "3", title: "Track over time", desc: "Watch it climb" },
-];
 
 const APP_STORE_URL = "https://apps.apple.com/gb/app/conka-app/id6450399391";
 const PLAY_STORE_URL =
@@ -40,8 +27,8 @@ function prefersReducedMotion() {
   );
 }
 
-/** Shared by both score charts: in-view trigger, the 72 -> 89 count-up, and
- *  the measured line length for the draw-on animation. */
+/** In-view trigger, the 72 -> 89 count-up, and the measured line length for
+ *  the draw-on animation. */
 function useScoreAnimation() {
   const [ref, isInView] = useInView();
   const [score, setScore] = useState(FROM);
@@ -85,155 +72,14 @@ function useScoreAnimation() {
   return { ref, isInView, score, lineRef, len, gid };
 }
 
-/** Dark cognitive-score card: line draws + score counts up on first view. */
-function MeasureScoreCard() {
-  const { ref, isInView, score, lineRef, len, gid } = useScoreAnimation();
-
+/** App Store + Google Play download buttons, sized to sit on one row inside a
+ *  ~300px listicle tile (tight padding and type, no wrap). */
+function MeasureStoreButtons() {
+  const btn =
+    "inline-flex min-w-0 items-center gap-2 rounded-xl border border-white/28 bg-black px-3 py-2";
+  const name = "text-[13px] font-medium tracking-[-0.01em]";
   return (
-    <div
-      ref={ref}
-      className="rounded-md border border-white/12 bg-[#18233f] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.35)]"
-    >
-      <span className="text-[13.5px] font-medium text-white/85">
-        Your cognitive score
-      </span>
-      <div className="mb-2 mt-1 flex items-baseline gap-2">
-        <b className="text-[31px] font-extrabold tracking-[-0.04em] tabular-nums">
-          {score}
-        </b>
-        <span className="inline-flex items-center gap-1 text-[12.5px] font-medium text-[#6bd37b]">
-          ↑ trending up over 30 days
-        </span>
-      </div>
-      <svg
-        className="block h-auto w-full"
-        viewBox="0 0 320 150"
-        xmlns="http://www.w3.org/2000/svg"
-        role="img"
-        aria-label="Cognitive score rising over 30 days"
-      >
-        <defs>
-          <linearGradient id={`${gid}-grad`} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#E9B200" />
-            <stop offset="100%" stopColor="#6BD37B" />
-          </linearGradient>
-          <linearGradient id={`${gid}-fill`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#6BD37B" stopOpacity="0.22" />
-            <stop offset="100%" stopColor="#6BD37B" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <line
-          x1="20"
-          y1="118"
-          x2="300"
-          y2="118"
-          stroke="rgba(255,255,255,.10)"
-          strokeWidth="1"
-        />
-        <line
-          x1="20"
-          y1="74"
-          x2="300"
-          y2="74"
-          stroke="rgba(255,255,255,.07)"
-          strokeWidth="1"
-        />
-        <path
-          d="M20,106 C70,98 90,90 132,78 C175,66 210,54 300,40 L300,118 L20,118 Z"
-          fill={`url(#${gid}-fill)`}
-          className="motion-safe:[transition:opacity_0.8s_ease_0.9s]"
-          style={{ opacity: isInView ? 1 : 0 }}
-        />
-        <path
-          ref={lineRef}
-          d="M20,106 C70,98 90,90 132,78 C175,66 210,54 300,40"
-          fill="none"
-          stroke={`url(#${gid}-grad)`}
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="motion-safe:[transition:stroke-dashoffset_1.6s_cubic-bezier(0.4,0,0.2,1)]"
-          style={
-            len
-              ? { strokeDasharray: len, strokeDashoffset: isInView ? 0 : len }
-              : undefined
-          }
-        />
-        <circle
-          cx="20"
-          cy="106"
-          r="4.5"
-          fill="#E9B200"
-          className="motion-safe:[transition:opacity_0.4s_ease_1.5s]"
-          style={{ opacity: isInView ? 1 : 0 }}
-        />
-        <circle
-          cx="300"
-          cy="40"
-          r="5.5"
-          fill="#6BD37B"
-          stroke="#18233F"
-          strokeWidth="2"
-          className="motion-safe:[transition:opacity_0.4s_ease_1.5s]"
-          style={{ opacity: isInView ? 1 : 0 }}
-        />
-        <g className="fill-white/40 text-[9.9px] font-medium uppercase tracking-[0.04em]">
-          <text x="20" y="138" textAnchor="start">
-            Day 1
-          </text>
-          <text x="160" y="138" textAnchor="middle">
-            Day 14
-          </text>
-          <text x="300" y="138" textAnchor="end">
-            Day 30
-          </text>
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-/** 1-2-3 routine steps with a connecting line. */
-function MeasureSteps() {
-  return (
-    <div className="relative mx-auto flex max-w-[40rem] justify-between gap-2">
-      <div
-        className="absolute left-[58px] right-[58px] top-[17px] h-0.5 bg-white/16"
-        aria-hidden
-      />
-      {STEPS.map((s) => (
-        <div
-          key={s.n}
-          className="relative flex flex-1 flex-col items-center gap-2 text-center"
-        >
-          <span className="flex h-[34px] w-[34px] items-center justify-center rounded-full border-2 border-white bg-[#18233f] text-[13.5px] font-extrabold">
-            {s.n}
-          </span>
-          <span className="text-[13px] font-medium leading-tight">
-            {s.title}
-          </span>
-          <span className="text-[11.5px] font-light leading-tight text-white/55">
-            {s.desc}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/** App Store + Google Play download buttons. `compact` keeps both on one row
- *  inside a ~300px listicle tile (tighter padding and type, no wrap). */
-function MeasureStoreButtons({ compact = false }: { compact?: boolean } = {}) {
-  const btn = compact
-    ? "inline-flex min-w-0 items-center gap-2 rounded-xl border border-white/28 bg-black px-3 py-2"
-    : "inline-flex items-center gap-2.5 rounded-xl border border-white/28 bg-black px-4 py-2.5";
-  const name = compact
-    ? "text-[13px] font-medium tracking-[-0.01em]"
-    : "text-[14.5px] font-medium tracking-[-0.01em]";
-  return (
-    <div
-      className={`flex justify-center ${compact ? "flex-nowrap gap-2" : "flex-wrap gap-3"}`}
-    >
+    <div className="flex flex-nowrap justify-center gap-2">
       <a
         href={APP_STORE_URL}
         target="_blank"
@@ -479,55 +325,8 @@ export function MeasureTile() {
 
         {/* Free app: the test is the proof, so the download stays in reach. */}
         <div className="mt-4">
-          <MeasureStoreButtons compact />
+          <MeasureStoreButtons />
         </div>
-      </div>
-    </div>
-  );
-}
-
-/** Full-section app proof: header + card + steps + stores + guarantee. */
-export default function AppMeasureSection() {
-  return (
-    <div className="overflow-hidden rounded-3xl bg-[#101a33] px-5 py-12 text-white md:px-10 md:py-16">
-      <div className="mx-auto mb-8 max-w-[42rem] text-center">
-        <h2
-          className="mb-3.5 text-3xl font-extrabold leading-[1.05] md:text-5xl"
-          style={{ letterSpacing: "-0.02em" }}
-        >
-          We don&rsquo;t ask if CONKA works.
-          <br />
-          We measure it.
-        </h2>
-        <p className="mx-auto max-w-[22rem] text-[15px] leading-snug text-white/75">
-          Take CONKA daily and run the cognitive test in the app whenever you
-          want. After a month, the numbers tell you whether it worked.
-        </p>
-      </div>
-
-      <div className="mx-auto mb-8 max-w-[34rem]">
-        <MeasureScoreCard />
-      </div>
-
-      <div className="mb-7">
-        <MeasureSteps />
-      </div>
-
-      <div className="mb-10">
-        <MeasureStoreButtons />
-      </div>
-
-      <div className="mx-auto max-w-[600px] text-center">
-        <p className="text-[16.5px] font-light leading-6 text-white/85">
-          <b className="mb-1 block text-[62px] font-extrabold leading-none tracking-[-0.04em] text-white">
-            100
-          </b>
-          days to feel AND see the difference, or your money back.
-        </p>
-        <p className="mx-auto mt-3 max-w-[300px] text-[13px] font-light leading-[18px] text-white/50">
-          No returns. No hassles. No questions. The only thing you have to lose
-          is the fog.
-        </p>
       </div>
     </div>
   );

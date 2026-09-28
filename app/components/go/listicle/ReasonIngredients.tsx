@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import {
   getOrderedActiveIngredients,
   type IngredientData,
@@ -8,7 +9,12 @@ import {
 import type { FormulaId } from "@/app/lib/productData";
 import { getIngredientBadge } from "@/app/lib/mmPdpData";
 import { IngredientTile } from "@/app/components/product/ClinicalIngredients";
-import IngredientDetailDrawer from "@/app/components/product/IngredientDetailDrawer";
+
+// Only needed once a tile is tapped, so it stays out of the page's first load.
+const IngredientDetailDrawer = dynamic(
+  () => import("@/app/components/product/IngredientDetailDrawer"),
+  { ssr: false },
+);
 
 /**
  * The ingredients a listicle reason names, as the PDP's tiles (IM8 pattern:
@@ -24,6 +30,7 @@ export default function ReasonIngredients({
   formula?: FormulaId;
 }) {
   const [open, setOpen] = useState<IngredientData | null>(null);
+  const [used, setUsed] = useState(false);
   const all = getOrderedActiveIngredients(formula);
   const ingredients = ids
     .map((id) => all.find((ing) => ing.id === id))
@@ -42,17 +49,24 @@ export default function ReasonIngredients({
             <IngredientTile
               ingredient={ing}
               formula={formula}
-              onOpen={() => setOpen(ing)}
+              onOpen={() => {
+                setUsed(true);
+                setOpen(ing);
+              }}
             />
           </li>
         ))}
       </ul>
-      <IngredientDetailDrawer
-        open={open !== null}
-        ingredient={open}
-        badge={open ? getIngredientBadge(formula, open.id) : undefined}
-        onClose={() => setOpen(null)}
-      />
+      {/* Mounted from the first tap onward (not per open), so the drawer's own
+          exit transition still runs on close. */}
+      {used ? (
+        <IngredientDetailDrawer
+          open={open !== null}
+          ingredient={open}
+          badge={open ? getIngredientBadge(formula, open.id) : undefined}
+          onClose={() => setOpen(null)}
+        />
+      ) : null}
     </div>
   );
 }

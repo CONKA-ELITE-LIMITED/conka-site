@@ -322,9 +322,11 @@ export default function CrashChart({
   return (
     <div
       ref={ref}
-      // No card chrome of its own: the listicle frame supplies the border and
-      // radius, so every reason visual shares one surface.
-      className={`overflow-hidden text-[#1d1d1d] ${sharp ? "" : "rounded-md"}`}
+      // The standalone card (start pages). The listicle uses the "tile"
+      // variant above, whose frame supplies border and radius instead.
+      className={`overflow-hidden border border-black/[0.09] bg-white text-[#1d1d1d] shadow-[0_4px_24px_rgba(20,30,60,0.06)] ${
+        sharp ? "" : "rounded-md"
+      }`}
     >
       <div className="px-4 pb-3 pt-[22px]">
         {/* Legend */}

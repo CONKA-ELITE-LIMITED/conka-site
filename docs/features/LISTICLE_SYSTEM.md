@@ -141,6 +141,12 @@ That is the whole thing. No route, component, or analytics wiring to touch.
   say something new about money, it comes from `offerData`, like everything else
   that can be sold.
 
+  **`stickyBar.layout: "button"` (SCRUM-1470, im8 only)** is the alternative
+  Grüns-pattern bar: one full-width filled navy CTA with a single-line rating
+  row under it (read from `hero.socialProof`), no price line. It stays hidden
+  (and `inert`) until the hero scrolls out of view, because the hero carries the
+  same CTA. The default `"offer"` layout above is unchanged.
+
 - `faqIds` are ids from `app/lib/faqContent.ts`, in display order. An unknown id fails the build. The `/go` surface strips claim anchors from answers, renders via `LabFAQ` with no image column and no hub link.
 - `proof` is the post-reasons proof tier, rendered by `ListicleProofTier` for both templates. Four optional moments, each doing a different job, in fixed order:
 
@@ -278,6 +284,38 @@ a flat studio sweep, which is worth checking when swapping one in.
 
 The `body` array is a plug-and-play library. Blocks: `reason`, `statsBand`, `reviewStrip`, `symptomExplainer`, `segmentToggle`. An IM8 `reason` takes a rich `asset` (`kind`): `image`, `video`, `crashChart`, `researchBacked`, `measureTile`, `cognitionBars`, `scoreByGroup`, `dayEnergyCurve`, `focusBars`, `athleteQuote`, `ingredientGrid`, `statPanel`, or `placeholder`. Each maps to a component in `ListicleRenderer`; see `listicle-types.ts` for the exact fields per kind.
 
+## Reason tiles and optional fields (SCRUM-1470)
+
+Every im8 reason visual renders in **one shared 4:5 frame** (`MEDIA_FRAME` /
+`CHART_FRAME` in `ListicleRenderer`): same radius, thin border, white surface.
+Photos and video fill it (their config `aspect` is ignored inside a reason);
+chart tiles fill it as a flex column and the frame grows rather than clips.
+
+**Chart tiles** share one grammar: a tinted `#eef1f8` banner with the title,
+the figure or chart, and a tinted bottom strip. Palette: navy is CONKA, grey
+the alternative, brand green only on the key figure; the crash chart keeps its
+red drop. Tiles: `crashChart` (`variant="tile"`, no cost panel), `focusBars`
+(0 to 120 axis), `measureTile` (score chart plus store buttons) and
+`coffeeCompare` (condensed CONKA vs coffee table, cost row from `offerData` and
+`landingPricing`).
+
+Optional reason fields:
+
+| Field | Does |
+|---|---|
+| `tag` | Category eyebrow ("Focus", "Value") with the counter on the right and a rule under; the reason then skips its top separator |
+| `payoff` | Bold closing fact. On a chart tile it becomes the tile's bottom strip; otherwise it closes the paragraph in bold and the body drops to regular weight |
+| `ingredients` | Flow ingredient ids, rendered as the PDP's `IngredientTile`s under "What to expect"; the detail drawer loads on first tap |
+
+Citations sit under the copy on desktop and close the section (under the
+visual) on mobile.
+
+Page-level options: `hero.proofWallFirst` puts the partner logos at the top of
+the page under a navy "Fueling High Performers at:" bar (and skips the band
+after the hero); `proof.comparison` adds the full comparison table between the
+feature and the UGC band. The bridge renders as a thin full-width navy band
+between the reasons and the buy box. `/go` listicles carry no site navigation.
+
 ## Offer tokens
 
 **Never write a price or a discount as a literal in a config.** Offer terms come
@@ -287,7 +325,9 @@ pricing moves, and can be wrong the day it ships: the three `im8` heroes claimed
 "Save 46%" for months, a figure that matched no cadence we sell (SCRUM-1323).
 
 `{percent}` is the token for a live discount. It resolves to the **bare number**;
-the copy owns the `%` sign:
+the copy owns the `%` sign. `{perDay}` is the quarterly price per day (bare, e.g.
+`1.83`; the copy owns the `£`) and resolves in im8 reason `body` and `payoff`
+too:
 
 ```ts
 cta: "Save {percent}% on a calmer mind",   // renders "Save 48% on a calmer mind"

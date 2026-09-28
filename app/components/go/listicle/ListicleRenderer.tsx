@@ -188,9 +188,9 @@ const STICKY_TINT = "#eef1f8";
 
 /**
  * The 4.7 star row: a grey five-star run with an amber copy clipped over it at
- * 94% width. Only the hero micro-row uses it now, since the sticky bar dropped
- * its rating line, but it stays extracted: it is twenty lines of clipped-overlay
- * trickery that reads far better named than inlined.
+ * 94% width. Used by the hero micro-row and the "button" sticky bar's proof
+ * line; extracted because it is twenty lines of clipped-overlay trickery that
+ * reads far better named than inlined.
  *
  * It is 4.7 specifically, not rating-agnostic: the figure is baked into both
  * the 94% fill and the aria-label. Callers read the number itself out of
@@ -763,7 +763,7 @@ function BodyBlock({
               </p>
             ) : (
               <p className="mb-5 max-w-[36rem] text-[15px] font-semibold leading-relaxed text-black md:text-base">
-                {block.body}
+                {resolveOfferTokens(block.body, heroId)}
               </p>
             )}
             {/* Desktop: the reference sits under the copy it supports. */}
@@ -1298,7 +1298,9 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
       {config.stickyBar ? (
         <aside
           aria-label="Offer bar"
-          aria-hidden={stickyHidden || undefined}
+          // inert, not just aria-hidden: keeps the off-screen CTA out of the
+          // tab order too.
+          inert={stickyHidden || undefined}
           className={`fixed bottom-0 left-0 right-0 z-40 border-t border-black/10 px-5 py-4 transition-transform duration-300 md:px-[5vw] ${stickyHidden ? "pointer-events-none translate-y-full" : "translate-y-0"}`}
           style={{ background: STICKY_TINT, color: "#111" }}
         >
