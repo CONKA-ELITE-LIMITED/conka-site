@@ -152,9 +152,10 @@ function stickyOffer(heroId: ProductHeroId) {
  * the number, so keep that opening if the degraded path matters.
  */
 function resolveOfferTokens(text: string, heroId: ProductHeroId): string {
-  const percent = getDisplayDiscount(
-    getOfferPricing(OFFER_PRODUCT[heroId], "quarterly-sub"),
-  );
+  const pricing = getOfferPricing(OFFER_PRODUCT[heroId], "quarterly-sub");
+  // `{perDay}` is the bare price per day (e.g. "1.25"); the copy owns the "£".
+  text = text.replaceAll("{perDay}", pricing.perDay.toFixed(2));
+  const percent = getDisplayDiscount(pricing);
   if (percent > 0) return text.replaceAll("{percent}", String(percent));
   const withoutClause = text.replace(/^\s*save\s+\{percent\}%\s*/i, "").trim();
   if (!withoutClause || withoutClause.includes("{percent}")) {
@@ -269,16 +270,26 @@ function splitStatValue(value: string): [string, string] {
 
 function ReasonHeading({
   n,
+  tag,
   className,
   children,
 }: {
   n?: number;
+  /** Category eyebrow (Grüns pattern): tag left, counter right, rule under. */
+  tag?: string;
   className: string;
   children: string;
 }) {
   return (
     <div className={className}>
-      {n ? (
+      {tag ? (
+        <div className="mb-4 flex items-baseline justify-between border-b border-black/15 pb-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-black/50">
+          <span>{tag}</span>
+          {n ? (
+            <span className="tabular-nums">{String(n).padStart(2, "0")}</span>
+          ) : null}
+        </div>
+      ) : n ? (
         <p className="mb-2 text-[13px] font-semibold tabular-nums text-black/40">
           {String(n).padStart(2, "0")}
         </p>
@@ -619,9 +630,11 @@ function ReviewStrip({
 function BodyBlock({
   block,
   index,
+  heroId,
 }: {
   block: ListicleBodyBlock;
   index: number;
+  heroId: ProductHeroId;
 }) {
   // Active-intent reporter for the interactive blocks below (symptom picker,
   // segment toggle). Unconditional per the rules of hooks; a no-op for the rest.
@@ -633,12 +646,21 @@ function BodyBlock({
       <div className={`${index === 0 ? "" : "border-t border-black/10"} py-14`}>
         <article className="grid items-center gap-8 md:grid-cols-2 md:gap-16">
           <div className={mediaFirst ? "md:order-2" : ""}>
-            <ReasonHeading n={block.n} className="mb-4">
+            <ReasonHeading n={block.n} tag={block.tag} className="mb-4">
               {block.headline}
             </ReasonHeading>
-            <p className="mb-5 max-w-[36rem] text-[15px] font-semibold leading-relaxed text-black md:text-base">
-              {block.body}
-            </p>
+            {block.payoff ? (
+              <p className="mb-5 max-w-[36rem] text-[15px] leading-relaxed text-black/80 md:text-base">
+                {resolveOfferTokens(block.body, heroId)}{" "}
+                <strong className="font-semibold text-black">
+                  {resolveOfferTokens(block.payoff, heroId)}
+                </strong>
+              </p>
+            ) : (
+              <p className="mb-5 max-w-[36rem] text-[15px] font-semibold leading-relaxed text-black md:text-base">
+                {block.body}
+              </p>
+            )}
             {block.citation ? (
               <CitationLine
                 citation={block.citation}
@@ -1028,7 +1050,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
           {config.body.map((block, i) => (
             <Fragment key={i}>
               <TrackedSection section={sectionId(block.kind, i)}>
-                <BodyBlock block={block} index={i} />
+                <BodyBlock block={block} index={i} heroId={heroId} />
               </TrackedSection>
               {/* World's-largest laurel badge, relocated out of the hero to sit
                   under point 1 so the hero title + CTA sit higher. */}

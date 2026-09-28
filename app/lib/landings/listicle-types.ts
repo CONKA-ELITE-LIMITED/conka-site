@@ -158,9 +158,18 @@ export type ListicleBodyBlock =
   | {
       kind: "reason";
       n: number;
+      /** Category eyebrow above the headline, e.g. "Focus" or "Value"
+       *  (Grüns pattern). Renders with the counter on the right and a rule
+       *  under both. Omit for the plain counter-only heading. */
+      tag?: string;
       headline: string;
-      /** Problem-validate paragraph, then solution; one string for now */
+      /** Problem-validate paragraph, then solution; one string for now.
+       *  Supports the `{perDay}` offer token (see Offer tokens in LISTICLE_SYSTEM.md). */
       body: string;
+      /** Bold closing fact after the body (Grüns pattern). When set, the body
+       *  drops to regular weight so this line carries the emphasis. Supports
+       *  the same offer tokens as `body`. */
+      payoff?: string;
       /** Optional source line under the body, e.g. "DOI: 10.1186/1550-2783-12-S1-P41" */
       citation?: string;
       /** Optional link target for the citation line */

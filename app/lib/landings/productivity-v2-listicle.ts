@@ -19,7 +19,7 @@ export const productivityV2Listicle: ListicleConfig = {
   persona: "productivity",
   format: "listicle",
   template: "im8",
-  title: "Why 5,000+ People Are Swapping Coffee for a Daily Brain Shot",
+  title: "7 Reasons 5,000+ People Have Made CONKA Part of Their Routine",
   hero: {
     laurel: {
       eyebrow: "World's Largest",
@@ -44,7 +44,7 @@ export const productivityV2Listicle: ListicleConfig = {
   },
   reasonsHeader: {
     eyebrow: "Brain health at the cellular level",
-    headline: "Why 5,000+ People Are Swapping Coffee for a Daily Brain Shot",
+    headline: "7 Reasons 5,000+ People Have Made CONKA Part of Their Routine",
   },
   proof: {
     logoBand: true,
@@ -62,31 +62,37 @@ export const productivityV2Listicle: ListicleConfig = {
         "Jack Willis applauding in the Stade Toulousain jersey, 2025 Top 14 Player of the Season",
     },
   },
-  // Headlines are the benefit; each body opens on the moment the reader hits
-  // their limit, then names the ingredient doing the work. Reason 1 says what
-  // CONKA is. The guarantee closes the page in the bridge, not as a reason.
+  // Grüns pattern: each reason is a category of reason to buy (tag eyebrow),
+  // a concrete outcome headline, and a bold closing fact (payoff). Reasons 3
+  // and 4 carry the ADHD and 40+ readers in their bodies. Visuals are stand-ins
+  // from the existing pages until purpose-made assets exist.
   body: [
     {
       kind: "reason",
       n: 1,
-      headline: "One Shot in the Morning, Sharp Until the Evening",
-      body: "CONKA is a small, caffeine-free shot you drink with breakfast. Inside are six natural ingredients, including Rhodiola, Ashwagandha and Lemon Balm, that support the pathways behind focus and mental energy. So the clarity you have at 9am is still there at 4pm, when the list is half done and your brain would normally clock off.",
-      asset: { kind: "focusBars" },
+      tag: "Focus",
+      headline: "All-Day Energy and Focus, Without the Crash",
+      body: "Sharp at your first meeting and still sharp at your last. CONKA's natural nootropics support the pathways behind focus and mental energy, so there's no spike to come down from and nothing wearing off by lunch.",
+      payoff: "App users scored 19.3% higher on focus tests while taking CONKA.",
+      asset: { kind: "dayEnergyCurve" },
     },
     {
       kind: "reason",
       n: 2,
-      headline: "Go All Day, Into the Evening, and Still Sleep",
-      body: "Coffee gets you to lunch, then the crash collects, and a late cup costs you the night. CONKA is completely caffeine-free, and its ingredients delivered 18.1% faster mental processing than caffeine. So you stay sharp through the afternoon and into the evening, and still fall asleep when your head hits the pillow.",
-      citation: "DOI: 10.1186/1550-2783-12-S1-P41",
-      asset: { kind: "dayEnergyCurve" },
+      tag: "Stress",
+      headline: "Stay Calm When Everything Lands at Once",
+      body: "The deadline moves up, the inbox fills, and your head goes from full to frantic. Stress hormones crowd out clear thinking right when you need it most.",
+      payoff: "Ashwagandha, one of CONKA's adaptogens, was shown to lower cortisol, the stress hormone, by 28%.",
+      citation: "PMID: 23439798",
+      asset: { kind: "focusBars" },
     },
     {
-      // ADHD bridge: headline names the shared moment, body names the condition.
       kind: "reason",
       n: 3,
-      headline: "Getting Started Stops Being a Fight",
-      body: "If you have ADHD, you know the gap between \"I should\" and \"I am\". ADHD brains run lower on dopamine, the chemical that bridges it, so starting feels like a fight. Plenty of people without ADHD feel it on a heavy day too. Lemon Balm and Rhodiola support calm, steady drive, so getting started stops costing so much.",
+      tag: "Motivation",
+      headline: "From 'I Should' to 'Done'",
+      body: "With ADHD, the hardest part of any task is the first minute. ADHD brains run lower on dopamine, the chemical that turns intention into action, and plenty of people without ADHD know that stuck feeling on a heavy day.",
+      payoff: "Lemon Balm and Rhodiola support calm, steady drive, so starting stops feeling like a fight.",
       asset: {
         kind: "video",
         src: "/videos/flow/FlowFloat.mp4",
@@ -95,11 +101,12 @@ export const productivityV2Listicle: ListicleConfig = {
       },
     },
     {
-      // Ageing bridge. Shane's quote is the proof: same workload as his 30s.
       kind: "reason",
       n: 4,
-      headline: "Your Workload Feels Like It Did at 35",
-      body: "Past 40, the job hasn't changed but it costs more. A ten-year study of over 7,000 people found cognitive decline already measurable from around 45, gradual enough to miss. CONKA's Turmeric and Bilberry are antioxidants that help protect brain cells from the wear behind it, so your workload feels like it used to.",
+      tag: "Memory",
+      headline: "Stop Losing Words Mid-Sentence",
+      body: "Past 40, the word you want arrives a beat late and a name you know goes blank. A ten-year study of over 7,000 people found decline measurable from around 45, gradual enough to miss.",
+      payoff: "CONKA's Turmeric and Bilberry are antioxidants that help protect the brain cells behind recall.",
       citation: "Singh-Manoux et al., BMJ, 2012 (Whitehall II)",
       asset: {
         kind: "athleteQuote",
@@ -113,10 +120,17 @@ export const productivityV2Listicle: ListicleConfig = {
     {
       kind: "reason",
       n: 5,
-      headline: "A Bad Night Costs You Less of Tomorrow",
-      body: "Short sleep shrinks what your brain can handle the next day. A late deadline, a newborn, a night lost to your phone. Rhodiola, one of CONKA's six ingredients, cut fatigue and sharpened mental performance in night-shift doctors, so a rough night takes less out of the day that follows.",
-      citation: "PMID: 11081987",
-      asset: { kind: "researchBacked" },
+      tag: "Convenience",
+      headline: "Fits Around Your Day, Whatever Time It Starts",
+      body: "One shot in the morning, one in the afternoon. No powders to mix or capsules to count, and zero caffeine, so you can take it as early or as late as your routine needs.",
+      payoff: "Our founders turned a 14-capsule daily stack into these two shots, tested at Cambridge.",
+      asset: {
+        kind: "image",
+        src: "/lifestyle/CreationOfConka.jpg",
+        alt: "CONKA founders developing the formula",
+        fit: "cover",
+        aspect: "1500/1000",
+      },
     },
     {
       kind: "reviewStrip",
@@ -152,9 +166,10 @@ export const productivityV2Listicle: ListicleConfig = {
     {
       kind: "reason",
       n: 6,
-      headline: "You Get Home With Something Left",
-      body: "Most days the work gets the best of you and the people at home get what's left. That's a capacity problem, not a priorities one. Ashwagandha, one of CONKA's adaptogens, has been shown to lower cortisol, the stress hormone, by 28%, so you finish work with something in the tank and the evening gets you at your best.",
-      citation: "PMID: 23439798",
+      tag: "Value",
+      headline: "Costs Less Than Your Daily Coffee",
+      body: "A coffee-shop flat white wears off by lunch, and you're buying another by 3pm.",
+      payoff: "On a quarterly subscription, CONKA works out at £{perDay} a day.",
       asset: {
         kind: "image",
         src: "/lifestyle/GirlsLaughing.jpg",
@@ -166,14 +181,16 @@ export const productivityV2Listicle: ListicleConfig = {
     {
       kind: "reason",
       n: 7,
-      headline: "You Can See It Working, in Your Score",
-      body: "Every supplement says it works. We'd rather you check. The CONKA app is built around CognICA, an FDA-cleared cognitive test from Cambridge. Take it before you start and again a few weeks in. Two minutes, and you'll see in a number whether your brain is sharper, not a hunch.",
-      asset: { kind: "measureTile" },
+      tag: "Proof",
+      headline: "See It Work, or Get Your Money Back",
+      body: "Take the free two-minute CognICA test in the CONKA app, an FDA-cleared test from Cambridge, before you start and again a few weeks in.",
+      payoff: "If your score and your days haven't moved within 100 days, you get every penny back.",
       pressMarquee: true,
+      asset: { kind: "measureTile" },
     },
   ],
   bridge: {
-    headline: "Try it for 100 days. If your limit hasn't moved, you get every penny back.",
+    headline: "Make it part of your routine. 100 days, risk-free.",
     cta: "Try CONKA Risk-Free →",
   },
   product: {
