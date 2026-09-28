@@ -331,6 +331,9 @@ export interface Im8ListicleConfig extends ListicleBase {
   hero: {
     /** Laurel-flanked credibility chip above the headline */
     laurel?: { eyebrow: string; body: string };
+    /** Mobile only: render the partner logo band between the hero copy and
+     *  the hero asset instead of after the whole hero. Desktop is unchanged. */
+    proofWallAboveAsset?: boolean;
     headline: string;
     subcopy: string;
     /** Avatar + star micro-row (the home hero's TrustMicroRow pattern) */
@@ -358,7 +361,13 @@ export interface Im8ListicleConfig extends ListicleBase {
    * indexed over `body`, so adding a block here would rebase every id below it
    * and void the scroll-funnel history. Tracked as `reasonsHeader`.
    */
-  reasonsHeader?: { eyebrow: string; headline: string };
+  reasonsHeader?: {
+    eyebrow: string;
+    headline: string;
+    /** "compact" drops the title to a quieter size so it does not compete
+     *  with the hero H1. Default is the display size. */
+    size?: "display" | "compact";
+  };
   /** Reasons with bands / strips woven between */
   body: ListicleBodyBlock[];
   /** Dark CTA card bridging the last reason into the product zone */

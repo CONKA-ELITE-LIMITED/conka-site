@@ -21,6 +21,7 @@ export const productivityV2Listicle: ListicleConfig = {
   template: "im8",
   title: "7 Reasons 5,000+ People Have Made CONKA Part of Their Routine",
   hero: {
+    proofWallAboveAsset: true,
     laurel: {
       eyebrow: "World's Largest",
       body: "Consumer brain-research project. 1,000+ brains tested through our app.",
@@ -28,7 +29,7 @@ export const productivityV2Listicle: ListicleConfig = {
     // v1 headline as a stand-in until the new hero line is settled.
     headline: "Discover the natural way to stay sharp all day.",
     subcopy:
-      "One caffeine-free shot each morning. Whether it's too much on, a mind that won't settle or a brain that isn't as quick as it was, CONKA's natural nootropics and adaptogens keep you sharp from the first task to the last.",
+      "Whether it's too much on, a mind that won't settle or a brain that isn't as quick as it was, CONKA's natural nootropics and adaptogens keep you sharp from the first task to the last.",
     socialProof: {
       label: "Excellent 4.7",
       sub: "622+ reviews · 5,000+ daily users",
@@ -46,6 +47,7 @@ export const productivityV2Listicle: ListicleConfig = {
   reasonsHeader: {
     eyebrow: "Brain health at the cellular level",
     headline: "7 Reasons 5,000+ People Have Made CONKA Part of Their Routine",
+    size: "compact",
   },
   proof: {
     logoBand: true,
@@ -75,7 +77,7 @@ export const productivityV2Listicle: ListicleConfig = {
       headline: "All-Day Energy and Focus, Without the Crash",
       body: "Sharp at your first meeting and still sharp at your last. CONKA's natural nootropics support the pathways behind focus and mental energy, so there's no spike to come down from and nothing wearing off by lunch.",
       payoff: "App users scored 19.3% higher on focus tests while taking CONKA.",
-      asset: { kind: "dayEnergyCurve" },
+      asset: { kind: "focusBars" },
     },
     {
       kind: "reason",
@@ -85,13 +87,13 @@ export const productivityV2Listicle: ListicleConfig = {
       body: "The deadline moves up, the inbox fills, and your head goes from full to frantic. Stress hormones crowd out clear thinking right when you need it most.",
       payoff: "Ashwagandha, one of CONKA's adaptogens, was shown to lower cortisol, the stress hormone, by 28%.",
       citation: "PMID: 23439798",
-      asset: { kind: "focusBars" },
+      asset: { kind: "dayEnergyCurve" },
     },
     {
       kind: "reason",
       n: 3,
       tag: "Motivation",
-      headline: "From 'I Should' to 'Done'",
+      headline: "Start the Tasks You Keep Putting Off",
       body: "With ADHD, the hardest part of any task is the first minute. ADHD brains run lower on dopamine, the chemical that turns intention into action, and plenty of people without ADHD know that stuck feeling on a heavy day.",
       payoff: "Lemon Balm and Rhodiola support calm, steady drive, so starting stops feeling like a fight.",
       asset: {
@@ -206,5 +208,6 @@ export const productivityV2Listicle: ListicleConfig = {
     "with-coffee",
     "guarantee",
   ],
-  stickyBar: { cta: "Try it risk-free" },
+  // Same line as the hero CTA, so the page makes one ask.
+  stickyBar: { cta: "Save {percent}% and try it risk-free" },
 };

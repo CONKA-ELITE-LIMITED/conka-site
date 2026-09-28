@@ -893,6 +893,12 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
   // The product this page sells. Drives the PDP hand-off (see PDP_HREF) and
   // every price and percentage the page quotes.
   const heroId = config.product.productHeroId ?? "03";
+  // Mobile: logos between hero copy and asset (the section below hides there).
+  const logosAboveAsset = Boolean(
+    config.hero.proofWallAboveAsset &&
+      config.proof &&
+      (config.proof.logoBand || config.proof.pressBand),
+  );
 
   // Marketing CTAs follow the product this page sells (see PDP_HREF).
   const buyHref = PDP_HREF[heroId];
@@ -923,7 +929,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
       >
         <div className="grid items-center md:grid-cols-[52fr_48fr]">
           <div
-            className="relative order-2 w-full md:order-1"
+            className={`relative w-full md:order-1 ${logosAboveAsset ? "order-3" : "order-2"}`}
             style={{
               aspectRatio:
                 config.hero.asset.kind === "image"
@@ -997,6 +1003,14 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               />
             ) : null}
           </div>
+          {logosAboveAsset && config.proof ? (
+            <TrackedSection
+              section={SECTION.proofWall}
+              className="order-2 px-5 pb-8 md:hidden"
+            >
+              <ListicleLogoBand proof={config.proof} />
+            </TrackedSection>
+          ) : null}
         </div>
       </section>
 
@@ -1006,7 +1020,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
       {config.proof && (config.proof.logoBand || config.proof.pressBand) ? (
         <section
           aria-label="Trusted by"
-          className="px-5 py-12 md:px-[5vw] md:py-14"
+          className={`px-5 py-12 md:block md:px-[5vw] md:py-14 ${logosAboveAsset ? "hidden" : ""}`}
           style={{ background: CANVAS, color: "#111" }}
         >
           <TrackedSection
@@ -1042,7 +1056,10 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               <h2
                 className="mx-auto max-w-[24ch] text-balance font-semibold text-black"
                 style={{
-                  fontSize: "clamp(2.125rem, 6.5vw, 3rem)",
+                  fontSize:
+                    config.reasonsHeader.size === "compact"
+                      ? "clamp(1.5rem, 5vw, 2rem)"
+                      : "clamp(2.125rem, 6.5vw, 3rem)",
                   lineHeight: 1.08,
                   letterSpacing: "-0.02em",
                 }}
