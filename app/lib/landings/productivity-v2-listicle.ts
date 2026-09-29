@@ -9,28 +9,30 @@ import type { ListicleConfig } from "./listicle-types";
  * the conka-messaging skill (.claude/skills/conka-messaging): experience not
  * biology, no named conditions, Flow first / Clear before it counts.
  *
- * Six reasons: composure, motivation ("not lazy"), memory ("not losing it"),
- * routine, value, then a proof reason that runs the club and workplace trials
- * into the reader's own test and the guarantee.
+ * Six reasons, one fixed shape each (tag, headline, short body, one visual,
+ * bold payoff): composure, motivation, memory, routine, value, then a proof
+ * reason that runs the athlete and trial results into the reader's own test
+ * and the guarantee. Social proof sits BETWEEN reasons as bands, never inside
+ * one. Round 3 applies Henry's Figma notes (29 Sep).
  */
 export const productivityV2Listicle: ListicleConfig = {
   slug: "productivity-v2",
   persona: "productivity",
   format: "listicle",
   template: "im8",
-  title: "6 Reasons 5,000+ People Have Made CONKA Part of Their Routine",
+  title: "6 Reasons Thousands Have Made the Viral Brain Shot Part of Their Routine",
   hero: {
     proofWallFirst: true,
     // No laurel: the logo band a scroll later does the credibility job, and the
     // hero reads as H1, subcopy, CTA, one proof line.
-    // v1 headline as a stand-in until the new hero line is settled.
-    headline: "Discover the natural way to stay sharp all day.",
+    // Henry's round-3 note: statics convert when they name the product the way
+    // social proof does ("viral brain shot"), so the H1 carries it.
+    headline: "The Viral Brain Shot That Keeps You Sharp All Day.",
     subcopy:
-      "Whether it's too much on, a mind that won't settle or a brain that isn't as quick as it was, CONKA keeps you sharp from the first task to the last. Flow first. Clear before it counts.",
-    socialProof: {
-      label: "Excellent 4.7",
-      sub: "622+ reviews · 5,000+ daily users",
-    },
+      "Too much on, a mind that won't settle, or a brain that isn't as quick as it was. Flow first. Clear before it counts.",
+    // Trustpilot star boxes (4.7 is our Trustpilot score) in place of the
+    // gold stars and the review and user counts.
+    socialProof: { label: "Excellent 4.7", trustpilot: true },
     cta: "Save {percent}% and try it risk-free",
     // Purpose-shot hero (round 2): overloaded desk worker, hands offering CONKA shots from every side.
     asset: {
@@ -43,18 +45,33 @@ export const productivityV2Listicle: ListicleConfig = {
   },
   reasonsHeader: {
     eyebrow: "Get ahead. Stay ahead.",
-    headline: "6 Reasons 5,000+ People Have Made CONKA Part of Their Routine",
+    headline: "6 Reasons Thousands Have Made the Viral Brain Shot Part of Their Routine",
   },
   proof: {
     logoBand: true,
+    logoBandHeading: "Improving brain performance at:",
+    // Corporate and sport alternating, big-name sport only (Henry, round 3).
+    logoBandLogos: [
+      { src: "/lander/partners/nike.svg", alt: "Nike", h: 26, w: 73 },
+      { src: "/lander/partners/england-rugby.webp", alt: "England Rugby", h: 58, w: 34 },
+      { src: "/logos/Revolut.png", alt: "Revolut", h: 28, w: 56 },
+      { src: "/lander/partners/bayern.webp", alt: "FC Bayern Munich", h: 52, w: 52 },
+      { src: "/logos/Skyscanner.png", alt: "Skyscanner", h: 20, w: 118 },
+      { src: "/lander/partners/f1.webp", alt: "Formula 1", h: 26, w: 104 },
+      { src: "/lander/partners/goldman-sachs.webp", alt: "Goldman Sachs", h: 36, w: 86 },
+      { src: "/lander/partners/team-gb.webp", alt: "Team GB", h: 58, w: 42 },
+      { src: "/lander/partners/british-airways.webp", alt: "British Airways", h: 18, w: 114 },
+      { src: "/lander/partners/bath-rugby.webp", alt: "Bath Rugby", h: 52, w: 52 },
+      { src: "/lander/partners/equinox.webp", alt: "Equinox", h: 19, w: 100 },
+      { src: "/lander/partners/wales-rugby.webp", alt: "Wales Rugby", h: 56, w: 42 },
+    ],
     ugc: {},
   },
   // Grüns pattern: each reason is a category of reason to buy (tag eyebrow),
   // a concrete outcome headline, and a bold closing fact (payoff). Copy follows
   // the conka-messaging skill: experience not biology, no named conditions, and
-  // Flow / Clear in their moments. Reasons 2 and 3 reframe the reader's worry
-  // ("not lazy", "not losing it") as the shared problem: a brain at its limit.
-  // Visuals are stand-ins from the existing pages until purpose-made assets exist.
+  // Flow / Clear in their moments. One visual per reason; the review strip is
+  // a band between reasons, not part of one.
   body: [
     {
       kind: "reason",
@@ -62,11 +79,10 @@ export const productivityV2Listicle: ListicleConfig = {
       tag: "Composure",
       headline: "Stay Calm in the Chaos of Life",
       body: "The deadline moves up, the inbox fills, and your head goes from full to frantic. CONKA helps you keep your composure when the day piles on, so you stay in control instead of playing catch-up.",
-      payoff:
-        "Focus scores rose 19.3% in a trial of professional athletes, people whose job is performing under pressure.",
       citation: "PMID: 23439798",
-      // Payoff becomes the focus bars' caption strip (athlete trial figure).
-      asset: { kind: "focusBars" },
+      // Graph as the hero, zoomed so the gap reads first. No payoff: the tile
+      // already states the figure, so a caption would repeat it.
+      asset: { kind: "focusBars", zoom: true },
     },
     // Closes reason 1 (compact strip): customers backing the calm claim.
     {
@@ -105,48 +121,31 @@ export const productivityV2Listicle: ListicleConfig = {
       kind: "reason",
       n: 2,
       tag: "Motivation",
-      headline: "You're Not Lazy. Your Brain Is Underfuelled.",
-      body: "Some days the hardest part of any task is the first minute. That isn't a character flaw. After a heavy week or a short night, your brain has less to give, and starting takes everything you've got.",
-      payoff:
-        "Flow first, before you open your emails, and the first minute stops feeling like a fight.",
-      // Placeholder wording tightened from the team's paraphrase: needs
-      // Dr Morehen's sign-off before scaling spend.
-      pullQuote: {
-        quote:
-          "Our athletes make more mistakes in the second half. That's a fuel gap: their body and brain are missing the fuel to stay sharp.",
-        name: "Dr James Morehen",
-        credentials: [
-          "England Rugby Performance Nutritionist",
-          "Also works with boxers Chris Billam-Smith and Adam Azim",
-        ],
-        image: "/testimonials/expert/JamesMorehen.webp",
-      },
-      ingredients: ["lemon-balm", "rhodiola"],
-      // Round 2: athletes and professionals, alternating, each with their own
-      // score change. Figures from caseStudiesData (CognICA total score).
-      // Leeds players are hidden site-wide on request (SCRUM-1354), so no Bamford.
+      headline: "Motivation Comes From a Fuelled Mind",
+      body: "After a heavy week or a short night, your brain has less to give. The hardest part of any task is the first minute, and it takes the most energy.",
+      payoff: "Flow before opening your laptop prepares you for the day ahead.",
+      // Quote wording from Henry's round-3 notes.
       asset: {
-        kind: "athleteScores",
-        athletes: [
-          { name: "Jade Shekells", role: "GB Women's Rugby 7s", image: "/caseStudies/JadeShekells.jpg", from: 60.33, to: 82.48, change: "+36.7%" },
-          { name: "Doris Regazi", role: "Account Executive, Revolut", image: "/caseStudies/DorisRegazi.jpg", from: 61.33, to: 80.21, change: "+30.8%" },
-          { name: "Finn Russell", role: "Bath Rugby, Scotland", image: "/caseStudies/FinnRussell.jpg", from: 54.67, to: 70.5, change: "+29.0%" },
-          { name: "Nimisha Kurup", role: "Managing Director, Bank of America", image: "/caseStudies/NimishaKurup.jpg", from: 65.67, to: 81.87, change: "+24.7%" },
-          { name: "Pierre-Louis Barassi", role: "Stade Toulousain", image: "/caseStudies/PierreLouisBarassi.jpg", from: 67, to: 85.25, change: "+27.2%" },
-          { name: "Jack Willis", role: "Stade Toulousain", image: "/caseStudies/JackWillis.jpg", from: 69.33, to: 83.56, change: "+20.5%" },
-        ],
+        kind: "athleteQuote",
+        name: "Dr James Morehen",
+        role: "Performance Nutritionist",
+        image: "/testimonials/expert/JamesMorehenHero.webp",
+        logo: "/lander/partners/england-rugby.webp",
+        logoAlt: "England Rugby",
+        crest: true,
+        label: "Meet Our Nutrition Advisor",
+        quote:
+          "My clients make more mistakes in the second half. That's a nutritional gap that can only be solved with the correct fuel their brains are missing.",
       },
     },
     {
       kind: "reason",
       n: 3,
       tag: "Memory",
-      headline: "You're Not Losing It. Your Brain Is Just Overloaded.",
-      body: "The word you want arrives a beat late. A name you know goes blank. It's easy to fear the worst, but most days your head is simply carrying too much at once. And the pace does shift: Archana Singh-Manoux's ten-year study of over 7,000 people found the slip in processing speed already measurable by 45.",
-      payoff:
-        "Clear before it counts, so the name is there when you need it.",
+      headline: "Feeling Slow? Your Brain Is Just Overloaded.",
+      body: "Words get lost mid-conversation. Names go blank. It's normal to fear the worst, but most days your head is simply carrying more than it can handle. A ten-year study of over 7,000 people found the slip in processing speed already measurable by 45.",
+      payoff: "CONKA Clear supports the moments that count.",
       citation: "Singh-Manoux et al., BMJ, 2012 (Whitehall II)",
-      ingredients: ["turmeric", "bilberry"],
       asset: {
         kind: "athleteQuote",
         name: "Shane Corstorphine",
@@ -164,12 +163,11 @@ export const productivityV2Listicle: ListicleConfig = {
       tag: "Convenience",
       headline: "Fits Around Your Day, Whatever Time It Starts",
       body: "Flow first, before you open your laptop or your emails. Clear in the five minutes before it counts. No powders to mix or capsules to count, and zero caffeine, so it fits whatever time your day starts.",
-      // Rendered at the frame's 4:5 from design/listicle-assets/routine.html,
-      // round 2: rewritten to the conka-messaging system lines.
+      // Rendered at the frame's 4:5 from design/listicle-assets/routine.html.
       asset: {
         kind: "image",
-        src: "/listicle/RoutineTwoShotsV3.jpg",
-        alt: "Flow first, Clear before it counts: Flow before you open your laptop, Clear 5 minutes before the big meeting. Zero caffeine, no powders, no capsules",
+        src: "/listicle/RoutineTwoShotsV4.jpg",
+        alt: "Flow first, Clear before it counts: Flow before you open your laptop, Clear 5 minutes before the big moment. 0 caffeine, 0 sugar, 0 calories",
         fit: "cover",
       },
     },
@@ -178,85 +176,83 @@ export const productivityV2Listicle: ListicleConfig = {
       n: 5,
       tag: "Value",
       headline: "Costs Less Than Your Daily Coffee",
-      body: "We love coffee too, but it has its limits. Too much caffeine takes a toll on your body and your sleep. CONKA gives you the focus today and looks after your brain for the long run, with zero caffeine.",
+      body: "We love coffee too, but it has its limits. Too much caffeine takes a toll on your brain and your sleep. CONKA gives you the focus today and looks after your brain for the long run, with zero caffeine. CONKA works 18.1% better than caffeine.*",
+      // The 18.1% is the Alpha-GPC vs caffeine processing-speed study, the
+      // same source brain-ageing reason 5 cites.
+      citation:
+        "*Mental processing speed, Alpha-GPC vs caffeine. DOI: 10.1186/1550-2783-12-S1-P41",
       payoff:
         "On a quarterly subscription, CONKA works out at £{perDay} a day.",
       // Cost is the first row; the payoff becomes the tile's bottom strip.
       asset: { kind: "coffeeCompare" },
     },
-    // Reason 6: "why are we so confident" and "prove it to yourself" in one.
-    // Others' results first, then the reader's own test and the guarantee. Figures exactly as
-    // docs/conkaAppData/HIGH_LEVEL_STATS.md and the two trial PDFs state them.
+    // Reason 6: the individual score cards, then the trials, then the reader's
+    // own test and the guarantee. Cards are the simple format (Henry, round 3):
+    // who, figure, zoomed chart, no CONKA-vs-CONKA bars. Figures from
+    // caseStudiesData and the trial reports.
     {
       kind: "trialCarousel",
       n: 6,
       tag: "Proof",
-      headline: "Tested by the Pros. Now Prove It to Yourself.",
+      headline: "Tested by the Best. Built for You.",
       intro:
-        "Why are we so confident? The people who can't afford an off day already measure it: professional athletes, executives and whole teams, tracking their scores on CONKA. Your turn: take the free two-minute test in the CONKA app before you start, then again a few weeks in.",
+        "Why are we so confident? The results speak for themselves: athletes, executives and professionals, all tested while taking CONKA. Now it's your turn: take the free two-minute test in the CONKA app to measure the change.",
       payoff:
         "If your score and your days haven't moved within 100 days, you get every penny back.",
       appStores: true,
       pressMarquee: true,
+      // Better-known names first, sport and corporate alternating. Bamford is
+      // shown here deliberately (29 Sep decision), though Leeds players stay
+      // hidden elsewhere under SCRUM-1354.
+      athletes: [
+        { name: "Patrick Bamford", role: "Professional Footballer", image: "/caseStudies/PatrickBamford.jpg", from: 62.67, to: 80.17, change: "+27.9%" },
+        { name: "Doris Regazi", role: "Account Executive, Revolut", image: "/caseStudies/DorisRegazi.jpg", from: 61.33, to: 80.21, change: "+30.8%" },
+        { name: "Jack Willis", role: "Stade Toulousain, England", image: "/caseStudies/JackWillis.jpg", from: 69.33, to: 83.56, change: "+20.5%" },
+        { name: "Nimisha Kurup", role: "Managing Director, Bank of America", image: "/caseStudies/NimishaKurup.jpg", from: 65.67, to: 81.87, change: "+24.7%" },
+        { name: "Finn Russell", role: "Bath Rugby, Scotland", image: "/caseStudies/FinnRussell.jpg", from: 54.67, to: 70.5, change: "+29.0%" },
+      ],
       slides: [
         {
           logo: "/logos/Harlequins.webp",
           logoAlt: "Harlequins",
-          design: "Randomised, double-blind, placebo-controlled",
-          meta: "29 professional rugby players · 6 weeks",
+          meta: "29 pro rugby players · 6 weeks",
           figure: "+14.86%",
-          figureLabel: "Cognitive performance on CONKA",
+          figureLabel: "Cognitive performance vs placebo",
           chartTitle: "Change in cognitive score",
           bars: [
             { label: "Placebo", value: -0.69, display: "−0.69%" },
             { label: "CONKA", value: 14.86, display: "+14.86%", conka: true },
           ],
           axis: { min: 0, max: 16, ticks: [0, 8, 16] },
-          caption:
-            "80% of fully tracked players on CONKA improved, while taking 60% more contact.",
-          source: "Harlequins F.C. trial report",
         },
         {
           logo: "/logos/BristolBears.svg",
           logoAlt: "Bristol Bears",
-          design: "Each player against their own baseline",
-          meta: "15 professional rugby players · 13 weeks",
-          figure: "77.9 → 88.7",
-          figureLabel: "Average cognitive score, baseline to peak",
-          chartTitle: "Average score every three weeks",
+          meta: "15 pro rugby players · 13 weeks",
+          figure: "+13.9%",
+          figureLabel: "Average cognitive score, start to week 9",
+          chartTitle: "Average cognitive score",
           bars: [
             { label: "Start", value: 77.9, display: "77.9" },
-            { label: "Wk 3", value: 83.9, display: "83.9", conka: true },
-            { label: "Wk 6", value: 86.5, display: "86.5", conka: true },
-            { label: "Wk 9", value: 88.7, display: "88.7", conka: true },
+            { label: "Week 9", value: 88.7, display: "88.7", conka: true },
           ],
-          axis: { min: 70, max: 90, ticks: [70, 80, 90] },
-          caption: "Scores climbed for nine straight weeks on CONKA.",
-          source: "Bristol Bears trial report",
+          axis: { min: 75, max: 90, ticks: [75, 80, 85, 90] },
         },
-        // The desk-job bridge. The group score average is flat (high scorers
-        // stopped testing in week 2), so this card leads on the share who
-        // improved and charts reaction time. RT bars average the five
-        // participants the report gives start and end times for (Ben, Fred,
-        // Doris, William, Michael): 416ms to 317ms, inside its "20-25% faster".
+        // Reaction time averages the five participants the report gives start
+        // and end times for: 416ms to 317ms, inside its "20-25% faster". Drawn
+        // as speed (1000 / ms) so taller reads as faster.
         {
           logo: "/logos/Revolut.png",
           logoAlt: "Revolut",
-          design: "Workplace trial",
           meta: "9 Revolut employees · 18 days",
-          figure: "75%",
-          figureLabel: "Improved their cognitive score",
-          // Reaction time inverted to speed (1000 / ms) so taller reads as
-          // faster: 416ms = 2.4 per second, 317ms = 3.2 per second.
-          chartTitle: "Reaction speed (responses per second)",
+          figure: "24% faster",
+          figureLabel: "Average reaction time, 416ms to 317ms",
+          chartTitle: "Reactions per second",
           bars: [
             { label: "Start", value: 2.4, display: "2.4" },
-            { label: "End", value: 3.15, display: "3.2", conka: true },
+            { label: "Day 18", value: 3.15, display: "3.2", conka: true },
           ],
-          axis: { min: 0, max: 4, ticks: [0, 2, 4] },
-          caption:
-            "Everyone got faster, with average response times down from 416ms to 317ms.",
-          source: "Revolut trial report, March 2026",
+          axis: { min: 2, max: 3.5, ticks: [2, 2.5, 3, 3.5] },
         },
       ],
     },

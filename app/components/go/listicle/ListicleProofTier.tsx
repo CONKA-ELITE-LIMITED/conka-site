@@ -51,15 +51,19 @@ export function ListicleLogoBand({
       {proof.logoBand && banner ? (
         <>
           <p className="bg-[var(--brand-navy)] px-4 py-2.5 text-center text-[13px] font-semibold tracking-[0.02em] text-white">
-            Fueling High Performers at:
+            {proof.logoBandHeading ?? "Fueling High Performers at:"}
           </p>
           <div className="pt-5">
             {/* Above the hero now, so the logos yield to the hero image. */}
-            <LogoMarquee heading="" lowPriority />
+            <LogoMarquee heading="" logos={proof.logoBandLogos} lowPriority />
           </div>
         </>
       ) : proof.logoBand ? (
-        <LogoMarquee largeHeading />
+        <LogoMarquee
+          largeHeading
+          heading={proof.logoBandHeading}
+          logos={proof.logoBandLogos}
+        />
       ) : null}
       {proof.pressBand ? (
         <div className={proof.logoBand ? "mt-12" : ""}>

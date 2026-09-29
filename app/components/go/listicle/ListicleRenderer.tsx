@@ -222,10 +222,60 @@ function StarRow({ fontSize }: { fontSize: string }) {
   );
 }
 
+/**
+ * Trustpilot's own rating mark: five green squares with white stars, the last
+ * one half filled. Trustpilot draws ratings to the nearest half star, so 4.7
+ * shows as 4.5, exactly as it does on their widget. Used instead of StarRow
+ * when the rating is the Trustpilot score; the green boxes carry the brand on
+ * their own, so no wordmark sits beside them.
+ */
+function TrustpilotStars({ size }: { size: number }) {
+  return (
+    <span
+      className="inline-flex shrink-0 gap-[2px]"
+      aria-label="Rated 4.7 out of 5 on Trustpilot"
+      role="img"
+    >
+      {Array.from({ length: 5 }, (_, i) => (
+        <span
+          key={i}
+          aria-hidden
+          className="inline-flex items-center justify-center"
+          style={{
+            width: size,
+            height: size,
+            background:
+              i < 4
+                ? "#00b67a"
+                : "linear-gradient(90deg, #00b67a 50%, #dcdce6 50%)",
+          }}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width={size * 0.72}
+            height={size * 0.72}
+            fill="#fff"
+          >
+            <path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z" />
+          </svg>
+        </span>
+      ))}
+    </span>
+  );
+}
+
 /** The home hero's avatar + star micro-row, compacted to the IM8 scale.
  *  Centred under the full-width mobile CTA, left-aligned beside it on desktop.
  *  Content only: the caller owns the surrounding spacing. */
-function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
+function TrustMicroRow({
+  label,
+  sub,
+  trustpilot = false,
+}: {
+  label: string;
+  sub?: string;
+  trustpilot?: boolean;
+}) {
   return (
     <div className="flex items-center justify-center gap-2.5 md:justify-start">
       <div className="flex items-center">
@@ -247,10 +297,16 @@ function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
       </div>
       <div className="flex flex-col leading-tight">
         <div className="flex items-center gap-1.5">
-          <StarRow fontSize="15px" />
+          {trustpilot ? (
+            <TrustpilotStars size={17} />
+          ) : (
+            <StarRow fontSize="15px" />
+          )}
           <span className="text-[13px] font-bold tabular-nums">{label}</span>
         </div>
-        <span className="mt-0.5 text-[11px] text-black/60">{sub}</span>
+        {sub && !trustpilot ? (
+          <span className="mt-0.5 text-[11px] text-black/60">{sub}</span>
+        ) : null}
       </div>
     </div>
   );
@@ -475,7 +531,7 @@ function AssetBlock({
   if (asset.kind === "focusBars") {
     return (
       <div className={CHART_FRAME}>
-        <FocusBars showSource={!caption} />
+        <FocusBars showSource={!caption} zoom={asset.zoom} />
         <ChartCaption text={caption} />
       </div>
     );
@@ -496,6 +552,8 @@ function AssetBlock({
           quote={asset.quote}
           logo={asset.logo}
           logoAlt={asset.logoAlt}
+          crest={asset.crest}
+          label={asset.label}
         />
       </div>
     );
@@ -857,10 +915,9 @@ function BodyBlock({
                 {resolveOfferTokens(block.body, heroId)}
               </p>
             )}
-            {/* Desktop: the reference sits under the copy it supports. */}
-            {citation ? (
-              <div className="-mt-3 mb-5 hidden md:block">{citation}</div>
-            ) : null}
+            {/* The reference sits under the copy it supports, on every
+                breakpoint (it used to close the section on mobile). */}
+            {citation ? <div className="-mt-3 mb-5">{citation}</div> : null}
             {block.ingredients?.length ? (
               <ReasonIngredients ids={block.ingredients} />
             ) : null}
@@ -897,9 +954,6 @@ function BodyBlock({
               caption={payoffInTile ? payoff : undefined}
               heroId={heroId}
             />
-            {/* Mobile: the reference closes the whole section instead of
-                interrupting the copy. */}
-            {citation ? <div className="mt-3 md:hidden">{citation}</div> : null}
           </div>
         </article>
         {block.pullQuote ? (
@@ -1082,6 +1136,13 @@ function BodyBlock({
           <p className="mb-6 max-w-[40rem] text-[15px] leading-relaxed text-black/80 md:mb-8 md:text-base">
             {block.intro}
           </p>
+        ) : null}
+        {block.athletes?.length ? (
+          // Capped on desktop: the carousel sizes its square cards to 85% of
+          // its parent, which inside a full-width block would be ~1,000px.
+          <div className="mb-5 md:max-w-[36rem]">
+            <AthleteScoreCarousel athletes={block.athletes} />
+          </div>
         ) : null}
         <TrialCarousel slides={block.slides} />
         {block.payoff || block.appStores ? (
@@ -1309,6 +1370,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               <TrustMicroRow
                 label={config.hero.socialProof.label}
                 sub={config.hero.socialProof.sub}
+                trustpilot={config.hero.socialProof.trustpilot}
               />
             ) : null}
           </div>
@@ -1493,14 +1555,23 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               </Link>
               {config.hero.socialProof ? (
                 // One line at 375px: the bare rating ("Excellent 4.7" -> "4.7")
-                // plus the sub-line, never wrapping.
+                // plus the sub-line (none on a Trustpilot row), never wrapping.
                 <p className="flex items-center justify-center gap-x-1.5 whitespace-nowrap text-[11.5px] leading-tight text-black/70">
-                  <StarRow fontSize="12px" />
+                  {config.hero.socialProof.trustpilot ? (
+                    <TrustpilotStars size={13} />
+                  ) : (
+                    <StarRow fontSize="12px" />
+                  )}
                   <span className="font-bold text-black">
                     {config.hero.socialProof.label.replace(/^[^\d]*/, "")}
                   </span>
-                  <span aria-hidden>·</span>
-                  <span>{config.hero.socialProof.sub}</span>
+                  {config.hero.socialProof.sub &&
+                  !config.hero.socialProof.trustpilot ? (
+                    <>
+                      <span aria-hidden>·</span>
+                      <span>{config.hero.socialProof.sub}</span>
+                    </>
+                  ) : null}
                 </p>
               ) : null}
             </div>

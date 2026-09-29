@@ -17,6 +17,11 @@ interface AthleteQuoteCardProps {
   /** Organisation logo (public path) in a white chip, top left */
   logo?: string;
   logoAlt?: string;
+  /** Tall crest (e.g. England Rugby): a taller chip so it stays legible */
+  crest?: boolean;
+  /** Title bar pinned to the foot of the card, e.g. "Meet Our Nutrition
+   *  Advisor" (the Cadence advisor card). A label, not a control. */
+  label?: string;
 }
 
 export default function AthleteQuoteCard({
@@ -26,6 +31,8 @@ export default function AthleteQuoteCard({
   quote,
   logo,
   logoAlt,
+  crest = false,
+  label,
 }: AthleteQuoteCardProps) {
   return (
     <div
@@ -45,16 +52,18 @@ export default function AthleteQuoteCard({
           <Image
             src={logo}
             alt={logoAlt ?? ""}
-            width={180}
-            height={31}
+            // Intrinsic size hints only (the class sets the rendered height);
+            // the crest pair is England Rugby's asset, the one crest in use.
+            width={crest ? 69 : 180}
+            height={crest ? 116 : 31}
             unoptimized={logo.endsWith(".svg")}
-            className="h-[18px] w-auto md:h-5"
+            className={crest ? "h-12 w-auto" : "h-[18px] w-auto md:h-5"}
           />
         </div>
       ) : null}
 
       <div
-        className="absolute inset-x-0 bottom-0 px-4 pb-4 pt-16"
+        className={`absolute inset-x-0 bottom-0 px-4 pt-16 ${label ? "pb-[72px]" : "pb-4"}`}
         style={{
           background:
             "linear-gradient(to top, rgba(14,31,63,0.94) 0%, rgba(14,31,63,0.6) 55%, rgba(14,31,63,0) 100%)",
@@ -68,6 +77,12 @@ export default function AthleteQuoteCard({
           <span className="text-[11px] text-white/70">{role}</span>
         </div>
       </div>
+
+      {label ? (
+        <p className="absolute inset-x-3 bottom-3 rounded-md bg-white px-4 py-3 text-[15px] font-medium text-black shadow-sm">
+          {label}
+        </p>
+      ) : null}
     </div>
   );
 }
