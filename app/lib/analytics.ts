@@ -1,6 +1,7 @@
 "use client";
 
 import { track } from "@vercel/analytics/react";
+import type { OfferOptionId } from "@/app/lib/landings/offer-types";
 
 /**
  * CONKA Analytics System
@@ -366,12 +367,12 @@ export function trackOfferUpsellChoice(params: {
 }
 
 /**
- * Fires when the visitor switches trial pack (Flow / Clear / Both). Not fired
+ * Fires when the visitor switches trial pack size (1 box / 2 boxes). Not fired
  * for the default selection on load, so counts read as active choices.
  */
 export function trackOfferOptionSelected(params: {
   slug: string;
-  option: "flow" | "clear" | "both";
+  option: OfferOptionId;
 }): void {
   safeTrack("offer:option_selected", params);
 }

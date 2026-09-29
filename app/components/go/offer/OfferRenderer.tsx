@@ -33,8 +33,8 @@ import TrialPackSeen from "./TrialPackSeen";
  * trial-pack selector), the UGC marquee, then the Both versions of the PDP's
  * ingredients, what to expect, comparison table and FAQ, footer and a sticky CTA.
  *
- * Below the fold always renders Both: it speaks to the default option and keeps
- * the page server-rendered with no layout shift when the selection changes.
+ * Below the fold always renders Both: since SCRUM-1467 every option is Both, and
+ * it keeps the page server-rendered with no layout shift when the selection changes.
  *
  * Wrapped in the same `brand-clinical` root as the PDPs so the reused parts
  * render exactly as they do there. Views and CTA clicks report through the

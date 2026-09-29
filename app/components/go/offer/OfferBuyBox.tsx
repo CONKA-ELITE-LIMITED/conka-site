@@ -16,7 +16,7 @@ import {
  * sits in the PDP hero (SCRUM-1343).
  *
  * Top to bottom: the heading and a line restating the selection with its
- * saving, a row of three square trial-pack tiles (bottle image, name, struck
+ * saving, a row of square trial-pack tiles, one per option (image, name, struck
  * one-time price and trial price; the selected tile carries a navy ring), the
  * "Start trial for £X" CTA, the conversion disclosure, and the buy-once link.
  * The CTA carries the price, the disclosure carries the terms. The struck price
@@ -27,6 +27,13 @@ import {
  * into a subscription and must say so next to the button. The Both gallery's
  * how-it-works slide shows the same journey visually.
  */
+
+/** Tile row columns by option count. Literal classes so Tailwind sees them. */
+const TILE_COLUMNS: Record<number, string> = {
+  1: "grid-cols-1",
+  2: "grid-cols-2",
+  3: "grid-cols-3",
+};
 
 /** The offer gradient shared with FlatPlanCard, CartUpsellTile and GiftValueStack. */
 const OFFER_GRADIENT = "linear-gradient(90deg, #cdeecf, #e9f5c9)";
@@ -55,12 +62,12 @@ export default function OfferBuyBox({ conversionDays }: { conversionDays: number
         )}
       </p>
       {/* Groups the toggles under the visible heading, so a screen reader hears
-          what the three pressed/unpressed buttons are choosing between. pt-2
+          what the pressed/unpressed buttons are choosing between. pt-2
           leaves room for the badge straddling a tile's top edge. */}
       <div
         role="group"
         aria-labelledby="offer-trial-pack-label"
-        className="grid grid-cols-3 gap-2.5 pt-2"
+        className={`grid ${TILE_COLUMNS[options.length] ?? "grid-cols-3"} gap-2.5 pt-2`}
       >
         {options.map((option) => (
           <PackTile
@@ -89,10 +96,11 @@ export default function OfferBuyBox({ conversionDays }: { conversionDays: number
 }
 
 /**
- * One square trial-pack tile: the bottle render on white, cropped to the upper
- * part of the bottles, over a base with name and trial price. The image box is
- * 160% of the tile's height and anchored top; going nearer a true half crop
- * clips the outer bottles on the wider Both render.
+ * One square trial-pack tile: the option's tile image, or the product's bottle
+ * render on white cropped to the upper part of the bottles, over a base with
+ * name and trial price. A tile image fills the square. The render's box is 160%
+ * of the tile's height and anchored top; going nearer a true half crop clips the
+ * outer bottles on the wider Both render.
  */
 function PackTile({
   option,
@@ -103,7 +111,8 @@ function PackTile({
   isSelected: boolean;
   onSelect: () => void;
 }) {
-  const render = bottleRendersCutout[option.product];
+  const src = option.tileImage ?? bottleRendersCutout[option.product].src;
+  const isRender = !option.tileImage;
 
   return (
     <button
@@ -127,13 +136,13 @@ function PackTile({
       )}
 
       <span className="relative block aspect-square w-full overflow-hidden rounded-t-md bg-white">
-        <span className="absolute inset-x-0 top-0 h-[160%]">
+        <span className={`absolute inset-x-0 top-0 ${isRender ? "h-[160%]" : "h-full"}`}>
           <Image
-            src={render.src}
+            src={src}
             alt=""
             fill
-            sizes="(min-width: 1024px) 130px, 30vw"
-            className="object-cover object-top"
+            sizes="(min-width: 1024px) 200px, 45vw"
+            className={`object-cover ${isRender ? "object-top" : "object-center"}`}
           />
         </span>
       </span>

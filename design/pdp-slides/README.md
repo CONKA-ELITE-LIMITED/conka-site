@@ -35,7 +35,10 @@ rendering slides with silently broken images.
 ```bash
 ./render.sh          # all slides
 ./render.sh s1 s4    # just those
+PROOF=1 ./render.sh bt0   # review render: proofs/BothTrialTwoBoxV5.jpg + @390 copy, public/ untouched
 ```
+
+The review loop (canvas plus proofs) is in `docs/workflows/12-generating-assets.md`.
 
 Output goes to `public/formulas/mmPdpAssetsV2/`. The consumer is
 `MM_GALLERY_ASSETS["01"]` in `app/lib/mmPdpData.ts`, plus `starterPackImage`
@@ -73,8 +76,10 @@ on Flow `monthly-sub` in `app/lib/offerData.ts` (slide `s0`).
 | `b8` | `BothGuarantee.jpg` | 100 days, Both boxes |
 | `t0` | `FlowTrialBoxV3.jpg` | `/go/trial-pack` Flow hero: focus without the crash, 57% off |
 | `ct0` | `ClearTrialBoxV3.jpg` | Clear trial hero: beat the afternoon slump, 57% off |
-| `bt0` | `BothTrialBoxV4.jpg` | `/go/trial-pack` default hero: sharp from morning to evening, lowest price ever, 68% off seal, staggered boxes |
-| `tp1` | `TrialPackHowItWorksV3.jpg` | Trial pack explainer: trial today, starter pack day 7, 42% off each month |
+| `bt0` | `BothTrialTwoBoxV5.jpg` | `/go/trial-pack` 2-box hero: sharp from morning to evening, lowest price ever, 68% off seal, two white mixed boxes staggered |
+| `bt1` | `BothTrialOneBoxV1.jpg` | 1-box hero: same copy, 57% off seal, one white mixed box |
+| `tp1` | `TrialPackHowItWorksV4.jpg` | 2-box trial explainer: two boxes today (8 shots, 4 days), starter pack day 7, 42% off each month |
+| `tp2` | `TrialPackHowItWorksOneBoxV1.jpg` | 1-box trial explainer: same as `tp1` with one box (4 shots, 2 days) |
 | `ftp1` | `FlowTrialHowItWorksV2.jpg` | Flow trial explainer: 4-shot box today, Flow starter pack day 7, 43% off each month |
 | `ctp1` | `ClearTrialHowItWorksV2.jpg` | Clear trial explainer: same as `ftp1` for Clear |
 
@@ -84,42 +89,38 @@ image optimiser caches by URL for a year (`minimumCacheTTL` in `next.config`), s
 a changed file under the same name keeps serving the old optimised copy, locally
 and on deployed previews. Locally, `rm -rf .next/dev/cache/images` also clears it.
 
-`tp1` burns in Both monthly figures from `offerData.ts` (£74.99, £236.93 of
-starter-pack value, 42% vs the £129.97 one-off reference). Like `s0`, re-render it
-if any of them change. It carries no trial price.
+`tp1` / `tp2` burn in Both monthly figures from `offerData.ts` (£74.99, £236.93 of
+starter-pack value, 42% vs the £129.97 one-off reference). Like `s0`, re-render them
+if any of them change. They carry no trial price.
 `ftp1` / `ctp1` are the same layout with the single-formula monthly figures
-(£39.99 / 20 shots, 28-shot first box, £152.94 of value, 43% vs £69.98).
+(£39.99 / 20 shots, 28-shot first box, £152.94 of value, 43% vs £69.98). They and
+`t0` / `ct0` belong to the retired Flow-only and Clear-only trials and are no longer
+served.
 
-`bt0` uses `t0` / `ct0`'s structure (stacked headline, sub, tick row, no
-benefit list) with a benefit-led headline and a low-barrier sub, "lowest price ever" (SCRUM-1343).
-No price is burned in: a figure here contradicted the page's own trial price. Side by side, `Both8Box.jpg` (2752x1536) could
-not get larger beside that column: the gap between the boxes is only 196px of
-ground (x 1291-1487), so there was nothing to close. It renders from
-`assets/Both8BoxStagger.jpg` instead, built in two steps:
+**The trial pack is Both only, in white boxes (SCRUM-1467).** Synergy packs every
+4-shot trial box as 2 Flow + 2 Clear, so the page sells 1 box (`bt1`, `tp2`) or
+2 boxes (`bt0`, `tp1`), and every trial image shows that white mixed box, never the
+brown single-formula boxes. The tiles (`TrialTileOneBox.jpg`, `TrialTileTwoBoxes.jpg`)
+and the three box sources in `assets/` are built by `build-white-box.py` from
+`Ai Assets/Box/Both4BoxWhite.webp`; its docstring has the method. The key fact:
+the box face is as light as the studio ground, so the ground is flattened to one
+grey, **rgb(238,236,240)**, not white, and every slide, media box and tile using
+these images sets its ground to that grey. The 2-box images are two copies of the
+one box, because the real 2-box order is 2 x `BOTH-BOX-4`; `Ai Assets/Box/Both8BoxWhite.webp`
+shows a Flow box and a Clear box, which no longer ships.
 
-1. **Flatten the ground.** The studio ground runs 220 at the corners to 253 behind
-   the boxes. Each 64px cell's brightest pixel estimates the ground (cells under
-   228 are box and get filled from neighbours), blurred and divided out, then
-   luminance 238-248 ramps to white. Result: `Both8BoxWhite.jpg`, ground 255.
-2. **Stagger.** The left half (x 0-1389, Flow) drops 900px; the right half
-   (x 1389-end, Clear) sits 819px right of it, the offset at which the two
-   silhouettes (luminance < 200) come within ~24px. The halves are multiplied onto
-   white, uncropped: 2182x2436.
+`bt0` / `bt1` use `t0` / `ct0`'s structure (stacked headline, sub, tick row, no
+benefit list) with a benefit-led headline and a low-barrier sub, "lowest price
+ever" (SCRUM-1343). No price is burned in, only the seal: 68% (£18.99 vs £59.96)
+and 57% (£12.99 vs £29.98). Re-render if either price changes. Both let the box
+image run off the frame and under the copy; its ground matches the slide, so no
+edge shows. `mix-blend-mode: multiply` does not apply in the headless render,
+which is why the 2-box composites are multiplied in Python instead.
 
-Do not crop the composite tight to the boxes. An earlier version did, and it cut
-the floor shadows, leaving a visible line. The slide lets the image run off the
-frame and under the copy instead: its ground is white, so no edge shows.
-
-The slide ground is white (as on `b1`), so the flattened ground has no edge.
-`mix-blend-mode: multiply` onto a tinted ground was tried and did not apply in the
-headless render: the composite showed as a white rectangle.
-
-`t0` is the Flow option's `galleryLead` in `app/lib/landings/trial-pack.ts`, not part of
-`MM_GALLERY_ASSETS`. It carries no price, so a price change does not invalidate
-it, but its seal claims 57% off (£12.99 trial vs a £29.98 one-time 4-shot box; `bt0`
-claims 68%, £18.99 vs £59.96): re-render if either price changes. The Flow gallery
-runs `t0`, `ftp1`, then `s1`, so the hero deliberately repeats none of `s1`'s
-benefits. Photo: `assets/Flow4BoxLight.jpg`, converted from `Ai
+`t0` was the Flow option's `galleryLead` in `app/lib/landings/trial-pack.ts`, not part of
+`MM_GALLERY_ASSETS`. Its seal claims 57% off (£12.99 trial vs a £29.98 one-time
+4-shot box). The Flow gallery ran `t0`, `ftp1`, then `s1`, so the hero
+deliberately repeats none of `s1`'s benefits. Photo: `assets/Flow4BoxLight.jpg`, converted from `Ai
 Assets/Box/Flow4BoxLight.webp`.
 
 Two slides are product-agnostic and are shared by both galleries, hence the

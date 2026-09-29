@@ -2,7 +2,7 @@
  * Offer page config schema (/go/[slug], format "offer", SCRUM-1343).
  *
  * A single-offer page for paid acquisition tests. The first use is the CONKA
- * trial pack: the visitor picks Flow, Clear or Both, pays a low price for a
+ * trial pack: the visitor picks a pack size of Both, pays a low price for a
  * trial pack, and Skio moves them onto that product's monthly plan a set number
  * of days after the order. The page reuses the PDP: the hero is built from
  * ProductHeroV3's parts with a trial-pack selector in place of the plan
@@ -13,12 +13,17 @@ import type { ProductHeroId } from "@/app/lib/productTypes";
 import type { OfferProduct } from "@/app/lib/offerData";
 import type { FaqEntry } from "@/app/lib/faqContent";
 
-export type OfferOptionId = "flow" | "clear" | "both";
+/**
+ * Also the `_offer_choice` line attribute on the order (CART_ATTRIBUTES.md), so
+ * it names what was in the box. Flow-only and Clear-only trials ("flow",
+ * "clear", "both") were retired in SCRUM-1467; old orders still carry them.
+ */
+export type OfferOptionId = "both_4shot" | "both_8shot";
 
 /** One selectable trial pack, as authored in the config. */
 export interface OfferOption {
   id: OfferOptionId;
-  /** Tile and copy label, e.g. "Flow" or "Flow + Clear". */
+  /** Tile and copy label, e.g. "1 box" or "2 boxes". */
   label: string;
   /**
    * What the pack gives, shown under the selector heading for the selected
@@ -53,6 +58,11 @@ export interface OfferOption {
    * explainers can burn in that product's monthly figures.
    */
   explainerSlide?: string;
+  /**
+   * The tile image. Defaults to the product's bottle cut-out, which is the same
+   * for two options of one product, so set it when options share a product.
+   */
+  tileImage?: string;
   /** Pill on the tile's top edge. */
   badge?: string;
 }

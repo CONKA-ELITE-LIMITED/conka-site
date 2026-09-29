@@ -4,6 +4,10 @@ How to build rendered image assets (carousel slides, listicle cards, anything
 that is text-on-image) as HTML and render them to JPG, rather than drawing them
 by hand in Figma.
 
+**The step-by-step process (brief, review loop, render, wire in) is
+[`docs/workflows/12-generating-assets.md`](../workflows/12-generating-assets.md).**
+This doc holds the techniques it points to.
+
 Companion to `VIDEO_OPTIMISATION.md`. Reference implementation:
 `design/pdp-slides/`, which produces the 26 PDP carousel assets.
 
@@ -48,7 +52,8 @@ the day it shipped, and nobody caught it because everyone reviewed it at full
 size on a laptop.
 
 **Always render a proof at true display width and look at that**, not at the
-artboard. In practice this is one extra `sips -Z 390`.
+artboard. In practice this is one extra `sips -Z 390`, which
+`PROOF=1 ./render.sh <slide>` does for you (into `proofs/`, never `public/`).
 
 The corollary is a word budget. At the floor, a 2400px artboard holds roughly
 40 characters per line at full width. If the copy does not fit, the copy is
@@ -167,6 +172,15 @@ or scrimmed:
 for frac in (0.02, 0.25, 0.5, 0.75, 0.98):
     y = int(H * frac); print(a[y, :40].mean(0).astype(int))   # far-left strip
 ```
+
+**A light subject on a light ground: flatten the ground to one grey, not white.**
+The white trial box face measured ~240 against a studio ground running 215 to 244,
+so pushing the ground to white erases the box. Instead estimate the ground on a
+grid of ground-only cells (box masked out, filled by diffusion), divide it out and
+multiply by one constant grey, then set every slide, media box and tile using the
+image to that exact grey. Composites of several copies are multiplied relative to
+that grey (`a*b/G0`) in Python, keeping silhouettes apart so nothing ghosts.
+Worked example: `design/pdp-slides/build-white-box.py`.
 
 **Crop a photo to the frame's aspect rather than letterboxing it.** Fitting a
 square shot into 7:5 leaves side gaps that need colour-matching. Cropping to the
