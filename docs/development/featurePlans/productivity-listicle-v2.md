@@ -41,14 +41,9 @@ Reasons are **categories of reason to buy** (Grüns pattern): a category eyebrow
 | - | Bridge band: "Make it part of your routine. 100 days, risk-free." | Navy band |
 | - | Buy box, Jack Willis, comparison table, UGC, FAQ; "button" sticky bar | Shared |
 
-## Still open
+## Status
 
-- **More bullish logos and social proof:** team wants it, deliberately deferred to a later pass.
-
-- **Hero headline:** the v1 line is a stand-in; the new hero line is not settled.
-- **Founder story:** now only a proof line in reason 5.
-- **"5,000+ people"** in the title reuses the "5,000+ daily users" figure; BRAND_VOICE lists 5,000+ as tests. Confirm before scaling spend.
-- **Inputs to sharpen copy:** Henry's winning ad hooks, AnswerSocrates phrasing.
+Phase 1 is live on `/go/productivity-listicle` and `/go/productivity-v2`. Status and open follow-ups live on SCRUM-1470. This doc stays as the template for the ADHD and brain-ageing rebuild (phase 2).
 
 ## Template for the ADHD and brain-ageing variants
 
@@ -82,7 +77,7 @@ Reasons are **categories of reason to buy** (Grüns pattern): a category eyebrow
 
 | Ticket | Title | Phase |
 |---|---|---|
-| SCRUM-1470 | Productivity listicle v2: core "your brain has a limit" messaging | 1 (active) |
+| SCRUM-1470 | Productivity listicle v2: core "your brain has a limit" messaging | 1 |
 | Future | ADHD and brain-ageing listicles rebuilt on the v2 template | 2 |
 
 ## Round 2: formal team feedback (28 Sep 2026)
@@ -103,7 +98,7 @@ Supersedes the six-reason page above once built. Copy stays on the `conka-messag
 
 **Round 2 follow-ups (28 Sep):** "Why are we so confident?" and "Prove It to Yourself" merged into reason 6 (trial cards, then the guarantee and app buttons in one bar; the app score tile is gone). Jack Willis proof feature removed, since athletes now lead reason 1.
 
-**Bristol Bears lockup (pending):** the club wordmark is at https://www.bristolbearsrugby.com/wp-content/uploads/2023/03/Footer-Logo.svg (removed from `public/logos/` until the lockup is built).
+**Bristol Bears lockup (follow-up on SCRUM-1470):** the club wordmark is at https://www.bristolbearsrugby.com/wp-content/uploads/2023/03/Footer-Logo.svg (removed from `public/logos/` until the lockup is built).
 
 ## Round 3: Henry's Figma notes (29 Sep 2026)
 
