@@ -13,6 +13,17 @@ The code source of truth is `OFFER_PRICING` in `app/lib/offerData.ts`. Git histo
 
 ## Log
 
+### 2026-09-29 (trial pack is Both only; no funnel price changed)
+
+SCRUM-1467 dropped the Flow-only and Clear-only trial packs from `/go/trial-pack`: Synergy packs every 4-shot trial box as 2 Flow + 2 Clear. The page now sells two sizes of Both, both converting to Both monthly (£74.99) on day 7. Charged prices confirmed on live Storefront carts 29 Sep 2026.
+
+| Product | Cadence | Base (one-time, struck on the tile) | Plan % off | Charged | Shots |
+|---------|---------|-------------------------------------|------------|---------|-------|
+| Both, 1 box (BOTH-BOX-4, new) | Trial, then Both monthly | £29.98 | 56.67% | £12.99 | 4 |
+| Both, 2 boxes (BOTH-BOX-8) | Trial, then Both monthly | £59.96 | 68.33% | £18.99 | 8 |
+
+BOTH-BOX-4 joins the existing 56.67% plan (`712985543030`). FLOW-BOX-4 / CLEAR-BOX-4 keep their price and plan for in-flight contracts but are no longer sold. All nine funnel offers, the quarterly one-time offers and the "From" per-shot figures are unchanged.
+
 ### 2026-09-15 (trial pack prices; supersedes the weekly £14.99 trial box; no funnel price changed)
 
 SCRUM-1343 replaced the weekly Flow trial box with the trial pack on `/go/trial-pack`: a Flow, Clear or Both pack at a trial price that Skio converts to the product's monthly plan 7 days after the order. Pre-add prices live in the offer config (`app/lib/landings/trial-pack.ts`), outside `OFFER_PRICING`. The charge is the variant's one-time price less the Skio plan percentage; confirmed on live Storefront carts.

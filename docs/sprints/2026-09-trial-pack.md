@@ -1,21 +1,22 @@
 # 2026-09 Trial Pack Campaign
 
-**Page live:** Tue 15 Sep 2026 · **Page:** `https://www.conka.io/go/trial-pack` · **Traffic:** cold UK Meta, own campaign · **Tickets:** SCRUM-1343 (page, done), SCRUM-1344 (Klaviyo + conka-lab)
+**Page live:** Tue 15 Sep 2026 · **Page:** `https://www.conka.io/go/trial-pack` · **Traffic:** cold UK Meta, own campaign · **Tickets:** SCRUM-1343 (page, done), SCRUM-1344 (Klaviyo + conka-lab), SCRUM-1466 / SCRUM-1467 (Both only)
 **How it is built:** [GO_LANDING_PAGES.md, Offer format](../features/GO_LANDING_PAGES.md#offer-format) · **Prices:** [PRICING_HISTORY.md](../PRICING_HISTORY.md) · **Skio side:** [SUBSCRIPTIONS.md](../features/SUBSCRIPTIONS.md)
 
 Live status lives on the Jira tickets. This doc holds the what, why and how of the campaign, and the read-out once it lands.
 
 ## What this is
 
-A cheap, honestly framed way into a monthly subscription. The visitor picks Flow, Clear or Both, pays a trial price for 4 days of CONKA, and 7 days after the order Skio moves them onto that product's monthly plan, with the starter pack as the first monthly box. Anyone who will not trial into a subscription can buy the regular one-time box from a link under the CTA.
+A cheap, honestly framed way into a monthly subscription. The visitor picks 1 or 2 boxes of Flow + Clear, pays a trial price, and 7 days after the order Skio moves them onto the Both monthly plan, with the starter pack as the first monthly box. Anyone who will not trial into a subscription can buy the regular one-time box from a link under the CTA.
 
 | Option | Trial pack | Trial price (struck one-time) | Monthly from day 7 | Buy-once link |
 |---|---|---|---|---|
-| Flow | `FLOW-BOX-4`, 4 shots | £12.99 (£29.98) | `FLOW-STARTER-20`, £39.99 | 20-shot box, £69.98 |
-| Clear | `CLEAR-BOX-4`, 4 shots | £12.99 (£29.98) | `CLEAR-STARTER-20`, £39.99 | 20-shot box, £69.98 |
-| Both (preselected, "Best value") | `BOTH-BOX-8`, 8 shots | £18.99 (£59.96) | `BOTH-STARTER-40`, £74.99 | 40-shot box, £99.98 |
+| 1 box | `BOTH-BOX-4`, 4 shots (2 Flow, 2 Clear) | £12.99 (£29.98) | `BOTH-STARTER-40`, £74.99 | 40-shot box, £99.98 |
+| 2 boxes (preselected, "Best value") | `BOTH-BOX-8`, 8 shots (2 x `BOTH-BOX-4`) | £18.99 (£59.96) | `BOTH-STARTER-40`, £74.99 | 40-shot box, £99.98 |
 
-Prices are a snapshot from 15 Sep 2026. The config (`app/lib/landings/trial-pack.ts`) and `PRICING_HISTORY.md` are the source of truth.
+Until SCRUM-1467 the page sold Flow-only and Clear-only 4-shot packs next to Both. Synergy packs every 4-shot trial box as 2 Flow + 2 Clear, so those options sold something that did not ship, and in the first two weeks they sold none anyway (Read-out below).
+
+Prices are a snapshot from 29 Sep 2026. The config (`app/lib/landings/trial-pack.ts`) and `PRICING_HISTORY.md` are the source of truth.
 
 ## Why
 
@@ -31,7 +32,7 @@ How it got here, all on 14 Sep 2026: a £14.99 weekly Flow trial box (`/go/flow-
 4. **Day 0 to 7:** the pack ships. A Klaviyo confirmation and a day-5 reminder ("your monthly plan starts in 2 days") cover the conversion (SCRUM-1344).
 5. **Day 7:** Skio charges the first monthly order, the starter pack. From there it is an ordinary monthly subscription.
 
-Every order line from the page carries `_source=trial_pack`, `_offer_choice=flow|clear|both` and `_purchase=trial|one_time`. Those are how Klaviyo, conka-lab and any read-out separate trials from one-time buys.
+Every order line from the page carries `_source=trial_pack`, `_offer_choice=both_4shot|both_8shot` (`flow|clear|both` before SCRUM-1467) and `_purchase=trial|one_time`. Those are how Klaviyo, conka-lab and any read-out separate trials from one-time buys.
 
 ## Key decisions
 
@@ -39,7 +40,7 @@ Every order line from the page carries `_source=trial_pack`, `_offer_choice=flow
 |---|---|
 | Converts to the chosen product's monthly plan, not weekly | Monthly is the plan we want. The trial is the way in, not a product |
 | 7 days, not 4 | Delivery eats most of the first days; nobody should be billed for monthly before they have tried the pack |
-| Both preselected with "Best value", Flow and Clear equal tiles | Both is the highest-value plan. "Most popular" is a claim we cannot back |
+| 2 boxes preselected with "Best value" | The larger pack has the bigger saving. "Most popular" is a claim we cannot back |
 | Both is one bundle variant | Two cart lines would create two contracts at £79.98, not one Both monthly at £74.99 |
 | Terms stated next to the CTA | It is a trial into a subscription; hiding that is the chargeback and trust risk |
 | Standard 100-day guarantee | They land on monthly, where the site-wide guarantee applies |
@@ -49,7 +50,7 @@ Every order line from the page carries `_source=trial_pack`, `_offer_choice=flow
 ## Success metrics
 
 - **Primary:** Meta cost per customer still subscribed after the day-7 charge, against the £105 listicle baseline.
-- **Supporting:** visitor to trial order rate, Flow / Clear / Both split, one-time share, share cancelled before day 7.
+- **Supporting:** visitor to trial order rate, 1 box / 2 boxes split, one-time share, share cancelled before day 7.
 
 | Signal | Source |
 |---|---|
@@ -72,6 +73,7 @@ The Meta Purchase event fires on the checkout order only (trial or one-time), ne
 |---|---|
 | 15 Sep 2026 | Launched on the Skio trial plans: struck one-time prices on the tiles, "How the trial works" FAQ, countdown banner, partner logos |
 | 16 Sep 2026 | Buy box: a line under "Choose your trial pack" restating the selection with its saving; CTA "Checkout - £X" became "Start trial for £X" |
+| 29 Sep 2026 | Both only: two tiles, 1 box (`BOTH-BOX-4`, £12.99) and 2 boxes (`BOTH-BOX-8`, £18.99, preselected), both converting to Both monthly. Flow-only and Clear-only removed because Synergy packs every trial box as 2 Flow + 2 Clear (SCRUM-1467) |
 
 ## Read-out
 

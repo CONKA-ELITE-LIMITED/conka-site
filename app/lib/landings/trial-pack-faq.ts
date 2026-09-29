@@ -27,30 +27,33 @@ export function buildTrialPackFaqs(
     if (!option) throw new Error(`Trial pack FAQ: no "${id}" option`);
     return option;
   };
-  const flow = get("flow");
-  const clear = get("clear");
-  const both = get("both");
+  const oneBox = get("both_4shot");
+  const twoBoxes = get("both_8shot");
+  // Both sizes are Both, so they share the monthly plan, starter pack and
+  // buy-once box.
+  const { monthly, starterPack, oneTime } = twoBoxes;
+  const perBox = oneBox.shots / 2;
 
   return [
     {
       id: "trial-how-it-works",
       question: "How does the trial work?",
-      answer: `Choose Flow, Clear or Both and try CONKA at home. ${conversionDays} days after your order, your trial moves onto that product's monthly plan, and your first monthly box is the starter pack. Cancel any time before then and you won't pay for the monthly plan.`,
+      answer: `Choose 1 box or 2 boxes of Flow + Clear and try CONKA at home. ${conversionDays} days after your order, your trial moves onto the Flow + Clear monthly plan, and your first monthly box is the starter pack. Cancel any time before then and you won't pay for the monthly plan.`,
     },
     {
       id: "trial-pack-contents",
       question: "What's in the trial pack?",
-      answer: `The Flow and Clear packs each have ${flow.shots} shots, one a day. Both has ${both.shots} shots: ${flow.shots} Flow for your mornings and ${clear.shots} Clear for your afternoons.`,
+      answer: `Each box has ${perBox} Flow for your mornings and ${perBox} Clear for your afternoons. 1 box is ${oneBox.shots} shots, 2 boxes is ${twoBoxes.shots} shots.`,
     },
     {
       id: "trial-after",
       question: `What happens after ${conversionDays} days?`,
-      answer: `Your monthly plan starts: ${formatPrice(flow.monthly.price)}/month for Flow, ${formatPrice(clear.monthly.price)}/month for Clear, or ${formatPrice(both.monthly.price)}/month for Both. Your first monthly box is the starter pack, then a new box arrives each month until you cancel.`,
+      answer: `Your Flow + Clear monthly plan starts at ${formatPrice(monthly.price)}/month, whichever pack size you chose. Your first monthly box is the starter pack, then a new box arrives each month until you cancel.`,
     },
     {
       id: "trial-starter-pack",
       question: "What's in the starter pack?",
-      answer: `Your first monthly box is the starter pack. Flow or Clear comes with ${flow.starterPack.shots} shots (${flow.starterPack.freeShots} of them free), and Both with ${both.starterPack.shots} (${both.starterPack.freeShots} free). Every starter pack also includes ${listGifts(flow.starterPack.gifts)}. That's ${formatPrice(flow.starterPack.value)} of value for ${formatPrice(flow.monthly.price)}, or ${formatPrice(both.starterPack.value)} for ${formatPrice(both.monthly.price)} with Both.`,
+      answer: `Your first monthly box is the starter pack: ${starterPack.shots} shots (${starterPack.freeShots} of them free), plus ${listGifts(starterPack.gifts)}. That's ${formatPrice(starterPack.value)} of value for ${formatPrice(monthly.price)}.`,
     },
     {
       id: "trial-cancel",
@@ -60,7 +63,7 @@ export function buildTrialPackFaqs(
     {
       id: "trial-buy-once",
       question: "Can I buy without a subscription?",
-      answer: `Yes. Use the "Or buy a box once" link under Checkout for a one-off ${flow.oneTime.shots}-shot box of Flow or Clear (${formatPrice(flow.oneTime.price)}), or a ${both.oneTime.shots}-shot box of Both (${formatPrice(both.oneTime.price)}). No subscription, nothing to cancel.`,
+      answer: `Yes. Use the "Or buy a box once" link under Checkout for a one-off ${oneTime.shots}-shot box of Flow + Clear (${formatPrice(oneTime.price)}). No subscription, nothing to cancel.`,
     },
   ];
 }

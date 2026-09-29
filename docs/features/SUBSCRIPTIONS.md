@@ -47,7 +47,7 @@ incident on the platform:
 | 60 Shots - Quarterly | Flow, Clear | 3 months | 42.11% | £109.99 | `712928919926` |
 | 40 Shots - Monthly | Both | 1 month | 25.00% | £74.99 | `712928952694` |
 | 120 Shots - Quarterly | Both | 3 months | 46.43% | £149.99 | `712928985462` |
-| Weekly Subscription (trial) | Flow, Clear 4-shot trial packs | 1 week | 56.67% | £12.99 | `712985543030` |
+| Weekly Subscription (trial) | 4-shot trial packs: Both (live), Flow and Clear (retired, in-flight contracts) | 1 week | 56.67% | £12.99 | `712985543030` |
 | Weekly Subscription (8-shot trial) | Both 8-shot trial pack | 1 week | 68.33% | £18.99 | `712986788214` |
 
 Variant SKUs and GIDs live in `docs/product/SKU_AND_SHOT_REFERENCE.md`, not here.
@@ -79,6 +79,12 @@ configuration owned by Rudh:
    Both `712928952694`).
 2. **On the second subscription order**, swap to the plain `FLOW-20` / `CLEAR-20` / `BOTH-40`
    variants, which have the monthly plans bound.
+
+There is one Journey per trial product, each conditioned on its own product (not the plan), because
+the 4-shot plan is shared by `FLOW-BOX-4`, `CLEAR-BOX-4` and `BOTH-BOX-4`: "Both 4 trial pack"
+(`BOTH-BOX-4`, added in SCRUM-1466 as a copy of the 8-shot one), "Both 8 trial pack" (`BOTH-BOX-8`),
+and the Flow and Clear ones, which stay for in-flight contracts. Both sizes convert to
+`BOTH-STARTER-40`.
 
 **The plan switch is the gotcha.** A Journey that changes only the interval keeps the trial plan,
 so the starter renews at the trial percentage (Flow £30.32 instead of £39.99). Change the selling

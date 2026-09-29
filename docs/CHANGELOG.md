@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-29** | /go/trial-pack sells Flow + Clear only, as 1 box (4 shots, £12.99) or 2 boxes (8 shots, £18.99, preselected), both moving onto Both monthly on day 7; the Flow-only and Clear-only packs are gone because Synergy packs every trial box as 2 Flow + 2 Clear (SCRUM-1467)
 - **2026-09-28** | /go/productivity-listicle (the live Meta campaign slug) now serves the v2 productivity page, so the campaign gets the new page without repointing ads (SCRUM-1470)
 - **2026-09-28** | /go/productivity-v2 team feedback: six reasons on the conka-messaging system (Flow first, Clear before it counts; no named conditions), new hero, athlete and professional score cards, Morehen quote, a Harlequins / Bristol / Revolut trial carousel before the guarantee, comparison table removed (SCRUM-1470)
 - **2026-09-28** | All /go listicles: no site nav, one 4:5 frame and tile style for every reason visual (navy/grey/green, red crash line), thin full-width bridge band, hero proof row centred under the CTA on mobile (SCRUM-1470)

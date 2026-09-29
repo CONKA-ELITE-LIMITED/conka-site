@@ -302,7 +302,7 @@ export function OfferStickyBar() {
       </div>
       <div className="brand-track mt-2 flex items-center justify-between gap-3">
         <span className="min-w-0 text-[15px] font-bold leading-tight">
-          {selected.label} trial pack
+          {selected.shots}-shot trial pack
         </span>
         <OfferCtaButton section="sticky" compact tabIndex={pastTile ? undefined : -1}>
           Start trial for {formatPrice(selected.price)}

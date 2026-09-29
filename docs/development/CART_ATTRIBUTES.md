@@ -54,10 +54,10 @@ a click. Add a `home_<section>` token for any new home CTA.
 | Key | Values | Meaning |
 |-----|--------|---------|
 | `_source` | `trial_pack` | The line came from the trial pack page |
-| `_offer_choice` | `flow` \| `clear` \| `both` | The selected option |
+| `_offer_choice` | `both_4shot` \| `both_8shot` | The selected pack size (1 box / 2 boxes). Orders before 29 Sep 2026 (SCRUM-1467) carry `flow` \| `clear` \| `both` |
 | `_purchase` | `trial` \| `one_time` | `trial` = the trial pack that converts to monthly; `one_time` = the buy-once link |
 
-The cart also carries `_fbp`, `_fbc` and `conka_uid` as cart attributes. Filter orders on `_purchase` for the trial vs one-time split and on `_offer_choice` for the product split. Only `_purchase=trial` orders become subscribers. How the page works: `docs/features/GO_LANDING_PAGES.md`.
+The cart also carries `_fbp`, `_fbc` and `conka_uid` as cart attributes. Filter orders on `_purchase` for the trial vs one-time split and on `_offer_choice` for the pack-size split. Only `_purchase=trial` orders become subscribers. How the page works: `docs/features/GO_LANDING_PAGES.md`.
 
 **Those three keys are LINE attributes, and conka-lab does not read line attributes at all** — its Shopify ingest selects `customAttributes` only at the order level (SCRUM-1382 is the ticket to add them). So the offer checkout also sets `_listicle_origin` as a **cart** attribute, value `<slug>-<section>` (e.g. `trial-pack-hero`), which is the order-level key the pipeline already parses. That is what puts trial pack orders on the dashboard's Landing Pages view today (SCRUM-1381).
 

@@ -10,7 +10,8 @@
  * Line attributes (CART_ATTRIBUTES.md) separate the orders once they reach
  * Shopify and conka-lab:
  * - `_source`       always "trial_pack"
- * - `_offer_choice` the selected option: "flow", "clear" or "both"
+ * - `_offer_choice` the selected option: "both_4shot" or "both_8shot" (orders
+ *                    before SCRUM-1467 carry "flow", "clear" or "both")
  * - `_purchase`     "trial" (trial pack, converts to monthly) or "one_time" (buy-once link)
  *
  * Those three are LINE attributes, and conka-lab's Shopify ingest does not read
