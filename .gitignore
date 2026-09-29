@@ -63,3 +63,5 @@ app/lib/reviews.ly_*.csv
 # PDP slide source photography lives outside the repo (5.3MB that never serves).
 # design/pdp-slides/assets is a symlink; see design/pdp-slides/README.md.
 design/pdp-slides/assets
+# Review renders from PROOF=1 ./render.sh; never served.
+design/pdp-slides/proofs/

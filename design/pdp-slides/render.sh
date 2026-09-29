@@ -2,6 +2,9 @@
 # Renders the PDP carousel slides to public/formulas/mmPdpAssetsV2/.
 #   ./render.sh            renders every slide
 #   ./render.sh s1 s4      renders just those
+#   PROOF=1 ./render.sh bt0   renders to proofs/ instead of public/, plus a
+#                            390px copy (<name>@390.jpg) at true phone width.
+#                            For review rounds: nothing live is overwritten.
 #
 # Slides are authored at 2400x1715 (7:5, the aspect ProductImageSlideshow uses)
 # and downsampled to 2000px wide. The carousel tops out around 1400px even at
@@ -10,6 +13,8 @@
 set -eu
 HERE="$(cd "$(dirname "$0")" && pwd)"
 OUT="$HERE/../../public/formulas/mmPdpAssetsV2"
+PROOF="${PROOF:-0}"
+[ "$PROOF" = "1" ] && OUT="$HERE/proofs"
 CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 WIDTH=2000
 QUALITY=82
@@ -64,5 +69,8 @@ for s in $SLIDES; do
   sips -Z $WIDTH "$tmp" >/dev/null
   sips -s format jpeg -s formatOptions $QUALITY "$tmp" --out "$OUT/$out.jpg" >/dev/null
   rm -f "$tmp"
+  if [ "$PROOF" = "1" ]; then
+    sips -Z 390 "$OUT/$out.jpg" --out "$OUT/$out@390.jpg" >/dev/null
+  fi
   printf "%-4s -> %-22s %s\n" "$s" "$out.jpg" "$(ls -lh "$OUT/$out.jpg" | awk '{print $5}')"
 done

@@ -35,7 +35,10 @@ rendering slides with silently broken images.
 ```bash
 ./render.sh          # all slides
 ./render.sh s1 s4    # just those
+PROOF=1 ./render.sh bt0   # review render: proofs/BothTrialTwoBoxV5.jpg + @390 copy, public/ untouched
 ```
+
+The review loop (canvas plus proofs) is in `docs/workflows/12-generating-assets.md`.
 
 Output goes to `public/formulas/mmPdpAssetsV2/`. The consumer is
 `MM_GALLERY_ASSETS["01"]` in `app/lib/mmPdpData.ts`, plus `starterPackImage`

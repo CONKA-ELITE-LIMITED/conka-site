@@ -60,6 +60,7 @@ When creating or updating Jira tickets, follow: docs/workflows/08-jira-workflow.
 | 09 | [UX Iteration](./09-ux-iteration.md) | Refining existing pages for conversion, layout, or information hierarchy |
 | 10 | [Figma Decks](./10-figma-decks.md) | Building or editing CONKA slide decks in Figma (visual system, file keys, asset porting) |
 | 11 | [Creating Products](./11-creating-products.md) | Adding a product or variant to Shopify (SKUs, weight, HS codes, bundles, what Synergy needs) |
+| 12 | [Generating Assets](./12-generating-assets.md) | Making or re-rendering slides, explainers, cards and tiles: brief, photo prep, HTML, review loop, render, wire in |
 
 ### Typical workflow chains
 
@@ -70,6 +71,7 @@ When creating or updating Jira tickets, follow: docs/workflows/08-jira-workflow.
 **New page (non-commerce):** 03 → 02 → 06 → 07
 **UX iteration / conversion work:** 09 → 06 → 07
 **Documentation task:** 05
+**Image assets:** 12 (process) → `docs/development/IMAGE_ASSET_PIPELINE.md` (techniques)
 **Code review only:** 06
 
 ---
