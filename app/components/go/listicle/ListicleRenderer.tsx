@@ -222,6 +222,47 @@ function StarRow({ fontSize }: { fontSize: string }) {
   );
 }
 
+/**
+ * Trustpilot's own rating mark: five green squares with white stars, the last
+ * one half filled. Trustpilot draws ratings to the nearest half star, so 4.7
+ * shows as 4.5, exactly as it does on their widget. Used instead of StarRow
+ * when the row credits Trustpilot, so the stars match the wordmark beside them.
+ */
+function TrustpilotStars({ size }: { size: number }) {
+  return (
+    <span
+      className="inline-flex shrink-0 gap-[2px]"
+      aria-label="Rated 4.7 out of 5 on Trustpilot"
+      role="img"
+    >
+      {Array.from({ length: 5 }, (_, i) => (
+        <span
+          key={i}
+          aria-hidden
+          className="inline-flex items-center justify-center"
+          style={{
+            width: size,
+            height: size,
+            background:
+              i < 4
+                ? "#00b67a"
+                : "linear-gradient(90deg, #00b67a 50%, #dcdce6 50%)",
+          }}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width={size * 0.72}
+            height={size * 0.72}
+            fill="#fff"
+          >
+            <path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z" />
+          </svg>
+        </span>
+      ))}
+    </span>
+  );
+}
+
 /** The Trustpilot wordmark (public/logos/Trustpilot.svg, 1132.8 x 278.2). */
 function TrustpilotMark({ className }: { className: string }) {
   return (
@@ -269,7 +310,11 @@ function TrustMicroRow({
       </div>
       <div className="flex flex-col leading-tight">
         <div className="flex items-center gap-1.5">
-          <StarRow fontSize="15px" />
+          {trustpilot ? (
+            <TrustpilotStars size={17} />
+          ) : (
+            <StarRow fontSize="15px" />
+          )}
           <span className="text-[13px] font-bold tabular-nums">{label}</span>
         </div>
         {trustpilot ? (
@@ -884,10 +929,9 @@ function BodyBlock({
                 {resolveOfferTokens(block.body, heroId)}
               </p>
             )}
-            {/* Desktop: the reference sits under the copy it supports. */}
-            {citation ? (
-              <div className="-mt-3 mb-5 hidden md:block">{citation}</div>
-            ) : null}
+            {/* The reference sits under the copy it supports, on every
+                breakpoint (it used to close the section on mobile). */}
+            {citation ? <div className="-mt-3 mb-5">{citation}</div> : null}
             {block.ingredients?.length ? (
               <ReasonIngredients ids={block.ingredients} />
             ) : null}
@@ -924,9 +968,6 @@ function BodyBlock({
               caption={payoffInTile ? payoff : undefined}
               heroId={heroId}
             />
-            {/* Mobile: the reference closes the whole section instead of
-                interrupting the copy. */}
-            {citation ? <div className="mt-3 md:hidden">{citation}</div> : null}
           </div>
         </article>
         {block.pullQuote ? (
@@ -1118,16 +1159,6 @@ function BodyBlock({
           </div>
         ) : null}
         <TrialCarousel slides={block.slides} />
-        {block.details ? (
-          <Link
-            href={block.details.href}
-            onClick={() => fireInteraction("trial_details")}
-            className="mt-4 inline-flex min-h-[44px] items-center gap-1.5 text-[14px] font-semibold text-black underline underline-offset-4"
-          >
-            {block.details.label}
-            <span aria-hidden>→</span>
-          </Link>
-        ) : null}
         {block.payoff || block.appStores ? (
           <div className="mt-6 flex flex-col gap-4 rounded-lg bg-[#eef1f8] px-5 py-5 text-black md:flex-row md:items-center md:justify-between md:gap-8 md:px-6">
             {block.payoff ? (
@@ -1540,7 +1571,11 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
                 // One line at 375px: the bare rating ("Excellent 4.7" -> "4.7")
                 // plus the Trustpilot mark or the sub-line, never wrapping.
                 <p className="flex items-center justify-center gap-x-1.5 whitespace-nowrap text-[11.5px] leading-tight text-black/70">
-                  <StarRow fontSize="12px" />
+                  {config.hero.socialProof.trustpilot ? (
+                    <TrustpilotStars size={13} />
+                  ) : (
+                    <StarRow fontSize="12px" />
+                  )}
                   <span className="font-bold text-black">
                     {config.hero.socialProof.label.replace(/^[^\d]*/, "")}
                   </span>

@@ -116,4 +116,4 @@ Source: Figma `zz2DcQuRiX19WFtRUNc0Ml` (annotated mobile screenshots). Built on 
 - **03:** "Feeling Slow? Your Brain Is Just Overloaded.", payoff "CONKA Clear supports the moments that count."
 - **04:** routine image V4: "5 minutes before the big moment", "0 Caffeine. 0 Sugar. 0 Calories."
 - **05:** "toll on your brain", plus "CONKA works 18.1% better than caffeine*" (Alpha-GPC vs caffeine, DOI 10.1186/1550-2783-12-S1-P41).
-- **06:** "Tested by the Best. Built for You." Athlete cards moved here (Bamford, Jack Willis, Finn Russell alternating with Revolut and Bank of America). Trial cards simplified to one format (who, figure, zoomed two-bar chart), detail links to `/app-insights` until trial write-ups exist there.
+- **06:** "Tested by the Best. Built for You." Athlete cards moved here (Bamford, Jack Willis, Finn Russell alternating with Revolut and Bank of America). Trial cards simplified to one format (who, figure, zoomed two-bar chart), no link out (trial write-ups on `/app-insights` are a later job).

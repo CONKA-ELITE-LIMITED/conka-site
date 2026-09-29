@@ -274,8 +274,6 @@ export type ListicleBodyBlock =
       pressMarquee?: boolean;
       /** Individual score cards (AthleteScoreCarousel) above the trial cards */
       athletes?: Extract<ListicleAsset, { kind: "athleteScores" }>["athletes"];
-      /** Link under the trial cards to the full results, e.g. /app-insights */
-      details?: { label: string; href: string };
     }
   | {
       kind: "reviewStrip";
@@ -430,7 +428,8 @@ export interface Im8ListicleConfig extends ListicleBase {
       label: string;
       /** Line under the stars. Omit when `trustpilot` carries the proof. */
       sub?: string;
-      /** Trustpilot wordmark in place of the sub-line numbers */
+      /** Trustpilot star boxes and wordmark in place of the gold stars and
+       *  the sub-line numbers */
       trustpilot?: boolean;
     };
     /**

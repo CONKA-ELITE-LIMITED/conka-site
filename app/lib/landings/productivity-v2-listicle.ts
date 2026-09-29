@@ -186,8 +186,8 @@ export const productivityV2Listicle: ListicleConfig = {
     },
     // Reason 6: the individual score cards, then the trials, then the reader's
     // own test and the guarantee. Cards are the simple format (Henry, round 3):
-    // who, figure, zoomed chart, no CONKA-vs-CONKA bars; trial detail lives on
-    // /app-insights. Figures from caseStudiesData and the trial reports.
+    // who, figure, zoomed chart, no CONKA-vs-CONKA bars. Figures from
+    // caseStudiesData and the trial reports.
     {
       kind: "trialCarousel",
       n: 6,
@@ -209,7 +209,6 @@ export const productivityV2Listicle: ListicleConfig = {
         { name: "Nimisha Kurup", role: "Managing Director, Bank of America", image: "/caseStudies/NimishaKurup.jpg", from: 65.67, to: 81.87, change: "+24.7%" },
         { name: "Finn Russell", role: "Bath Rugby, Scotland", image: "/caseStudies/FinnRussell.jpg", from: 54.67, to: 70.5, change: "+29.0%" },
       ],
-      details: { label: "See the full trial results", href: "/app-insights" },
       slides: [
         {
           logo: "/logos/Harlequins.webp",
