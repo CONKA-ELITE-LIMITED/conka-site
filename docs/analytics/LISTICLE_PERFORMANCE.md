@@ -34,6 +34,8 @@ Three events, all keyed `{ slug, section }` (the two-property budget — see `ap
 
 **Timeline note, 28 Sept 2026 (SCRUM-1470).** `/go/productivity-listicle` now serves the v2 page (same content as `/go/productivity-v2`) so the live Meta campaign gets it without repointing ads. Section ids changed with the new structure (six reasons, `trialCarousel_*`, `reviewStrip` after reason 1), so read Productivity section retention against this date, not across it.
 
+**Timeline note, 29 Sept 2026 (SCRUM-1470).** `/go/productivity-listicle` takes productivity-v2 round 3 (Henry's Figma notes: "viral brain shot" hero, Trustpilot stars, one visual per reason, new Motivation and Memory copy, simplified trial charts). Section ids are unchanged (same seven body blocks in the same order), so retention reads across this date, but conversion before and after is a copy test.
+
 **Timeline note, 8 Sept 2026 (SCRUM-1320 / 1321), not yet deployed.** All three heroes were rebuilt as a soft educational preframe: outcome headline in place of the "N reasons" title, the green "+1 week free" pill dropped so the CTA is the only offer surface, the rating moved below the CTA, copy above the asset on mobile, and new person-with-product photography on ADHD and Productivity. The navy proof ticker was removed. Read `hero` CTA rate and first-section retention against this date, not across it. Annotate the chart here when it goes live.
 
 **Why CTA-click is the conversion signal (baseline):** every listicle CTA links to a PDP, so a click is the furthest-down-funnel action we could attribute to a persona. This holds for the 24–27 Jul baseline snapshot below.

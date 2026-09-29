@@ -553,6 +553,7 @@ function AssetBlock({
           logo={asset.logo}
           logoAlt={asset.logoAlt}
           crest={asset.crest}
+          label={asset.label}
         />
       </div>
     );

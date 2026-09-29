@@ -310,7 +310,8 @@ Citations sit at the end of the copy, under the paragraph, on every breakpoint.
 
 `athleteQuote` takes an optional `logo` / `logoAlt` (a white chip, top left,
 e.g. Skyscanner on Shane Corstorphine); `crest: true` gives a tall crest
-(England Rugby) a taller chip. `focusBars` takes `zoom: true` to start its axis
+(England Rugby) a taller chip, and `label` pins a white title bar to the foot
+of the card ("Meet Our Nutrition Advisor"). `focusBars` takes `zoom: true` to start its axis
 at 90 so the gap reads first. The `trialCarousel` body block is a
 full-width proof section: heading (numbered like a reason when `n` + `tag` are
 set) and intro, then one card per trial (`TrialCarousel.tsx`: club logo, study

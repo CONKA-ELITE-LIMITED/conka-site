@@ -133,6 +133,7 @@ export const productivityV2Listicle: ListicleConfig = {
         logo: "/lander/partners/england-rugby.webp",
         logoAlt: "England Rugby",
         crest: true,
+        label: "Meet Our Nutrition Advisor",
         quote:
           "My clients make more mistakes in the second half. That's a nutritional gap that can only be solved with the correct fuel their brains are missing.",
       },

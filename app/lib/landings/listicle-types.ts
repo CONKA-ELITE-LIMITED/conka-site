@@ -137,6 +137,8 @@ export type ListicleAsset =
       logoAlt?: string;
       /** Tall crest logo (e.g. England Rugby): a larger chip so it stays legible */
       crest?: boolean;
+      /** White title bar at the foot of the card, e.g. "Meet Our Nutrition Advisor" */
+      label?: string;
     }
   /** Tile grid of named actives + one-line effects (our deficiency-panel answer) */
   | {
