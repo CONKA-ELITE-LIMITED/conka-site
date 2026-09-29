@@ -12,7 +12,7 @@ that README to recreate it).
 
 | Source | Output | Used by |
 |---|---|---|
-| `routine.html` | `public/listicle/RoutineTwoShotsV3.jpg` | productivity-v2 reason 4 (conka-messaging system lines) |
+| `routine.html` | `public/listicle/RoutineTwoShotsV4.jpg` | productivity-v2 reason 4 (conka-messaging system lines) |
 
 Render:
 
@@ -22,7 +22,7 @@ tmp="$(mktemp -t routine).png"
   --force-device-scale-factor=1 --hide-scrollbars --virtual-time-budget=8000 \
   --run-all-compositor-stages-before-draw --screenshot="$tmp" --window-size=1600,2000 \
   "file://$PWD/design/listicle-assets/routine.html"
-sips -s format jpeg -s formatOptions 82 "$tmp" --out public/listicle/RoutineTwoShotsV3.jpg
+sips -s format jpeg -s formatOptions 82 "$tmp" --out public/listicle/RoutineTwoShotsV4.jpg
 ```
 
 Changing a served image? Bump the `V1` suffix: Next's image optimiser caches by

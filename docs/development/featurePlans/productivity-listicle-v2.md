@@ -104,3 +104,16 @@ Supersedes the six-reason page above once built. Copy stays on the `conka-messag
 **Round 2 follow-ups (28 Sep):** "Why are we so confident?" and "Prove It to Yourself" merged into reason 6 (trial cards, then the guarantee and app buttons in one bar; the app score tile is gone). Jack Willis proof feature removed, since athletes now lead reason 1.
 
 **Bristol Bears lockup (pending):** the club wordmark is at https://www.bristolbearsrugby.com/wp-content/uploads/2023/03/Footer-Logo.svg (removed from `public/logos/` until the lockup is built).
+
+## Round 3: Henry's Figma notes (29 Sep 2026)
+
+Source: Figma `zz2DcQuRiX19WFtRUNc0Ml` (annotated mobile screenshots). Built on `productivity-v2` only; the live `productivity-listicle` copy is untouched.
+
+- **Fixed reason shape:** tag, headline, short body, one visual, bold payoff. Social proof sits between reasons as bands, never inside one. Ingredient tiles and the Morehen pull quote are gone from the reasons.
+- **Hero:** "The Viral Brain Shot That Keeps You Sharp All Day." (static ads convert when naming the product like social proof), shorter subcopy, Trustpilot wordmark in place of the counts, "Thousands" instead of "5,000+", logo band "Improving brain performance at:" alternating corporate (Nike, Revolut, Skyscanner, Goldman Sachs, BA, Equinox) and big-name sport.
+- **01:** focus chart zoomed (axis from 90), no caption repeating the stat.
+- **02:** "Motivation Comes From a Fuelled Mind" (ad data: "not lazy" gets no traffic). Visual is the Morehen quote card: "Performance Nutritionist", England Rugby crest, Henry's quote wording.
+- **03:** "Feeling Slow? Your Brain Is Just Overloaded.", payoff "CONKA Clear supports the moments that count."
+- **04:** routine image V4: "5 minutes before the big moment", "0 Caffeine. 0 Sugar. 0 Calories."
+- **05:** "toll on your brain", plus "CONKA works 18.1% better than caffeine*" (Alpha-GPC vs caffeine, DOI 10.1186/1550-2783-12-S1-P41).
+- **06:** "Tested by the Best. Built for You." Athlete cards moved here (Bamford, Jack Willis, Finn Russell alternating with Revolut and Bank of America). Trial cards simplified to one format (who, figure, zoomed two-bar chart), detail links to `/app-insights` until trial write-ups exist there.

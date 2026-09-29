@@ -15,6 +15,9 @@ import type { TrialSlide } from "@/app/lib/landings/listicle-types";
  * Columns draw from `axis.min`, and the axis is always labelled, so a chart
  * that starts above zero (Bristol's 70 to 90 score range) says so on its face.
  * A value at or below the floor keeps a 2px stub so its label still has a bar.
+ *
+ * `design` and `caption` are optional: without them a card is the simple
+ * format (logo + who, figure, chart) and the trial detail lives elsewhere.
  * ========================================================================== */
 
 const NAVY = "#1B2757";
@@ -40,10 +43,20 @@ function TrialCard({ slide }: { slide: TrialSlide }) {
           className="h-9 w-[72px] shrink-0 object-contain object-left"
         />
         <div className="min-w-0">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.08em]">
-            {slide.design}
+          {slide.design ? (
+            <p className="text-[12px] font-semibold uppercase tracking-[0.08em]">
+              {slide.design}
+            </p>
+          ) : null}
+          <p
+            className={
+              slide.design
+                ? "mt-0.5 text-[13px] text-black/60"
+                : "text-[13px] font-semibold"
+            }
+          >
+            {slide.meta}
           </p>
-          <p className="mt-0.5 text-[13px] text-black/60">{slide.meta}</p>
         </div>
       </div>
 
@@ -115,12 +128,18 @@ function TrialCard({ slide }: { slide: TrialSlide }) {
         </div>
       </div>
 
-      <div className="rounded-b-lg bg-[#eef1f8] px-4 py-3">
-        <p className="text-[13px] font-semibold leading-snug">{slide.caption}</p>
-        {slide.source ? (
-          <p className="mt-1 text-[11px] text-black/50">{slide.source}</p>
-        ) : null}
-      </div>
+      {slide.caption || slide.source ? (
+        <div className="rounded-b-lg bg-[#eef1f8] px-4 py-3">
+          {slide.caption ? (
+            <p className="text-[13px] font-semibold leading-snug">
+              {slide.caption}
+            </p>
+          ) : null}
+          {slide.source ? (
+            <p className="mt-1 text-[11px] text-black/50">{slide.source}</p>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }

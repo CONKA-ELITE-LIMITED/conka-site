@@ -17,6 +17,8 @@ interface AthleteQuoteCardProps {
   /** Organisation logo (public path) in a white chip, top left */
   logo?: string;
   logoAlt?: string;
+  /** Tall crest (e.g. England Rugby): a taller chip so it stays legible */
+  crest?: boolean;
 }
 
 export default function AthleteQuoteCard({
@@ -26,6 +28,7 @@ export default function AthleteQuoteCard({
   quote,
   logo,
   logoAlt,
+  crest = false,
 }: AthleteQuoteCardProps) {
   return (
     <div
@@ -45,10 +48,10 @@ export default function AthleteQuoteCard({
           <Image
             src={logo}
             alt={logoAlt ?? ""}
-            width={180}
-            height={31}
+            width={crest ? 69 : 180}
+            height={crest ? 116 : 31}
             unoptimized={logo.endsWith(".svg")}
-            className="h-[18px] w-auto md:h-5"
+            className={crest ? "h-12 w-auto" : "h-[18px] w-auto md:h-5"}
           />
         </div>
       ) : null}

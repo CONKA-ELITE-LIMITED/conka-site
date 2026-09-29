@@ -222,10 +222,32 @@ function StarRow({ fontSize }: { fontSize: string }) {
   );
 }
 
+/** The Trustpilot wordmark (public/logos/Trustpilot.svg, 1132.8 x 278.2). */
+function TrustpilotMark({ className }: { className: string }) {
+  return (
+    <Image
+      src="/logos/Trustpilot.svg"
+      alt="Trustpilot"
+      width={73}
+      height={18}
+      unoptimized
+      className={className}
+    />
+  );
+}
+
 /** The home hero's avatar + star micro-row, compacted to the IM8 scale.
  *  Centred under the full-width mobile CTA, left-aligned beside it on desktop.
  *  Content only: the caller owns the surrounding spacing. */
-function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
+function TrustMicroRow({
+  label,
+  sub,
+  trustpilot = false,
+}: {
+  label: string;
+  sub?: string;
+  trustpilot?: boolean;
+}) {
   return (
     <div className="flex items-center justify-center gap-2.5 md:justify-start">
       <div className="flex items-center">
@@ -250,7 +272,11 @@ function TrustMicroRow({ label, sub }: { label: string; sub: string }) {
           <StarRow fontSize="15px" />
           <span className="text-[13px] font-bold tabular-nums">{label}</span>
         </div>
-        <span className="mt-0.5 text-[11px] text-black/60">{sub}</span>
+        {trustpilot ? (
+          <TrustpilotMark className="mt-1 h-[18px] w-auto" />
+        ) : sub ? (
+          <span className="mt-0.5 text-[11px] text-black/60">{sub}</span>
+        ) : null}
       </div>
     </div>
   );
@@ -475,7 +501,7 @@ function AssetBlock({
   if (asset.kind === "focusBars") {
     return (
       <div className={CHART_FRAME}>
-        <FocusBars showSource={!caption} />
+        <FocusBars showSource={!caption} zoom={asset.zoom} />
         <ChartCaption text={caption} />
       </div>
     );
@@ -496,6 +522,7 @@ function AssetBlock({
           quote={asset.quote}
           logo={asset.logo}
           logoAlt={asset.logoAlt}
+          crest={asset.crest}
         />
       </div>
     );
@@ -1083,7 +1110,21 @@ function BodyBlock({
             {block.intro}
           </p>
         ) : null}
+        {block.athletes?.length ? (
+          <div className="mb-5">
+            <AthleteScoreCarousel athletes={block.athletes} />
+          </div>
+        ) : null}
         <TrialCarousel slides={block.slides} />
+        {block.details ? (
+          <Link
+            href={block.details.href}
+            className="mt-4 inline-flex min-h-[44px] items-center gap-1.5 text-[14px] font-semibold text-black underline underline-offset-4"
+          >
+            {block.details.label}
+            <span aria-hidden>→</span>
+          </Link>
+        ) : null}
         {block.payoff || block.appStores ? (
           <div className="mt-6 flex flex-col gap-4 rounded-lg bg-[#eef1f8] px-5 py-5 text-black md:flex-row md:items-center md:justify-between md:gap-8 md:px-6">
             {block.payoff ? (
@@ -1309,6 +1350,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               <TrustMicroRow
                 label={config.hero.socialProof.label}
                 sub={config.hero.socialProof.sub}
+                trustpilot={config.hero.socialProof.trustpilot}
               />
             ) : null}
           </div>
@@ -1499,8 +1541,14 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
                   <span className="font-bold text-black">
                     {config.hero.socialProof.label.replace(/^[^\d]*/, "")}
                   </span>
-                  <span aria-hidden>·</span>
-                  <span>{config.hero.socialProof.sub}</span>
+                  {config.hero.socialProof.trustpilot ? (
+                    <TrustpilotMark className="h-[13px] w-auto" />
+                  ) : config.hero.socialProof.sub ? (
+                    <>
+                      <span aria-hidden>·</span>
+                      <span>{config.hero.socialProof.sub}</span>
+                    </>
+                  ) : null}
                 </p>
               ) : null}
             </div>

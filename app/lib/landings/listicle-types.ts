@@ -21,6 +21,7 @@
 import type { ProductHeroId } from "../productTypes";
 import type { UGCItem } from "@/app/components/testimonials/UGCMarquee";
 import type { AthleteReviewContent } from "@/app/components/AthleteReviewFeature";
+import type { MarqueeLogo } from "@/app/components/landing/LogoMarquee";
 
 /**
  * A single named-person proof feature: white-background cutout portrait beside
@@ -51,6 +52,11 @@ export type ListicleProofFeature = AthleteReviewContent;
 export interface ListicleProof {
   /** Partner-logo marquee ("Fueling High Performers at:"), above the buy box */
   logoBand?: boolean;
+  /** Override the band's heading (default "Fueling High Performers at:") */
+  logoBandHeading?: string;
+  /** Override the partner logos for this page, e.g. a sport and corporate
+   *  alternation. Omit for the shared PARTNER_LOGOS list. */
+  logoBandLogos?: MarqueeLogo[];
   /** Press and journal marquee ("As Published On:"), under the partner band */
   pressBand?: boolean;
   /** UGC band. Pass `items` for a persona subset; omit for the shared set. */
@@ -114,8 +120,9 @@ export type ListicleAsset =
         change: string;
       }[];
     }
-  /** Two-bar focus comparison: off CONKA vs on CONKA (+19.3%) */
-  | { kind: "focusBars" }
+  /** Two-bar focus comparison: off CONKA vs on CONKA (+19.3%). `zoom` starts
+   *  the axis at 90 so the gap reads at a glance (labelled, so still honest). */
+  | { kind: "focusBars"; zoom?: boolean }
   /** Condensed CONKA vs coffee table with cost per day (CoffeeCompareTile) */
   | { kind: "coffeeCompare" }
   /** Athlete portrait with their quote overlaid + status (proof for a reason) */
@@ -128,6 +135,8 @@ export type ListicleAsset =
       /** Organisation logo chip, e.g. the athlete's club or employer */
       logo?: string;
       logoAlt?: string;
+      /** Tall crest logo (e.g. England Rugby): a larger chip so it stays legible */
+      crest?: boolean;
     }
   /** Tile grid of named actives + one-line effects (our deficiency-panel answer) */
   | {
@@ -160,8 +169,9 @@ export interface TrialSlide {
   /** Club or organisation logo (public path) */
   logo: string;
   logoAlt: string;
-  /** Study design, e.g. "Randomised, double-blind, placebo-controlled" */
-  design: string;
+  /** Study design, e.g. "Randomised, double-blind, placebo-controlled".
+   *  Omit for the simple card: logo + `meta` only. */
+  design?: string;
   /** Who and how long, e.g. "29 professional rugby players · 6 weeks" */
   meta: string;
   /** The headline figure, e.g. "+14.86%" */
@@ -171,8 +181,8 @@ export interface TrialSlide {
   /** Columns drawn from `axis.min`. `conka` bars are navy, the rest grey. */
   bars: { label: string; value: number; display: string; conka?: boolean }[];
   axis: { min: number; max: number; ticks: number[] };
-  /** Takeaway in the tinted bottom strip */
-  caption: string;
+  /** Takeaway in the tinted bottom strip. Omit to end the card on the chart. */
+  caption?: string;
   source?: string;
 }
 
@@ -262,6 +272,10 @@ export type ListicleBodyBlock =
       appStores?: boolean;
       /** "As Published On:" press marquee under the section */
       pressMarquee?: boolean;
+      /** Individual score cards (AthleteScoreCarousel) above the trial cards */
+      athletes?: Extract<ListicleAsset, { kind: "athleteScores" }>["athletes"];
+      /** Link under the trial cards to the full results, e.g. /app-insights */
+      details?: { label: string; href: string };
     }
   | {
       kind: "reviewStrip";
@@ -412,7 +426,13 @@ export interface Im8ListicleConfig extends ListicleBase {
     headline: string;
     subcopy: string;
     /** Avatar + star micro-row (the home hero's TrustMicroRow pattern) */
-    socialProof?: { label: string; sub: string };
+    socialProof?: {
+      label: string;
+      /** Line under the stars. Omit when `trustpilot` carries the proof. */
+      sub?: string;
+      /** Trustpilot wordmark in place of the sub-line numbers */
+      trustpilot?: boolean;
+    };
     /**
      * Primary CTA; anchors to #product.
      *
