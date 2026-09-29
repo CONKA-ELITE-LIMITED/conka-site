@@ -334,8 +334,8 @@ Page-level options: `hero.proofWallFirst` puts the partner logos at the top of
 the page under a navy "Fueling High Performers at:" bar (and skips the band
 after the hero); `proof.logoBandHeading` and `proof.logoBandLogos` override that
 heading and the shared `PARTNER_LOGOS` list per page; `hero.socialProof.trustpilot`
-swaps the gold stars for Trustpilot's green star boxes and the sub-line for
-the Trustpilot wordmark, in the hero micro-row and the sticky bar; `proof.comparison` adds the full comparison table between the
+swaps the gold stars for Trustpilot's green star boxes and drops the sub-line,
+in the hero micro-row and the sticky bar; `proof.comparison` adds the full comparison table between the
 feature and the UGC band. The bridge renders as a thin full-width navy band
 between the reasons and the buy box. `/go` listicles carry no site navigation.
 

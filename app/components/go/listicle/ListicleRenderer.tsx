@@ -226,7 +226,8 @@ function StarRow({ fontSize }: { fontSize: string }) {
  * Trustpilot's own rating mark: five green squares with white stars, the last
  * one half filled. Trustpilot draws ratings to the nearest half star, so 4.7
  * shows as 4.5, exactly as it does on their widget. Used instead of StarRow
- * when the row credits Trustpilot, so the stars match the wordmark beside them.
+ * when the rating is the Trustpilot score; the green boxes carry the brand on
+ * their own, so no wordmark sits beside them.
  */
 function TrustpilotStars({ size }: { size: number }) {
   return (
@@ -260,20 +261,6 @@ function TrustpilotStars({ size }: { size: number }) {
         </span>
       ))}
     </span>
-  );
-}
-
-/** The Trustpilot wordmark (public/logos/Trustpilot.svg, 1132.8 x 278.2). */
-function TrustpilotMark({ className }: { className: string }) {
-  return (
-    <Image
-      src="/logos/Trustpilot.svg"
-      alt="Trustpilot"
-      width={73}
-      height={18}
-      unoptimized
-      className={className}
-    />
   );
 }
 
@@ -317,9 +304,7 @@ function TrustMicroRow({
           )}
           <span className="text-[13px] font-bold tabular-nums">{label}</span>
         </div>
-        {trustpilot ? (
-          <TrustpilotMark className="mt-1 h-[18px] w-auto" />
-        ) : sub ? (
+        {sub && !trustpilot ? (
           <span className="mt-0.5 text-[11px] text-black/60">{sub}</span>
         ) : null}
       </div>
@@ -1569,7 +1554,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               </Link>
               {config.hero.socialProof ? (
                 // One line at 375px: the bare rating ("Excellent 4.7" -> "4.7")
-                // plus the Trustpilot mark or the sub-line, never wrapping.
+                // plus the sub-line (none on a Trustpilot row), never wrapping.
                 <p className="flex items-center justify-center gap-x-1.5 whitespace-nowrap text-[11.5px] leading-tight text-black/70">
                   {config.hero.socialProof.trustpilot ? (
                     <TrustpilotStars size={13} />
@@ -1579,9 +1564,8 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
                   <span className="font-bold text-black">
                     {config.hero.socialProof.label.replace(/^[^\d]*/, "")}
                   </span>
-                  {config.hero.socialProof.trustpilot ? (
-                    <TrustpilotMark className="h-[13px] w-auto" />
-                  ) : config.hero.socialProof.sub ? (
+                  {config.hero.socialProof.sub &&
+                  !config.hero.socialProof.trustpilot ? (
                     <>
                       <span aria-hidden>·</span>
                       <span>{config.hero.socialProof.sub}</span>

@@ -428,8 +428,8 @@ export interface Im8ListicleConfig extends ListicleBase {
       label: string;
       /** Line under the stars. Omit when `trustpilot` carries the proof. */
       sub?: string;
-      /** Trustpilot star boxes and wordmark in place of the gold stars and
-       *  the sub-line numbers */
+      /** Trustpilot's green star boxes in place of the gold stars, and no
+       *  sub-line (the boxes carry the proof) */
       trustpilot?: boolean;
     };
     /**

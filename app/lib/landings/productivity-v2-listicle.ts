@@ -30,7 +30,8 @@ export const productivityV2Listicle: ListicleConfig = {
     headline: "The Viral Brain Shot That Keeps You Sharp All Day.",
     subcopy:
       "Too much on, a mind that won't settle, or a brain that isn't as quick as it was. Flow first. Clear before it counts.",
-    // Trustpilot wordmark in place of the review and user counts.
+    // Trustpilot star boxes (4.7 is our Trustpilot score) in place of the
+    // gold stars and the review and user counts.
     socialProof: { label: "Excellent 4.7", trustpilot: true },
     cta: "Save {percent}% and try it risk-free",
     // Purpose-shot hero (round 2): overloaded desk worker, hands offering CONKA shots from every side.
