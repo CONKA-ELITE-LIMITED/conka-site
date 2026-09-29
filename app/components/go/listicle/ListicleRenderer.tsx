@@ -1111,7 +1111,9 @@ function BodyBlock({
           </p>
         ) : null}
         {block.athletes?.length ? (
-          <div className="mb-5">
+          // Capped on desktop: the carousel sizes its square cards to 85% of
+          // its parent, which inside a full-width block would be ~1,000px.
+          <div className="mb-5 md:max-w-[36rem]">
             <AthleteScoreCarousel athletes={block.athletes} />
           </div>
         ) : null}
@@ -1119,6 +1121,7 @@ function BodyBlock({
         {block.details ? (
           <Link
             href={block.details.href}
+            onClick={() => fireInteraction("trial_details")}
             className="mt-4 inline-flex min-h-[44px] items-center gap-1.5 text-[14px] font-semibold text-black underline underline-offset-4"
           >
             {block.details.label}
@@ -1535,7 +1538,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               </Link>
               {config.hero.socialProof ? (
                 // One line at 375px: the bare rating ("Excellent 4.7" -> "4.7")
-                // plus the sub-line, never wrapping.
+                // plus the Trustpilot mark or the sub-line, never wrapping.
                 <p className="flex items-center justify-center gap-x-1.5 whitespace-nowrap text-[11.5px] leading-tight text-black/70">
                   <StarRow fontSize="12px" />
                   <span className="font-bold text-black">

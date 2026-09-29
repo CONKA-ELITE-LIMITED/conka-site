@@ -48,6 +48,8 @@ export default function AthleteQuoteCard({
           <Image
             src={logo}
             alt={logoAlt ?? ""}
+            // Intrinsic size hints only (the class sets the rendered height);
+            // the crest pair is England Rugby's asset, the one crest in use.
             width={crest ? 69 : 180}
             height={crest ? 116 : 31}
             unoptimized={logo.endsWith(".svg")}

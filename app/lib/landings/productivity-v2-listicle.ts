@@ -69,9 +69,8 @@ export const productivityV2Listicle: ListicleConfig = {
   // Grüns pattern: each reason is a category of reason to buy (tag eyebrow),
   // a concrete outcome headline, and a bold closing fact (payoff). Copy follows
   // the conka-messaging skill: experience not biology, no named conditions, and
-  // Flow / Clear in their moments. Reasons 2 and 3 reframe the reader's worry
-  // ("not lazy", "not losing it") as the shared problem: a brain at its limit.
-  // Visuals are stand-ins from the existing pages until purpose-made assets exist.
+  // Flow / Clear in their moments. One visual per reason; the review strip is
+  // a band between reasons, not part of one.
   body: [
     {
       kind: "reason",
@@ -200,7 +199,9 @@ export const productivityV2Listicle: ListicleConfig = {
         "If your score and your days haven't moved within 100 days, you get every penny back.",
       appStores: true,
       pressMarquee: true,
-      // Better-known names first, sport and corporate alternating.
+      // Better-known names first, sport and corporate alternating. Bamford is
+      // shown here deliberately (29 Sep decision), though Leeds players stay
+      // hidden elsewhere under SCRUM-1354.
       athletes: [
         { name: "Patrick Bamford", role: "Professional Footballer", image: "/caseStudies/PatrickBamford.jpg", from: 62.67, to: 80.17, change: "+27.9%" },
         { name: "Doris Regazi", role: "Account Executive, Revolut", image: "/caseStudies/DorisRegazi.jpg", from: 61.33, to: 80.21, change: "+30.8%" },

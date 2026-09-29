@@ -8,9 +8,9 @@ import { useInView } from "@/app/hooks/useInView";
  * Listicle chart tile: a tinted title banner across the top, then the figure
  * large, then a proper bar chart filling the rest of the frame. Focus off
  * CONKA vs on CONKA, indexed so the baseline is 100 and CONKA is 119.3 (the
- * verified +19.3%). A labelled 0 to 120 axis, gridlines and a value on each
- * bar make it read as measured data rather than two decorative blocks; bars
- * start at zero, so the proportions are honest.
+ * verified +19.3%). A labelled axis and gridlines make it read as measured
+ * data rather than two decorative blocks. By default the axis runs 0 to 120,
+ * so the proportions are literal; see `zoom` below for the cropped variant.
  *
  * Navy is CONKA, grey the baseline, green only on the headline figure. Copy is
  * black throughout. Fills its parent (`flex-1` in the listicle frame).
@@ -63,7 +63,8 @@ export default function FocusBars({
           +19.3%
         </p>
 
-        {/* Plot: y-axis labels on the left, gridlines behind, bars from 0. */}
+        {/* Plot: y-axis labels on the left, gridlines behind, bars from the
+            axis floor (0, or 90 when zoomed). */}
         <div className="mt-6 flex min-h-[170px] flex-1 gap-2">
           <div className="relative w-7 shrink-0">
             {ticks.map((t) => (
