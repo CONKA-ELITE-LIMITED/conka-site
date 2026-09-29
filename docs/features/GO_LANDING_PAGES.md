@@ -191,7 +191,7 @@ are built from the option views, so prices and days follow the config and
 - **A pack size is one variant, never two cart lines.** 2 boxes is one line of `BOTH-BOX-8`, not quantity 2 of `BOTH-BOX-4`: two lines create two Skio contracts.
 - **A page price and its Skio percentage change together.** Change one alone and the page and checkout disagree. Re-render any slide that burns in the price or a percentage (`design/pdp-slides/README.md`, which also holds the new-filename rule for re-rendered slides).
 - **The conversion terms sit next to the CTA.** It is a trial into a subscription; the disclosure is the single statement of the terms.
-- **Below the fold is always Both.** Keeps the page server-rendered with no layout shift and speaks to the default option.
+- **Below the fold is always Both.** Every option is Both since SCRUM-1467, and it keeps the page server-rendered with no layout shift.
 - **Stays under `/go` while it is an experiment.** A root page reusing PDP sections would compete with the PDPs in search.
 - **Returning subscribers can buy the trial.** Filter read-outs by first order. One trial per customer is not enforced.
 

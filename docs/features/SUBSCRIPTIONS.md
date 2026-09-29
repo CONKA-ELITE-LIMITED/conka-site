@@ -71,8 +71,8 @@ contract swapped onto one renews at the full one-time price.
 
 ### Trial pack Journeys
 
-Trial contracts (the two weekly trial plans above) are converted by two Skio Journeys, dashboard
-configuration owned by Rudh:
+Trial contracts (the two weekly trial plans above) are converted by Skio Journeys, dashboard
+configuration owned by Rudh. Each Journey does two things:
 
 1. **After the trial order**, swap the contract to `FLOW-STARTER-20` / `CLEAR-STARTER-20` /
    `BOTH-STARTER-40` **and** switch it to the monthly selling plan (Flow/Clear `712928887158`,

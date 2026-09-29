@@ -1,8 +1,9 @@
 """Builds the white trial box sources and the /go/trial-pack tile images (SCRUM-1467).
 
-    python3 build-white-box.py   # needs Pillow + numpy (a throwaway venv is fine)
+    python3 build-white-box.py [source.webp]   # needs Pillow + numpy (a throwaway venv is fine)
 
-Input: the Ai Assets photo of the white mixed box (2 Flow + 2 Clear, what Synergy
+Input: the Ai Assets photo of the white mixed box (default path below, or pass
+one) (2 Flow + 2 Clear, what Synergy
 ships). Its studio ground runs 215 to 244 and the box face sits at ~240, so the
 ground cannot go to white without losing the box. Instead it is flattened to ONE
 grey, rgb(238,236,240): a 32px grid of ground medians (box area masked out and
@@ -16,12 +17,13 @@ offsets keep the two silhouettes apart; overlapping boxes would ghost.
 Writes assets/Both4BoxWhiteFlat.jpg, assets/Both8BoxMixedSide.jpg,
 assets/Both8BoxMixedStagger.jpg, and the two tile JPGs into public/.
 """
+import sys
 from pathlib import Path
 import numpy as np
 from PIL import Image
 
 HERE = Path(__file__).resolve().parent
-SRC = Path.home() / "Desktop/ClaudeAssetDrop/Ai Assets/Box/Both4BoxWhite.webp"
+SRC = Path(sys.argv[1]) if len(sys.argv) > 1 else Path.home() / "Desktop/ClaudeAssetDrop/Ai Assets/Box/Both4BoxWhite.webp"
 PUBLIC = HERE / "../../public/formulas/mmPdpAssetsV2"
 G0 = np.array([238.0, 236.0, 240.0])
 BOX = (370, 240, 1640, 1800)  # x0, y0, x1, y1 of box + shadow in the 2048px source
@@ -78,7 +80,11 @@ save(side, HERE / "assets/Both8BoxMixedSide.jpg", 90)
 save(stagger, HERE / "assets/Both8BoxMixedStagger.jpg", 90)
 
 # Tiles: square crops at 800px, the size OfferBuyBox needs at 3x DPR.
-tile = lambda arr, box: Image.fromarray(arr.astype(np.uint8)).crop(box).resize((800, 800), Image.LANCZOS)
-tile(one, (295, 235, 1745, 1685)).save(PUBLIC / "TrialTileOneBox.jpg", quality=82, optimize=True, progressive=True)
-tile(side, (380, 0, 2568, 2188)).save(PUBLIC / "TrialTileTwoBoxes.jpg", quality=82, optimize=True, progressive=True)
+def save_tile(arr, box, name):
+    tile = Image.fromarray(arr.astype(np.uint8)).crop(box).resize((800, 800), Image.LANCZOS)
+    tile.save(PUBLIC / name, quality=82, optimize=True, progressive=True)
+
+
+save_tile(one, (295, 235, 1745, 1685), "TrialTileOneBox.jpg")
+save_tile(side, (380, 0, 2568, 2188), "TrialTileTwoBoxes.jpg")
 print("done")

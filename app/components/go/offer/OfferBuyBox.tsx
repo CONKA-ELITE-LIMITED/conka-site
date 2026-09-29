@@ -30,6 +30,7 @@ import {
 
 /** Tile row columns by option count. Literal classes so Tailwind sees them. */
 const TILE_COLUMNS: Record<number, string> = {
+  1: "grid-cols-1",
   2: "grid-cols-2",
   3: "grid-cols-3",
 };
