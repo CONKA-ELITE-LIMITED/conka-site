@@ -76,11 +76,11 @@ Synergy 3PL barcodes on the physical funnel boxes: `FLOWFUNNEL28` / `CLEARFUNNEL
 
 **Physical boxes** (the only things Synergy picks; every recipe above explodes into them). Each carries `custom.batchexpiry` = `BATCHEXPIRY` and no `bundlecomposition`:
 
-| SKU | Variant GID | Contents | Weight | Status |
+| SKU | Variant GID | Contents | Weight | Role |
 |---|---|---|---|---|
-| FLOW-FUNNEL-28 | 57568795918710 | 28 Flow shots | 2.1kg | Live, in every Flow recipe |
-| CLEAR-FUNNEL-28 | 57568517489014 | 28 Clear shots (original flavour) | 2.1kg | Live, in every Clear recipe until the RV cutover |
-| CLEAR-RV-28 | 58853256692086 | 28 Clear shots, Raspberry Vanilla | 2.1kg | Created 2026-09-30, no stock yet. Replaces CLEAR-FUNNEL-28 1:1 in every recipe when the old stock runs out (SCRUM-1488). No barcode; Synergy works from the SKU |
+| FLOW-FUNNEL-28 | 57568795918710 | 28 Flow shots | 2.1kg | In every Flow recipe |
+| CLEAR-FUNNEL-28 | 57568517489014 | 28 Clear shots (original flavour) | 2.1kg | In every Clear recipe until the Raspberry Vanilla cutover |
+| CLEAR-RV-28 | 58853256692086 | 28 Clear shots, Raspberry Vanilla | 2.1kg | Replaces CLEAR-FUNNEL-28 1:1 in every recipe at the cutover. No barcode; Synergy works from the SKU. Status: SCRUM-1488 |
 
 Note: every "20" product currently ships one full 28-shot box (for example `CLEAR-20` = `1xCLEAR-FUNNEL-28`, `CLEAR-60` = 84 shots). A physical 20-shot box is planned but postponed.
 

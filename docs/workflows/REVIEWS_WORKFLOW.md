@@ -43,4 +43,4 @@ Trustpilot is separate from Loox: it collects **service reviews** (of CONKA as a
 **Constraints:**
 - **Free plan: 50 invites a month.** The API, webhooks, Zapier and the **Klaviyo** integration all need a paid plan. Branded Klaviyo invites are the upgrade path, not a free option.
 - Don't use the "Past orders" tab on the free plan: one bulk send uses up the month's allowance.
-- Trustpilot's guidelines discourage inviting only customers likely to be happy, so invites go to every order rather than repeat customers only.
+- **No selective invites.** Trustpilot's [Guidelines for Businesses](https://corporate.trustpilot.com/legal/for-businesses/guidelines-for-businesses/may-2025) prohibit cherry-picking: inviting only customers likely to be happy, or timing invites to a journey stage only happy customers reach. Invites therefore trigger on every fulfilled order, including customers who cancelled after one box. Keep it that way, and never word the email or any ask as "if you like us, leave 5 stars".

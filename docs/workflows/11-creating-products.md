@@ -52,6 +52,8 @@ A kit's components must exist as their own products before the kit can reference
   omitted for the Skio-era base variants (`FLOW-20`, `BOTH-120`)
 - Shots: the **actual shot count in the box**, not the priced count
 - `-OTP` suffix for one-time-purchase variants
+- A new-flavour **physical box** replaces the role with a flavour code:
+  `<FORMULA>-<FLAVOUR>-<SHOTS>`, e.g. `CLEAR-RV-28` (Clear Raspberry Vanilla)
 
 Put the count in the SKU on purpose, so a future different-sized pack takes its own SKU and
 stock line rather than silently redefining an existing one.
@@ -130,7 +132,7 @@ right. What needs saying explicitly:
 - [ ] **`custom.batchexpiry` = `BATCHEXPIRY`** on the physical box, so Synergy tracks batch and
       expiry for it. Missing it on a new physical box means stock goes in untracked.
 - [ ] **Bundle composition** for kits, so they know what to explode it into.
-- [ ] **Physical stock delivered** to Synergy, with the barcode on the carton.
+- [ ] **Physical stock delivered** to Synergy, with the SKU on the carton.
 
 Two tags to know about, neither of which we write:
 
