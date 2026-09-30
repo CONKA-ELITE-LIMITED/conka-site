@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-09-30** | Trustpilot invite script added sitewide (deferred until first interaction, production only) so Trustpilot can verify conka.io; footer and schema Trustpilot link now point to the merged conka.io profile; /cookies lists Trustpilot (SCRUM-1487)
 - **2026-09-29** | /go/trial-pack sells Flow + Clear only, as 1 box (4 shots, £12.99) or 2 boxes (8 shots, £18.99, preselected), both moving onto Both monthly on day 7; the Flow-only and Clear-only packs are gone because Synergy packs every trial box as 2 Flow + 2 Clear (SCRUM-1467)
 - **2026-09-29** | /go/productivity-v2 round 3 (Henry's Figma notes): "viral brain shot" hero, sport and corporate logo band with Nike, one visual per reason (zoomed focus chart, Morehen quote card, Shane card), new Motivation and Memory copy, routine image says "big moment" and 0 caffeine / sugar / calories, 18.1% vs caffeine line, proof reason with better-known athletes and simplified trial charts; Trustpilot star boxes in the hero row and sticky bar; reason references sit under the paragraph on mobile on every listicle; the live /go/productivity-listicle now serves this version (SCRUM-1470)
 - **2026-09-28** | /go/productivity-listicle (the live Meta campaign slug) now serves the v2 productivity page, so the campaign gets the new page without repointing ads (SCRUM-1470)
