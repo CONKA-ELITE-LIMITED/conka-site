@@ -188,16 +188,6 @@ export default function CookiesPage() {
                       </td>
                       <td className="py-3">2 years</td>
                     </tr>
-                    <tr>
-                      <td className="py-3 pr-4 font-mono text-xs">
-                        tpinvid (local storage)
-                      </td>
-                      <td className="py-3 pr-4">Trustpilot</td>
-                      <td className="py-3 pr-4">
-                        Verifies our site with Trustpilot so we can invite customers to review us
-                      </td>
-                      <td className="py-3">Persistent</td>
-                    </tr>
                   </tbody>
                 </table>
               </div>

@@ -155,7 +155,7 @@ Read the relevant one before starting that kind of task. Full index: [`workflows
 | [`workflows/08-jira-workflow.md`](./workflows/08-jira-workflow.md) | Ticket creation, transitions, ACs. |
 | [`workflows/09-ux-iteration.md`](./workflows/09-ux-iteration.md) | Refining pages for conversion. |
 | [`workflows/10-figma-decks.md`](./workflows/10-figma-decks.md) | Building/editing CONKA slide decks in Figma. |
-| [`workflows/REVIEWS_WORKFLOW.md`](./workflows/REVIEWS_WORKFLOW.md) | Reviews workflow. |
+| [`workflows/REVIEWS_WORKFLOW.md`](./workflows/REVIEWS_WORKFLOW.md) | Reviews workflow: Loox testimonials on site, Trustpilot invites via the Shopify app. |
 
 ---
 
