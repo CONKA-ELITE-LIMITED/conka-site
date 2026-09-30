@@ -41,8 +41,9 @@ A kit's components must exist as their own products before the kit can reference
 
 - [ ] **Title** and handle. The handle becomes the URL, so it is effectively permanent.
 - [ ] **SKU**, following the convention below.
-- [ ] **Barcode** if this is a physical box Synergy scans. Code 128. Existing funnel boxes use
-      `FLOWFUNNEL28` / `CLEARFUNNEL28`.
+- [ ] **Barcode**: optional. Synergy identifies stock by SKU, so a new box does not need one
+      (`CLEAR-RV-28` has none). The original funnel boxes carry `FLOWFUNNEL28` /
+      `CLEARFUNNEL28` (Code 128).
 
 **SKU convention.** `<FORMULA>-<ROLE>-<SHOTS>[-OTP]`
 
@@ -97,6 +98,11 @@ have. See [`../shipping/DUTIES_AND_DDP.md`](../shipping/DUTIES_AND_DDP.md#hs-cod
 
 ### Metafields
 
+- [ ] `custom.batchexpiry` = `BATCHEXPIRY` on **physical box variants only** (the thing Synergy
+      actually picks, e.g. `FLOW-FUNNEL-28`, `CLEAR-FUNNEL-28`, `CLEAR-RV-28`). It is a fixed
+      flag, not a date: it tells Synergy to track the SKU by batch and expiry, and Synergy
+      records the real batch and expiry at goods-in. Leave it **blank** on kits, bundles and
+      subscription variants. Set up in SCRUM-1051.
 - [ ] `custom.bundlecomposition` on kit variants only. Format:
       `<qty>x<SKU>+<qty>x<SKU>+…`, for example
       `1xFLOW-FUNNEL-28+1xCLEAR-FUNNEL-28+1xCONKA-HAT+1xCONKA-TRAVEL-PACK-28`.
@@ -120,7 +126,9 @@ right. What needs saying explicitly:
 
 - [ ] **Tell them the new SKU exists** before the first order lands. Their WMS needs the
       stock line set up, or the order fails to pick.
-- [ ] **Barcode and weight**, so goods-in can receive it.
+- [ ] **SKU and weight**, so goods-in can receive it (Synergy works from the SKU).
+- [ ] **`custom.batchexpiry` = `BATCHEXPIRY`** on the physical box, so Synergy tracks batch and
+      expiry for it. Missing it on a new physical box means stock goes in untracked.
 - [ ] **Bundle composition** for kits, so they know what to explode it into.
 - [ ] **Physical stock delivered** to Synergy, with the barcode on the carton.
 

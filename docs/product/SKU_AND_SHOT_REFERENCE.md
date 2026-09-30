@@ -74,6 +74,16 @@ Compare-at values were corrected at the same time to reference a **real purchasa
 
 Synergy 3PL barcodes on the physical funnel boxes: `FLOWFUNNEL28` / `CLEARFUNNEL28` (Code 128). See [`../shipping/SYNERGY_ROUTING.md`](../shipping/SYNERGY_ROUTING.md).
 
+**Physical boxes** (the only things Synergy picks; every recipe above explodes into them). Each carries `custom.batchexpiry` = `BATCHEXPIRY` and no `bundlecomposition`:
+
+| SKU | Variant GID | Contents | Weight | Status |
+|---|---|---|---|---|
+| FLOW-FUNNEL-28 | 57568795918710 | 28 Flow shots | 2.1kg | Live, in every Flow recipe |
+| CLEAR-FUNNEL-28 | 57568517489014 | 28 Clear shots (original flavour) | 2.1kg | Live, in every Clear recipe until the RV cutover |
+| CLEAR-RV-28 | 58853256692086 | 28 Clear shots, Raspberry Vanilla | 2.1kg | Created 2026-09-30, no stock yet. Replaces CLEAR-FUNNEL-28 1:1 in every recipe when the old stock runs out (SCRUM-1488). No barcode; Synergy works from the SKU |
+
+Note: every "20" product currently ships one full 28-shot box (for example `CLEAR-20` = `1xCLEAR-FUNNEL-28`, `CLEAR-60` = 84 shots). A physical 20-shot box is planned but postponed.
+
 ### Skio-era variants (created for the Skio selling-plan migration)
 
 Read from Shopify Admin 2026-08-28 (SCRUM-1257). Six newer variants sit on the same three products, each attached to a Skio "Subscription" selling-plan group; the **base price is the one-time price** and the plan discounts it to the subscription price. All ACTIVE and available for sale. The 60/120-shot base prices are the first real purchasable quarterly one-time prices, sold as the `quarterly-otp` cadence since SCRUM-1285. They are offerings, not discount anchors: every anchor derives from the monthly-size one-time reference unit so the badge ladder ascends with quantity (see [`../ops/offerings-and-discounts.md`](../ops/offerings-and-discounts.md) §2).

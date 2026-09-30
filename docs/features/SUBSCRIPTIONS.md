@@ -105,7 +105,9 @@ set `custom.bundlecomposition`; leave `custom.batchexpiry` blank (only physical 
 batch and expiry); set the weight (boxes x 2.1 kg); attach the selling plan; then verify on the
 first live order that it exploded into components.
 
-**Never delete `FLOW-FUNNEL-28` / `CLEAR-FUNNEL-28`.** Every bundle composition points at them.
+**Never delete the physical boxes** (`FLOW-FUNNEL-28`, `CLEAR-FUNNEL-28`, and `CLEAR-RV-28` once
+the Clear Raspberry Vanilla cutover lands, SCRUM-1488). Every bundle composition points at them.
+A new physical box carries `custom.batchexpiry` = `BATCHEXPIRY` and no `bundlecomposition`.
 
 **Shipping and Synergy.** A renewal ships on the delivery method stored on the contract, and
 Synergy routes on that name. How that works, the connector rules and the contract re-sync fix:
