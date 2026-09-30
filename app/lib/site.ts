@@ -56,7 +56,7 @@ export const SOCIAL_PROFILES = [
   { label: "LinkedIn", url: "https://www.linkedin.com/company/conka-io/", inFooter: true },
   { label: "Instagram", url: "https://www.instagram.com/conka.io/", inFooter: true },
   { label: "TikTok", url: "https://www.tiktok.com/@conka.io", inFooter: true },
-  { label: "Trustpilot", url: "https://uk.trustpilot.com/review/conka.uk", inFooter: true },
+  { label: "Trustpilot", url: "https://uk.trustpilot.com/review/conka.io", inFooter: true },
   {
     label: "Facebook",
     url: "https://www.facebook.com/p/CONKA-100071338810920/",
