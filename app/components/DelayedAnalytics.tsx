@@ -80,11 +80,13 @@ export default function DelayedAnalytics() {
       />
 
       {/* Trustpilot invite JS: its only job is Trustpilot's domain
-          verification for conka.io. ~4KB gzipped, no fonts, one hidden
-          iframe. Production host only, like the Meta Pixel. */}
+          verification for conka.io. ~4KB gzipped plus one hidden ~16KB
+          iframe, no fonts. Production host only, like the Meta Pixel. Skipped
+          on /account: that route's CSP frame-src only allows Skio, so the
+          iframe would be blocked and log a console error. */}
       <Script id="trustpilot-invite" strategy="lazyOnload">
         {`
-            if (window.location.hostname === 'www.conka.io') {
+            if (window.location.hostname === 'www.conka.io' && window.location.pathname.indexOf('/account') !== 0) {
               (function(w,d,s,r,n){w.TrustpilotObject=n;w[n]=w[n]||function(){(w[n].q=w[n].q||[]).push(arguments)};
                 var a=d.createElement(s);a.async=1;a.src=r;a.type='text/java'+s;var f=d.getElementsByTagName(s)[0];
                 f.parentNode.insertBefore(a,f)})(window,document,'script','https://invitejs.trustpilot.com/tp.min.js','tp');

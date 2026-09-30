@@ -108,7 +108,7 @@ The `/start` page has four third-party scripts. Changing strategy on any of them
 | Google Analytics | `afterInteractive` | Main thread impact is acceptable post-interactive. |
 | Meta Pixel | `lazyOnload` | Browser-side only; CAPI handles server-side deduplication. |
 | Triple Pixel | `lazyOnload` | Deferred in April 2026, reduced TBT. |
-| Trustpilot invite JS | Interaction-triggered via `DelayedAnalytics`, then `lazyOnload`; production host only | Only exists for Trustpilot domain verification (SCRUM-1487). ~4KB gzipped, no fonts, one hidden iframe, `tpinvid` in local storage. If verification ever fails because the checker cannot see a deferred script, step up to `afterInteractive` with a Lighthouse before/after. |
+| Trustpilot invite JS | Interaction-triggered via `DelayedAnalytics`, then `lazyOnload`; production host only | Only exists for Trustpilot domain verification (SCRUM-1487). ~4KB gzipped plus one hidden ~16KB iframe (inline script, no further requests), no fonts, `tpinvid` in local storage. Skipped on `/account` (that route's CSP only frames Skio). If verification ever fails because the checker cannot see a deferred script, step up to `afterInteractive` with a Lighthouse before/after. |
 
 **Do not change script strategies on layout.tsx without a Lighthouse before/after.** The interactions between these scripts are non-obvious.
 
