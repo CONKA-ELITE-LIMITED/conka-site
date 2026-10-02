@@ -672,7 +672,7 @@ function isValidListicleSrc(raw: string): boolean {
 /**
  * The `?src=` token on the current URL only, validated, with no sessionStorage
  * fallback. The single URL reader for the helpers below, and used directly by
- * /go/trial-pack, which checks out on the same page load the listicle CTA
+ * the trial pack offer page, which checks out on the same page load the listicle CTA
  * landed on: a stored token from earlier in the tab could belong
  * to a different journey, so it is deliberately not consulted (SCRUM-1516).
  */

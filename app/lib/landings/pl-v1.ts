@@ -6,7 +6,8 @@ import type { ListicleConfig } from "./listicle-types";
  * The live slug the trial-pack productivity ads point at. Identical to
  * productivity-listicle.ts as of 2 Oct 2026 except the CTA copy and
  * `product.offer`: the buy zone sells the Both trial pack and the CTAs go to
- * /go/trial-pack. Iterate on /go/pl-v2 and copy a winning change back here in
+ * the offer page, /go/trial-pack-v2. /go/trial-pack (the trial pack Meta
+ * campaign URL) redirects here (SCRUM-1518). Iterate on /go/pl-v2 and copy a winning change back here in
  * one deliberate step, the same pattern as productivity-v2 -> productivity-listicle.
  */
 export const plV1Listicle: ListicleConfig = {

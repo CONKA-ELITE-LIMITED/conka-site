@@ -11,7 +11,7 @@ import type { OfferConfig } from "@/app/lib/landings/offer-types";
 import { SECTION } from "./listicleAnalytics";
 
 /**
- * Listicle buy zone in offer mode (SCRUM-1514): the /go/trial-pack hero, with
+ * Listicle buy zone in offer mode (SCRUM-1514): the trial pack offer page hero, with
  * its pack selector and straight-to-checkout CTA, in place of
  * ListicleProductHero's PDP hero.
  *

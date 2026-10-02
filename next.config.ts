@@ -41,6 +41,16 @@ const nextConfig: NextConfig = {
   // Redirects
   async redirects() {
     return [
+      // The trial pack Meta campaign keeps /go/trial-pack as its destination
+      // but now lands on the productivity trial pack listicle first; the offer
+      // page itself lives at /go/trial-pack-v2. Temporary (307) so it can be
+      // undone without browsers caching it; query strings (fbclid, UTMs) pass
+      // through.
+      {
+        source: '/go/trial-pack',
+        destination: '/go/pl-v1',
+        permanent: false,
+      },
       // Near-duplicate engine post, trashed in Notion (SCRUM-1461). Live for a
       // week, so its URL points at the post it duplicated rather than a 404.
       {
