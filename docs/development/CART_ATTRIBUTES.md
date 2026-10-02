@@ -65,7 +65,7 @@ Consequence for anyone querying: **`_listicle_origin` no longer implies a listic
 
 ### `_trial_pack_seen`: trial pack visitors who bought on a PDP
 
-Loading the trial pack page writes its slug to `sessionStorage`, and `CartContext` re-attaches it on every site-cart add as the hidden cart attribute `_trial_pack_seen` (value: the slug, e.g. `trial-pack`), the same way `_listicle_origin` rides through. The page has no outbound PDP CTAs, so there is no `?src=` to carry; the footer's PDP links keep the journey in one tab.
+Loading the trial pack offer page, or a listicle selling the trial pack (`/go/pl-v1`, where the trial pack ads now land), writes that page's slug to `sessionStorage`, and `CartContext` re-attaches it on every site-cart add as the hidden cart attribute `_trial_pack_seen` (value: the slug, e.g. `trial-pack`), the same way `_listicle_origin` rides through. The page has no outbound PDP CTAs, so there is no `?src=` to carry; the footer's PDP links keep the journey in one tab.
 
 An order with `_trial_pack_seen` and no `_source: trial_pack` line = saw the trial pack, bought a regular product instead. Trial pack checkouts build their own cart and never carry it. Same limit as the listicle token: this tab only, so a visitor who returns later in a new tab is not captured. No order tag is written (see the tag bug below).
 
