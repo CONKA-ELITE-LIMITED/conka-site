@@ -11,11 +11,13 @@ import { APP_INSIGHTS_TOTALS } from "@/app/lib/appInsightsData";
  * page invites before it lectures.
  *
  * It answers the why before it shows the data: one trial as a filmstrip
- * (image for a tenth of a second, a noise mask, your tap) built from the
+ * (an image for a fraction of a second, a noise mask, your tap; exact timings
+ * stay off the page) built from the
  * test's own image and mask, then four reasons from the app's ungameable list
  * (conkaApp docs/app/features/cognitive-testing/cognica-game.md). The
  * research stats, Humphrey's origin and the /app-insights link follow as the
- * supporting proof.
+ * supporting proof. On mobile the reasons collapse to a +/- accordion so the
+ * section stays short; from lg they are open cards beside the filmstrip.
  *
  * Stats and reason surfaces are white because the page gives this section the
  * tint background. Content-only; the page owns the section.
@@ -24,7 +26,7 @@ import { APP_INSIGHTS_TOTALS } from "@/app/lib/appInsightsData";
 const LEARNING_STUDY_HREF = "https://www.nature.com/articles/s41598-018-37709-x";
 
 const TRIAL = [
-  { label: "Image, 0.1 sec", kind: "image" as const },
+  { label: "Image flashes", kind: "image" as const },
   { label: "Noise mask", kind: "mask" as const },
   { label: "You tap", kind: "tap" as const },
 ];
@@ -35,8 +37,8 @@ const REASONS: {
   source?: { text: string; href: string };
 }[] = [
   {
-    title: "Too fast to think it through",
-    body: "Each image shows for a tenth of a second, then a pattern wipes it. Your brain answers before you can strategise.",
+    title: "Too fast to game",
+    body: "Each image shows for a fraction of a second, then a pattern wipes it. Your brain answers before you can strategise.",
   },
   {
     title: "Nothing to memorise",
@@ -44,7 +46,7 @@ const REASONS: {
     source: { text: "Scientific Reports, 2019", href: LEARNING_STUDY_HREF },
   },
   {
-    title: "No words, no numbers",
+    title: "No reading or maths",
     body: "No reading, maths or general knowledge. Language, education and culture give no one a head start.",
   },
   {
@@ -87,6 +89,24 @@ const STATS: {
     label: "510(k) cleared test technology",
   },
 ];
+
+function ReasonBody({ reason }: { reason: (typeof REASONS)[number] }) {
+  return (
+    <>
+      <p className="text-sm leading-relaxed text-black/75">{reason.body}</p>
+      {reason.source && (
+        <a
+          href={reason.source.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 inline-block text-xs text-black/50 underline underline-offset-2 hover:text-black"
+        >
+          {reason.source.text}
+        </a>
+      )}
+    </>
+  );
+}
 
 export default function AppV2Trust() {
   return (
@@ -166,7 +186,32 @@ export default function AppV2Trust() {
           </figure>
         </div>
 
-        <ul className="grid grid-cols-1 gap-3 self-center sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+        {/* Mobile: titles only, tap + to open. */}
+        <ul className="flex flex-col gap-2 lg:hidden">
+          {REASONS.map((reason) => (
+            <li key={reason.title}>
+              <details className="group rounded-md bg-white text-black">
+                <summary className="flex min-h-[52px] cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 [&::-webkit-details-marker]:hidden">
+                  <h3 className="text-base font-bold leading-tight text-[var(--brand-navy)]">
+                    {reason.title}
+                  </h3>
+                  <span
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#eef0f5] text-lg font-semibold leading-none text-[var(--brand-navy)] transition-transform group-open:rotate-45"
+                    aria-hidden="true"
+                  >
+                    +
+                  </span>
+                </summary>
+                <div className="px-4 pb-4">
+                  <ReasonBody reason={reason} />
+                </div>
+              </details>
+            </li>
+          ))}
+        </ul>
+
+        {/* Desktop: open cards beside the filmstrip. */}
+        <ul className="hidden grid-cols-1 gap-3 self-center lg:grid xl:grid-cols-2">
           {REASONS.map((reason) => (
             <li
               key={reason.title}
@@ -175,19 +220,7 @@ export default function AppV2Trust() {
               <h3 className="mb-1.5 text-base font-bold leading-tight text-[var(--brand-navy)]">
                 {reason.title}
               </h3>
-              <p className="text-sm leading-relaxed text-black/75">
-                {reason.body}
-              </p>
-              {reason.source && (
-                <a
-                  href={reason.source.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2 inline-block text-xs text-black/50 underline underline-offset-2 hover:text-black"
-                >
-                  {reason.source.text}
-                </a>
-              )}
+              <ReasonBody reason={reason} />
             </li>
           ))}
         </ul>

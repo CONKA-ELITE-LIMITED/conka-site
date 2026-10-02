@@ -21,7 +21,11 @@ import Image from "next/image";
  * section.
  * ========================================================================== */
 
-type Stat = { value: string; label: string; positive?: boolean };
+/** The outcome tile: a big value over a short label, or a check and a
+ *  single line when the step's outcome is done rather than a number. */
+type Stat =
+  | { value: string; label: string; positive?: boolean }
+  | { check: string };
 
 type Step = {
   tag: string;
@@ -39,9 +43,9 @@ const STEPS: Step[] = [
     body: "A quick test in the app sets your starting score. It takes about 90 seconds.",
     visual: {
       kind: "phone",
-      src: "/app/AppHowToPlayCapture.webp",
-      alt: "CONKA app test instructions: tap right for an animal, left for everything else",
-      stat: { value: "84", label: "Your baseline" },
+      src: "/app/AppHomeCapture.webp",
+      alt: "CONKA app home screen showing a cognitive score of 92",
+      stat: { check: "Baseline set" },
     },
   },
   {
@@ -81,8 +85,35 @@ const BOTTLES = [
 ];
 
 function StatTile({ stat }: { stat: Stat }) {
+  const tile =
+    "absolute bottom-4 left-3 rounded-lg bg-white px-3.5 py-2.5 text-left shadow-[0_8px_24px_rgba(27,39,87,0.16)] lg:left-4";
+
+  if ("check" in stat) {
+    return (
+      <div className={`${tile} flex items-center gap-2.5`}>
+        <span
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--brand-positive)] text-white"
+          aria-hidden="true"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M5 12.5l4.5 4.5L19 7.5"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
+        <p className="text-base font-bold leading-none text-[var(--brand-navy)]">
+          {stat.check}
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="absolute bottom-4 left-3 rounded-lg bg-white px-3.5 py-2.5 text-left shadow-[0_8px_24px_rgba(27,39,87,0.16)] lg:left-4">
+    <div className={tile}>
       <p
         className={`text-xl font-bold leading-none tracking-tight lg:text-2xl ${
           stat.positive
