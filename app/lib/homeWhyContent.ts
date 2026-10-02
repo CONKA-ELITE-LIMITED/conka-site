@@ -53,8 +53,8 @@ export const HOME_WHY_ROWS: HomeWhyRow[] = [
     title: "Measure It Yourself",
     lede: "No need to leave it to chance.",
     // "FDA-cleared" is established site copy, not a new claim: see
-    // app/case-studies/layout.tsx, InsightHeroDifferentiator and
-    // HowThisIsPossibleModule, the last of which cites FDA 21 CFR 882.1470.
+    // app/case-studies/layout.tsx and the /app-insights validation note
+    // (InsightHowWeKnow).
     // Two minutes is the canonical duration (faqContent x6, CaseStudiesHero,
     // PilotProgramme, the listicles). Two files said five and were corrected
     // 2026-08-27: HowThisIsPossibleModule and whyConkaData.

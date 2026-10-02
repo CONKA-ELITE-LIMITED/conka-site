@@ -1,9 +1,8 @@
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
 import InsightFindingsHero from "@/app/components/insights/InsightFindingsHero";
-import HowThisIsPossibleModule from "@/app/components/insights/HowThisIsPossibleModule";
-import MethodologyInThirtySeconds from "@/app/components/insights/MethodologyInThirtySeconds";
-import AppDownloadSection from "@/app/components/app/AppDownloadSection";
+import InsightHowWeKnow from "@/app/components/insights/InsightHowWeKnow";
+import InsightDownloadClose from "@/app/components/insights/InsightDownloadClose";
 import ProfessionalTrialsBlock from "@/app/components/insights/ProfessionalTrialsBlock";
 import ReviewedDate from "@/app/components/ReviewedDate";
 import Reveal from "@/app/components/landing/Reveal";
@@ -60,31 +59,34 @@ export default function AppInsightsPage() {
         </section>
       ))}
 
-      {/* TEMPORARY DARK BAND (Phase 1 only): these sections still carry the
-          old dark styling until Phase 2 of SCRUM-1522 rebuilds them, so they
-          keep their dark canvas here rather than going unreadable. */}
-      <div
-        className="brand-clinical text-white"
-        style={{ backgroundColor: "#0a0a0a" }}
-      >
+      {/* HOW WE KNOW: method + credentials, depth in accordions. Tint, the
+          last report (coffee) being white. */}
       <section
-        className="brand-section"
+        className="brand-section brand-bg-tint"
         aria-label="How CONKA captures this data"
       >
-        <div className="brand-track flex flex-col gap-10">
-          <HowThisIsPossibleModule />
-          <MethodologyInThirtySeconds />
-        </div>
-      </section>
-
-      <section className="brand-section" aria-label="Download the CONKA app">
         <div className="brand-track">
-          <AppDownloadSection />
+          <Reveal>
+            <InsightHowWeKnow />
+          </Reveal>
         </div>
       </section>
 
+      {/* DOWNLOAD: get your own curve */}
       <section
-        className="brand-section"
+        className="brand-section brand-bg-white"
+        aria-label="Download the CONKA app"
+      >
+        <div className="brand-track">
+          <Reveal>
+            <InsightDownloadClose />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* PROFESSIONAL TRIALS: the B2B exit */}
+      <section
+        className="brand-section brand-bg-tint"
         aria-label="Professional trials with sports clubs"
       >
         <div className="brand-track">
@@ -92,63 +94,62 @@ export default function AppInsightsPage() {
         </div>
       </section>
 
-      {/* 9. METHODOLOGY FOOTER — slimmed to legal anchors only */}
+      {/* ABOUT THIS DATA: method summary, notes behind the ^^ and ¶ markers,
+          the full report and its citation. Legal anchors stay legible. */}
       <section
-        className="brand-section"
+        className="brand-section brand-bg-white"
         aria-label="Overall methodology and ethics"
       >
         <div className="brand-track">
-          <div className="border-t border-white/10 pt-10">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/65 tabular-nums mb-4">
-              {"// About this data · APP-01"}
+          <h2
+            className="brand-h3 mb-4 max-w-[28ch] text-black"
+            style={{ letterSpacing: "-0.02em" }}
+          >
+            How we look at the numbers.
+          </h2>
+          <p className="mb-3 max-w-[68ch] text-sm leading-relaxed text-black/75">
+            Every analysis on this page uses a per-user delta method. We
+            compute each user&apos;s personal baseline from their own
+            clean-state tests, then compare their impaired-state tests against
+            that baseline. This removes the confound of natural ability
+            differences between users.
+          </p>
+          <p className="mb-5 max-w-[68ch] text-sm leading-relaxed text-black/75">
+            Wellness factors (alcohol, fatigue, stress, readiness) are
+            self-reported in the CONKA app on an opt-in basis at the moment of
+            testing. Cognitive scores come from the same test session.
+          </p>
+          <div className="flex flex-col gap-2 border-t border-black/10 pt-5 text-xs leading-relaxed text-black/60">
+            <p>
+              ^^ Cognitive test details and validation are documented above in
+              &quot;How we know&quot;.
             </p>
-            <h2
-              className="brand-h3 text-white mb-4 max-w-[28ch]"
-              style={{ letterSpacing: "-0.02em" }}
+            <p>
+              ¶ Ingredient-level peer-reviewed studies. Findings as published;
+              not extrapolated to product-level effect.
+            </p>
+            <p>
+              Food supplements are not a substitute for a varied and balanced
+              diet and a healthy lifestyle.
+            </p>
+          </div>
+          <div className="mt-5 flex flex-col gap-3 border-t border-black/10 pt-5">
+            <a
+              href="/CONKA-Real-World-Evidence-Report.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-[44px] w-fit items-center text-sm font-semibold text-[var(--brand-navy)] underline underline-offset-4"
             >
-              How we look at the numbers.
-            </h2>
-            <p className="text-sm text-white/85 leading-relaxed max-w-[68ch] mb-3">
-              Every analysis on this page uses a per-user delta method. We
-              compute each user&apos;s personal baseline from their own clean-state
-              tests, then compare their impaired-state tests against that
-              baseline. This removes the confound of natural ability differences
-              between users.
+              Download the full report (PDF)
+            </a>
+            <p className="max-w-[74ch] text-xs text-black/50">
+              Kurup, R. (2026). CONKA Real-World Evidence Report: cognitive
+              performance patterns from 712 app users (APP-01 to APP-05). CONKA.
             </p>
-            <p className="text-sm text-white/85 leading-relaxed max-w-[68ch] mb-3">
-              Wellness factors (alcohol, fatigue, stress, readiness) are
-              self-reported in the CONKA app on an opt-in basis at the moment
-              of testing. Cognitive scores come from the same test session.
-            </p>
-            <div className="border-t border-white/10 pt-5 flex flex-col gap-3">
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/60 tabular-nums">
-                ^^ Cognitive test details and validation are documented above in &quot;How this is possible&quot;.
-              </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/60 tabular-nums">
-                ¶ Ingredient-level peer-reviewed studies. Findings as published; not extrapolated to product-level effect.
-              </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/60 tabular-nums">
-                Food supplements are not a substitute for a varied and balanced diet and a healthy lifestyle.
-              </p>
-            </div>
-            <div className="border-t border-white/10 pt-5 mt-5 flex flex-col gap-3">
-              <a
-                href="/CONKA-Real-World-Evidence-Report.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/85 hover:text-white tabular-nums underline underline-offset-4 decoration-white/30 w-fit"
-              >
-                Download the full report (PDF)
-              </a>
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/50 tabular-nums max-w-[74ch]">
-                Kurup, R. (2026). CONKA Real-World Evidence Report: cognitive performance patterns from 712 app users (APP-01 to APP-05). CONKA.
-              </p>
-              <ReviewedDate isoDate="2026-07" label="July 2026" tone="onDark" className="mt-2" />
-            </div>
+            <ReviewedDate isoDate="2026-07" label="July 2026" className="mt-2" />
           </div>
         </div>
       </section>
-      </div>
 
       <Footer />
     </div>

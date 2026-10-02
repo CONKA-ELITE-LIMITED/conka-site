@@ -1,74 +1,40 @@
-"use client";
-
-import { useRef } from "react";
-import { useGSAP, withMotion, revealUp } from "@/app/lib/motion";
-import { resolveReading } from "./insightMotion";
 import { PROFESSIONAL_TRIALS } from "@/app/lib/revolutTrialData";
 import { supportMailtoHref } from "@/app/lib/supportEmail";
 
+/** The B2B exit: the same instrument runs trials with professional sports
+ *  organisations. One white card, the count as the headline number, sports
+ *  as pills, and an enquiry link. Content-only. */
 export default function ProfessionalTrialsBlock() {
-  const root = useRef<HTMLDivElement>(null);
-  const countRef = useRef<HTMLParagraphElement>(null);
-
-  useGSAP(
-    () => {
-      withMotion(() => {
-        revealUp("[data-trials-reveal]", root.current, { stagger: 0.1 });
-        if (countRef.current) {
-          resolveReading(countRef.current, { duration: 1.3 });
-        }
-      });
-    },
-    { scope: root },
-  );
-
   return (
-    <div
-      ref={root}
-      className="border border-white/20 bg-white/[0.06] p-6 lg:p-8 flex flex-col gap-6"
-    >
-      {/* Header */}
-      <div data-trials-reveal>
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50 tabular-nums mb-4">
-          {"// Professional Trials · PROOF-01"}
+    <div className="flex flex-col gap-6 rounded-lg bg-white p-6 text-black ring-1 ring-black/5 lg:p-8">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:gap-6">
+        <p
+          className="text-6xl font-bold leading-none tabular-nums text-[var(--brand-navy)] lg:text-7xl"
+          style={{ letterSpacing: "-0.03em" }}
+        >
+          {PROFESSIONAL_TRIALS.count}
         </p>
-        <div className="flex flex-col lg:flex-row lg:items-end lg:gap-6 gap-3">
-          <p
-            ref={countRef}
-            className="font-mono text-5xl lg:text-7xl text-white tabular-nums leading-none"
-            style={{ letterSpacing: "-0.03em" }}
-          >
-            {PROFESSIONAL_TRIALS.count}
-          </p>
-          <p className="text-base lg:text-lg text-white/80 leading-snug max-w-[36ch]">
-            trials run with professional sports organisations.
-          </p>
-        </div>
+        <p className="max-w-[36ch] text-lg leading-snug text-black/80">
+          trials run with professional sports organisations, on the same test.
+        </p>
       </div>
 
-      {/* Sport tags */}
-      <div data-trials-reveal className="flex flex-wrap gap-2">
+      <ul className="flex flex-wrap gap-2">
         {PROFESSIONAL_TRIALS.sports.map((sport) => (
-          <span
+          <li
             key={sport}
-            className="border border-white/20 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-white/60"
+            className="rounded-full bg-[#eef0f5] px-3.5 py-1.5 text-sm font-medium text-[var(--brand-navy)]"
           >
             {sport}
-          </span>
+          </li>
         ))}
-      </div>
+      </ul>
 
-      {/* NDA note + CTA */}
-      <div
-        data-trials-reveal
-        className="border-t border-white/10 pt-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between"
-      >
-        <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/35 tabular-nums">
-          {PROFESSIONAL_TRIALS.note}
-        </p>
+      <div className="flex flex-col gap-4 border-t border-black/10 pt-5 lg:flex-row lg:items-center lg:justify-between">
+        <p className="text-xs text-black/50">{PROFESSIONAL_TRIALS.note}</p>
         <a
           href={supportMailtoHref({ subject: "Trial enquiry" })}
-          className="inline-flex items-center justify-center w-full lg:w-auto px-6 py-3 border border-white/40 text-white/70 font-mono text-[11px] uppercase tracking-[0.18em] hover:border-white hover:text-white transition-colors min-h-[44px] whitespace-nowrap"
+          className="inline-flex min-h-[44px] w-full items-center justify-center whitespace-nowrap rounded-full border-2 border-[var(--brand-navy)] px-6 py-2.5 text-sm font-semibold text-[var(--brand-navy)] transition-colors hover:bg-[var(--brand-navy)] hover:text-white lg:w-auto"
         >
           Enquire about a trial
         </a>
