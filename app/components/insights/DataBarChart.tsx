@@ -109,7 +109,9 @@ export default function DataBarChart({ data }: { data: BarChartData }) {
               />
               <Bar
                 dataKey="value"
-                radius={[0, 0, 6, 6]}
+                // Recharts draws a negative bar as an inverted rect, so its
+                // "top" corners land on the tip: this rounds the tip either way.
+                radius={[6, 6, 0, 0]}
                 isAnimationActive={!prefersReduced}
                 animationDuration={900}
                 animationEasing="ease-out"
