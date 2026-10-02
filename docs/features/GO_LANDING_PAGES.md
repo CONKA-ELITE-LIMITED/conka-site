@@ -74,8 +74,16 @@ event, see below). What is shared:
 ## Offer format
 
 A single-offer page for paid acquisition tests that sells a low-priced trial into a
-subscription. The one config is the **CONKA trial pack**, `/go/trial-pack`
-(`app/lib/landings/trial-pack.ts`). Status: SCRUM-1343 (page), SCRUM-1344 (Klaviyo
+subscription. The one config is the **CONKA trial pack**, `/go/trial-pack-v2`
+(`app/lib/landings/trial-pack.ts`).
+
+> **URL note (SCRUM-1518).** `/go/trial-pack` is the trial pack Meta campaign's
+> destination, and it 307-redirects (in `next.config.ts`) to `/go/pl-v1`, the
+> productivity listicle selling the trial pack, whose CTAs land on the offer page
+> at `/go/trial-pack-v2`. Orders and events from before 2 Oct 2026 carry the slug
+> `trial-pack`; after, direct offer-page orders carry `trial-pack-v2` and listicle
+> CTA orders carry `pl-v1-<section>`. Everything below that says `trial-pack` as a
+> slug means the offer page. Status: SCRUM-1343 (page), SCRUM-1344 (Klaviyo
 and conka-lab). The campaign's what, why and success metrics: `docs/sprints/2026-09-trial-pack.md`.
 
 **The offer.** The visitor picks 1 box (4 shots, 2 Flow + 2 Clear) or 2 boxes
@@ -167,7 +175,7 @@ signal fires at the checkout click.
 - **Meta:** ViewContent on mount; AddToCart and InitiateCheckout at the checkout click, Pixel and CAPI deduplicated by a shared `event_id`. Triple Whale AddToCart at the same click.
 - **Purchase:** the server Purchase (orders/paid webhook) gates on `checkout_token`, so the trial order counts as a Purchase and the day-7 conversion charge and renewals do not.
 - **Embedded in a listicle** (`product.offer`, LISTICLE_SYSTEM.md): the same buy box reports under the listicle's slug, with `location: offer_product` (or `offer_otp`) and `_listicle_origin=<listicle slug>-product`. No ViewContent fires there; listicles do not send one.
-- **Arriving from a listicle CTA** (`/go/trial-pack?src=<listicle slug>-<section>`): the order's `_listicle_origin` is that token, not `trial-pack-<section>`, so it counts against the listicle (SCRUM-1516). Events on the page still carry `slug: trial-pack`.
+- **Arriving from a listicle CTA** (`/go/trial-pack-v2?src=<listicle slug>-<section>`): the order's `_listicle_origin` is that token, not `trial-pack-<section>`, so it counts against the listicle (SCRUM-1516). Events on the page still carry `slug: trial-pack`.
 - `offer:upsell_shown` / `offer:upsell_choice` helpers exist in `app/lib/analytics.ts` for the parked modal and never fire.
 
 ### FAQ
