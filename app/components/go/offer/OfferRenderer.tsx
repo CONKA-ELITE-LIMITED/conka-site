@@ -15,7 +15,7 @@ import OfferCountdownBanner from "./OfferCountdownBanner";
 import OfferHero from "./OfferHero";
 import { OfferPurchaseProvider, OfferStickyBar } from "./OfferPurchase";
 import TrialPackSeen from "./TrialPackSeen";
-import { buildOptionView } from "./offerOptionView";
+import { buildOptionView, getTrialFromPrice } from "./offerOptionView";
 
 /**
  * /go offer format (SCRUM-1343): the CONKA trial pack page for paid traffic.
@@ -35,7 +35,7 @@ import { buildOptionView } from "./offerOptionView";
 export default function OfferRenderer({ config }: { config: OfferConfig }) {
   const options = config.options.map(buildOptionView);
   // The cheapest trial price, shared by the banner and the hero headline.
-  const fromPrice = Math.min(...options.map((o) => o.price));
+  const fromPrice = getTrialFromPrice(options);
   const offerFaqSection = config.offerFaqs;
   const offerFaqItems = offerFaqSection?.build(options, config.conversionDays);
   const defaultView = options.find((o) => o.id === config.defaultOption);

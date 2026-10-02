@@ -1,8 +1,12 @@
 "use client";
 
+import { useMemo } from "react";
 import OfferHero from "@/app/components/go/offer/OfferHero";
 import { OfferPurchaseProvider } from "@/app/components/go/offer/OfferPurchase";
-import { buildOptionView } from "@/app/components/go/offer/offerOptionView";
+import {
+  buildOptionView,
+  getTrialFromPrice,
+} from "@/app/components/go/offer/offerOptionView";
 import type { OfferConfig } from "@/app/lib/landings/offer-types";
 import { SECTION } from "./listicleAnalytics";
 
@@ -23,8 +27,10 @@ export default function ListicleOfferHero({
   slug: string;
   offer: OfferConfig;
 }) {
-  const options = offer.options.map(buildOptionView);
-  const fromPrice = Math.min(...options.map((o) => o.price));
+  // Memoised: the listicle re-renders as its hero scrolls in and out, and a
+  // fresh options array each time would churn the purchase context.
+  const options = useMemo(() => offer.options.map(buildOptionView), [offer]);
+  const fromPrice = getTrialFromPrice(options);
 
   return (
     <OfferPurchaseProvider

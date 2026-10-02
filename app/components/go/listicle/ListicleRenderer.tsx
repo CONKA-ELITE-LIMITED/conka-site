@@ -15,6 +15,7 @@ import Link from "next/link";
 import ListicleProductHero from "./ListicleProductHero";
 import ListicleOfferHero from "./ListicleOfferHero";
 import { trialPack } from "@/app/lib/landings/trial-pack";
+import { getTrialFromPrice } from "@/app/components/go/offer/offerOptionView";
 import CognitionBars from "@/app/components/landing/CognitionBars";
 import ScoreByGroup from "@/app/components/landing/ScoreByGroup";
 import AthleteQuoteCard from "@/app/components/landing/AthleteQuoteCard";
@@ -103,7 +104,8 @@ const NAVY = "var(--brand-navy, #1b2757)";
 /* Marketing CTAs (hero, bridge, sticky) navigate to the PDP for the product
    this page sells, following the buy box's productHeroId, rather than scrolling
    to the in-page buy zone. Flow "01" -> /conka-flow, Clear "02" -> /conka-clarity,
-   Both "03" (and the default) -> /conka-both. */
+   Both "03" (and the default) -> /conka-both. A page with `product.offer` goes
+   to that offer's /go page instead (see OFFERS). */
 /** The buy-box product, in the vocabulary `offerData` uses. */
 const OFFER_PRODUCT: Record<ProductHeroId, OfferProduct> = {
   "01": "flow",
@@ -187,6 +189,7 @@ const PDP_HREF: Record<ProductHeroId, string> = {
 
 /** Offers a page can sell in place of a PDP product (`product.offer`). */
 const OFFERS = { "trial-pack": trialPack } as const;
+
 /* Light-navy tint strip (Simple DTC tint, not soft-blue). */
 const TINT = "var(--brand-tint, #f4f5f8)";
 /* Flat sibling of HERO_WASH for the sticky bar: the same Neuro Blue over white,
@@ -1268,7 +1271,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
   // CTA destination and `{trialPrice}` all follow the offer.
   const trialOffer = config.product.offer ? OFFERS[config.product.offer] : null;
   const trialPrice = trialOffer
-    ? Math.min(...trialOffer.options.map((o) => o.price)).toFixed(2)
+    ? getTrialFromPrice(trialOffer.options).toFixed(2)
     : null;
   const ctaLabel = (text: string) =>
     resolveOfferTokens(

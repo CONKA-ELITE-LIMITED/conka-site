@@ -21,7 +21,7 @@ export function buildOptionView(option: OfferOption): OfferOptionView {
   const oneTimePricing = getOfferPricing(product, "monthly-otp");
   const oneTimeVariant = getOfferVariant(product, "monthly-otp");
   if (!oneTimeVariant) {
-    throw new Error(`Offer page: no one-time variant for "${product}"`);
+    throw new Error(`Trial offer: no one-time variant for "${product}"`);
   }
 
   const oneTimePrice = getChargedPrice(oneTimePricing);
@@ -55,4 +55,9 @@ export function buildOptionView(option: OfferOption): OfferOptionView {
         gifts.reduce((total, gift) => total + gift.rrp, 0),
     },
   };
+}
+
+/** The cheapest pack's price: the "from" figure every trial headline and CTA quotes. */
+export function getTrialFromPrice(options: readonly { price: number }[]): number {
+  return Math.min(...options.map((o) => o.price));
 }

@@ -462,7 +462,8 @@ export interface Im8ListicleConfig extends ListicleBase {
   body: ListicleBodyBlock[];
   /** Dark CTA card bridging the last reason into the product zone */
   bridge?: { headline: string; cta: string };
-  /** Buy box zone. Renders ProductHeroV2 (via ListicleProductHero). */
+  /** Buy box zone. Renders the PDP hero (ListicleProductHero), or the offer's
+   *  hero (ListicleOfferHero) when `offer` is set. */
   product: {
     /** Which product the buy box sells ("01" Flow, "02" Clear, "03" Both).
      *  With `offer` set it still drives the body's prices (coffee compare,

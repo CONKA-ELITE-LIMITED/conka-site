@@ -166,6 +166,7 @@ signal fires at the checkout click.
 
 - **Meta:** ViewContent on mount; AddToCart and InitiateCheckout at the checkout click, Pixel and CAPI deduplicated by a shared `event_id`. Triple Whale AddToCart at the same click.
 - **Purchase:** the server Purchase (orders/paid webhook) gates on `checkout_token`, so the trial order counts as a Purchase and the day-7 conversion charge and renewals do not.
+- **Embedded in a listicle** (`product.offer`, LISTICLE_SYSTEM.md): the same buy box reports under the listicle's slug, with `location: offer_product` (or `offer_otp`) and `_listicle_origin=<listicle slug>-product`. No ViewContent fires there; listicles do not send one.
 - `offer:upsell_shown` / `offer:upsell_choice` helpers exist in `app/lib/analytics.ts` for the parked modal and never fire.
 
 ### FAQ
