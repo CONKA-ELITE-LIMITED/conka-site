@@ -645,6 +645,20 @@
   }
 }
 
+/* ---- /app hero test tiles ----
+   Consumed by app/components/appv2/AppV2Hero.tsx. A slow bob on the
+   `translate` property, so it composes with each tile's Tailwind rotate.
+   Phase is set inline per tile. */
+@keyframes app-hero-tile-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -8px; }
+}
+.app-hero-tile { animation: app-hero-tile-float 6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .app-hero-tile { animation: none; }
+}
+
 /* ---- Mobile navigation menu motion (SCRUM-1346) ----
    Consumed by app/components/navigation/NavigationMobile.tsx. CSS-only
    because the nav ships on every page. Transform and opacity only, so no

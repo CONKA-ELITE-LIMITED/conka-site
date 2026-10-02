@@ -74,13 +74,13 @@ Resolved 2026-08-27 by **adding** a CTA rather than replacing one, which was the
 
 **Audience:** top-to-mid-funnel visitors weighing CONKA, plus the existing customer. The app is free, so the page is not selling a supplement: it sells the app as the way to see CONKA working.
 **Posture:** friendly and light, in the Oura / Bevel spirit (light Simple DTC, real phone screenshots). Invite first, then earn trust, then prove it. The page's jobs, in order: app download, email capture through the live test, then CONKA. It deliberately does not sell "test for life": what matters is the early moments, a baseline, then CONKA, then a retest.
-**Story arc:** see CONKA working -> baseline, CONKA, retest -> get your baseline right here -> a score you can trust -> real people, real scores -> more in the app -> start with your baseline.
+**Story arc:** know your brain, see CONKA working -> baseline, CONKA, retest -> get your baseline right here -> a score you can trust -> real people, real scores -> more in the app -> start with your baseline.
 
 Motion is the CSS `Reveal` entrance plus the features section's auto-advance; the hero is static so its centre phone (the likely LCP element) is not held back.
 
 | # | Section (component) | Job in the story | Health | Notes |
 |---|---------------------|------------------|--------|-------|
-| 1 | Hero (`AppV2Hero`) | "See CONKA working." Store buttons, Oura-style fan of five real app screenshots (three on mobile) | OK | Mobile puts the fan under the headline, so the store buttons sit just below the fold on a phone |
+| 1 | Hero (`AppV2Hero`) | "Know your brain. See CONKA working." One demo readable in seconds: the score screen with four real test images floating round it, labelled Animal / Not an animal, plus a "90-second cognition test" pill. Store buttons, then "Or try it here first" to the live test (`#try-the-test`) | OK | Replaced the five-phone fan (Oct 2026), which read as a feature list rather than showing what the app does. Tiles are the test's own 256px images. Mobile order: headline, demo, body, buttons |
 | 2 | The loop (`AppV2Loop`) | "Baseline. CONKA. Retest." Day 1 / every day / Day 30 cards | OK | The heart of the page. Same flat card anatomy as /science "The challenge": 2:1 banner with a label pill, stacked on mobile |
 | 3 | Get your baseline (`CognitiveTestIsland`) | Live short test behind the email gate, then scores, a Flow + Clear recommendation and an app prompt | Strong | The email capture (SCRUM-1360). The test is our own engine in the site's navy theme, scored by our server (SCRUM-1457, `docs/features/COGNITIVE_TEST.md`) |
 | 4 | Trust (`AppV2Trust`) | "A score you can trust." Sourced research stats, Humphrey's origin as one line, "See the app data" button to /app-insights | OK | Placed after the test so the page invites before it lectures |

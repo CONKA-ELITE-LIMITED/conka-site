@@ -61,6 +61,7 @@ export default function AppPage() {
           No Reveal: the island renders nothing until the breakpoint resolves,
           so wrapping it would animate an empty box. */}
       <section
+        id="try-the-test"
         className="brand-section brand-bg-white"
         aria-labelledby="cognitive-test-heading"
       >
