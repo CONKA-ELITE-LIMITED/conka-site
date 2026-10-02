@@ -557,6 +557,16 @@ These were referenced only by components deleted in the sweep, and a repo grep n
 **What closes it:** confirm with whoever owns the Klaviyo templates and the Notion blog that none of the four are linked, then delete. Low risk: the live surfaces all use the `.jpg` variants of the same ingredients (`BuildStep.tsx`, both `IngredientsGrid.tsx`, both `ingredients.data.ts`) and the transparent cut-outs were only ever used by the deleted benefit components. (`CONKA_04.jpg` was deleted in SCRUM-1347.)
 
 
+### Three /app screenshots left unreferenced by the /app clarity upgrade
+
+**Status:** Open (SCRUM-1520). Not deleted with the change.
+**Files:** `public/app/AppTestDistractor.png`, `public/app/AppLongTrends.png`, `public/app/AppTestBreakdown.png`
+
+The hero and loop rebuild swapped these for the store pipeline captures (`AppHomeCapture.webp`, `AppTrendsCapture.webp`), and a repo grep now returns nothing for any of them. Same caution as above: `public/` is reachable by URL, so an email, blog post or ad could still point at them.
+
+**What closes it:** confirm nothing external links them, then delete. Note `AppLongTrends.png` ends with the score falling, so it should not be reused as an outcome visual either way.
+
+
 ### Confirm the v1 PDP carousel assets can stay deleted
 
 **Status:** Open. Removed from the repo 2026-09-11, copy archived off-repo.

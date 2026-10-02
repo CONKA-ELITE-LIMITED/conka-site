@@ -74,7 +74,7 @@ Resolved 2026-08-27 by **adding** a CTA rather than replacing one, which was the
 
 **Audience:** top-to-mid-funnel visitors weighing CONKA, plus the existing customer. The app is free, so the page is not selling a supplement: it sells the app as the way to see CONKA working.
 **Posture:** friendly and light, in the Oura / Bevel spirit (light Simple DTC, real phone screenshots). Invite first, then earn trust, then prove it. The page's jobs, in order: app download, email capture through the live test, then CONKA. It deliberately does not sell "test for life": what matters is the early moments, a baseline, then CONKA, then a retest.
-**Story arc:** know your brain, see CONKA working -> baseline, CONKA, retest -> get your baseline right here -> simple to learn, impossible to cheat -> real people, real scores -> more in the app -> start with your baseline.
+**Story arc:** know your brain, see CONKA working -> baseline, CONKA, retest -> get your baseline right here -> simple to learn, impossible to cheat -> real people, real scores -> more in the app -> your baseline is 90 seconds away.
 
 Motion is the CSS `Reveal` entrance, the hero tiles' CSS float and the features section's auto-advance; the hero is static so its centre phone (the likely LCP element) is not held back.
 
@@ -86,7 +86,7 @@ Motion is the CSS `Reveal` entrance, the hero tiles' CSS float and the features 
 | 4 | Trust (`AppV2Trust`) | "Simple to learn. Impossible to cheat." Explains why before showing data: one trial as a filmstrip (image flashes, noise mask, tap), four reasons (too fast to game, nothing to memorise, no reading or maths, hard-wired; a +/- accordion on mobile, open cards from lg), then the sourced research stats, Humphrey's origin and "See the app data" | OK | Exact image timings stay off the page on purpose ("a fraction of a second"). Reasons come from conkaApp `docs/app/features/cognitive-testing/cognica-game.md`. Placed after the test so the page invites before it lectures |
 | 5 | Real results (`AppV2Results`) | "Real people. Real scores." The score gain leads each card, large and green, with baseline to retest under it; "See all case studies" button | OK | Testing periods run months, so no fixed-timeframe claim |
 | 6 | More in the app (`AppV2Features`) | Interactive feature list (Bevel pattern): pick a feature, one phone shows its screen. Patterns, Apple Health, test breakdown, compete, rewards | OK | Retention beat. Auto-advances while in view until the visitor takes over; mobile is a swipeable card row above the phone |
-| 7 | Download (`AppV2Download`) | "Start with your baseline." Free, no subscription, plus a CONKA link | OK | Store clicks report as `download` |
+| 7 | Download (`AppV2Download`) | "Your baseline is 90 seconds away." Free, no subscription, "a number to beat", plus a CONKA link | OK | Store clicks report as `download` |
 
 **Weakest link right now:** unproven, the light rebuild shipped September 2026. Watch the `app:*` funnel (SCRUM-1360) for how many visitors reach the test and store buttons now that the mobile hero leads with the phones rather than the buttons.
 
