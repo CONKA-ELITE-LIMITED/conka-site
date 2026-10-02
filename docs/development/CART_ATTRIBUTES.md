@@ -47,6 +47,10 @@ that is the point of them: home had no per-CTA attribution, so there was no way
 to tell which argument (the timeline, the comparison table, the athletes) drove
 a click. Add a `home_<section>` token for any new home CTA.
 
+`/app-insights` uses the same mechanism for its one purchase link, the Try CONKA
+button in the Coffee vs CONKA report: `insights_coffee`. Exclude the
+`insights_` prefix from listicle reports for the same reason.
+
 ### Offer page line attributes
 
 `/go/[slug]` offer pages build their own cart (`app/components/go/offer/offerCheckout.ts`), so they set hidden line attributes directly on both the trial checkout and the buy-once link:

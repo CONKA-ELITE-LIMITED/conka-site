@@ -4,14 +4,15 @@ import { useEffect, useRef } from "react";
 import { track } from "@vercel/analytics/react";
 import type { ReportData } from "@/app/lib/appInsightsTypes";
 import EvidenceStrengthBadge from "./EvidenceStrengthBadge";
+import InsightIcon from "./insightIcons";
 
 /**
- * Per-report headline-finding callout. Sits between the trio header and
- * the chart inside DataReportSection. Layman framing + sample size +
- * evidence-strength badge + 1-2 layman anchors.
+ * A report's glance header: icon + topic, the hook, the headline finding
+ * in plain English, and the evidence line. Everything a skimmer needs; the
+ * rest sits behind the card's "See the full data".
  *
- * Fires `insights_report_callout_view` once per report when the callout
- * enters the viewport. Component is content-only.
+ * Fires `insights_report_callout_view` once per report when the header is
+ * half in view. Content-only.
  */
 export default function ReportHeadlineCallout({
   report,
@@ -22,11 +23,8 @@ export default function ReportHeadlineCallout({
   const firedRef = useRef(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (firedRef.current) return;
-
     const node = sentinelRef.current;
-    if (!node) return;
+    if (!node || firedRef.current) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -45,7 +43,7 @@ export default function ReportHeadlineCallout({
           }
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.5 },
     );
 
     observer.observe(node);
@@ -53,34 +51,27 @@ export default function ReportHeadlineCallout({
   }, [report.id]);
 
   return (
-    <div
-      ref={sentinelRef}
-      className="bg-white/85 p-5 lg:p-6"
-    >
-      <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#0a0a0a]/60 tabular-nums mb-3">
-        {"// Headline finding"}
+    <div ref={sentinelRef}>
+      <p className="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-[var(--brand-navy)]">
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#eef0f5]">
+          <InsightIcon id={report.id} className="h-4 w-4" />
+        </span>
+        {report.eyebrowConcept}
       </p>
-      <p className="text-lg lg:text-xl text-[#0a0a0a] leading-snug font-medium max-w-[58ch] mb-5">
+      <h2
+        className="brand-h2 mb-4 max-w-[22ch] text-black"
+        style={{ letterSpacing: "-0.02em" }}
+      >
+        {report.hook}
+      </h2>
+      <p className="mb-5 max-w-[48ch] text-lg leading-relaxed text-black/80">
         {report.headlineFinding}
       </p>
-      <div className="flex flex-wrap items-center gap-3 mb-5">
-        <EvidenceStrengthBadge strength={report.evidenceStrength} tone="light" />
-        <span className="font-mono text-[9px] uppercase tracking-[0.16em] tabular-nums text-[#0a0a0a]/60">
-          {report.sampleSize}
-        </span>
-      </div>
-      {report.laymanAnchors.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-5 border-t border-[#0a0a0a]/10">
-          {report.laymanAnchors.map((a) => (
-            <div key={a.stat}>
-              <p className="font-mono text-[10px] uppercase tracking-[0.16em] tabular-nums text-[#0a0a0a]/70 mb-1.5">
-                {a.stat}
-              </p>
-              <p className="text-sm text-[#0a0a0a]/85 leading-snug">{a.anchor}</p>
-            </div>
-          ))}
-        </div>
-      ) : null}
+      <EvidenceStrengthBadge
+        strength={report.evidenceStrength}
+        earlySignal={report.earlySignal}
+        sample={report.sampleSize}
+      />
     </div>
   );
 }

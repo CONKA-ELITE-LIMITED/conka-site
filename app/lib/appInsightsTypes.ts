@@ -111,6 +111,15 @@ export type LaymanAnchor = {
 
 export type EvidenceStrength = "Strong" | "Moderate" | "Early signal";
 
+/** The one number a report is remembered by: the finding tile in the hero
+ *  and the floating stat tile on the report's chart. */
+export type GlanceStat = {
+  value: string;
+  label: string;
+  /** Rendered in the positive accent (a gain rather than a cost). */
+  positive?: boolean;
+};
+
 export type ReportData = {
   id: "time-of-day" | "mental-fatigue" | "stress" | "alcohol" | "coffee";
   topicCode: string;
@@ -123,6 +132,13 @@ export type ReportData = {
   sampleSize: string;
   /** Evidence-strength badge, sourced from the report Summary tables. */
   evidenceStrength: EvidenceStrength;
+  /** Hero finding tile and the chart's floating stat tile. */
+  glance: GlanceStat;
+  /** Short sample label for tiles, e.g. "712 users". */
+  sampleShort: string;
+  /** Small user count: shown with an "Early signal" chip next to the
+   *  sourced evidence strength, which stays as reported. */
+  earlySignal?: boolean;
   /** 1-2 relatable comparisons to anchor the headline numbers. */
   laymanAnchors: LaymanAnchor[];
   chart: ChartData;

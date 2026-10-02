@@ -14,41 +14,26 @@ import {
 import type { BarChartData } from "@/app/lib/appInsightsTypes";
 import { useInView } from "@/app/hooks/useInView";
 import { usePrefersReducedMotion } from "@/app/hooks/usePrefersReducedMotion";
+import {
+  AXIS_STROKE,
+  GRID_STROKE,
+  NAVY,
+  NAVY_FAINT,
+  TICK_STYLE,
+  TOOLTIP_ITEM_STYLE,
+  TOOLTIP_LABEL_STYLE,
+  TOOLTIP_STYLE,
+  Y_LABEL_CLASS,
+  ZERO_LINE_LABEL_STYLE,
+  ZERO_LINE_STROKE,
+} from "./chartTheme";
 
-const BAR_COLOR = "rgba(255, 255, 255, 0.9)";
-const BAR_COLOR_NOISE = "rgba(255, 255, 255, 0.18)";
+const BAR_COLOR = NAVY;
+const BAR_COLOR_NOISE = NAVY_FAINT;
 
-const TICK_STYLE = {
-  fill: "rgba(255, 255, 255, 0.85)",
-  fontSize: 10,
-  fontFamily: "var(--font-jetbrains-mono)",
-  letterSpacing: "0.18em",
-};
 
-const TOOLTIP_STYLE = {
-  backgroundColor: "rgba(20, 20, 20, 0.95)",
-  border: "1px solid rgba(255, 255, 255, 0.15)",
-  borderRadius: 0,
-  fontFamily: "var(--font-jetbrains-mono)",
-  fontSize: 11,
-  color: "rgba(255, 255, 255, 0.9)",
-};
 
-const TOOLTIP_LABEL_STYLE = {
-  color: "rgba(255, 255, 255, 0.6)",
-  fontSize: 10,
-  textTransform: "uppercase" as const,
-  letterSpacing: "0.18em",
-  marginBottom: 4,
-};
 
-const ZERO_LINE_LABEL_STYLE = {
-  fontSize: 9,
-  fill: "rgba(255, 255, 255, 0.55)",
-  fontFamily: "var(--font-jetbrains-mono)",
-  letterSpacing: "0.16em",
-  textTransform: "uppercase" as const,
-};
 
 function colorForValue(value: number): string {
   // Near-zero / noise bars rendered very dim so they don't compete with real signal
@@ -74,9 +59,7 @@ export default function DataBarChart({ data }: { data: BarChartData }) {
 
   return (
     <div className="w-full">
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/55 tabular-nums mb-3">
-        {`Y · ${data.yLabel}`}
-      </p>
+      <p className={Y_LABEL_CLASS}>{data.yLabel}</p>
       <div ref={inViewRef} className="w-full h-[280px] lg:h-[340px]">
         {inView ? (
           <ResponsiveContainer width="100%" height="100%">
@@ -86,7 +69,7 @@ export default function DataBarChart({ data }: { data: BarChartData }) {
               barCategoryGap="30%"
             >
               <CartesianGrid
-                stroke="rgba(255, 255, 255, 0.08)"
+                stroke={GRID_STROKE}
                 strokeDasharray="2 4"
                 vertical={false}
               />
@@ -94,7 +77,7 @@ export default function DataBarChart({ data }: { data: BarChartData }) {
                 dataKey="label"
                 tick={TICK_STYLE}
                 tickLine={false}
-                axisLine={{ stroke: "rgba(255, 255, 255, 0.15)" }}
+                axisLine={{ stroke: AXIS_STROKE }}
               />
               <YAxis
                 tick={TICK_STYLE}
@@ -104,9 +87,9 @@ export default function DataBarChart({ data }: { data: BarChartData }) {
               />
               <ReferenceLine
                 y={0}
-                stroke="rgba(255, 255, 255, 0.3)"
+                stroke={ZERO_LINE_STROKE}
                 label={{
-                  value: "YOUR TYPICAL DAY",
+                  value: "Your typical day",
                   position: "insideBottomRight",
                   style: ZERO_LINE_LABEL_STYLE,
                 }}
@@ -114,8 +97,8 @@ export default function DataBarChart({ data }: { data: BarChartData }) {
               <Tooltip
                 contentStyle={TOOLTIP_STYLE}
                 labelStyle={TOOLTIP_LABEL_STYLE}
-                itemStyle={{ color: "rgba(255, 255, 255, 0.9)" }}
-                cursor={{ fill: "rgba(255, 255, 255, 0.04)" }}
+                itemStyle={TOOLTIP_ITEM_STYLE}
+                cursor={{ fill: "rgba(27, 39, 87, 0.04)" }}
                 formatter={(value: number, _name, item) => {
                   const meta = item?.payload?.meta;
                   return [
@@ -126,7 +109,7 @@ export default function DataBarChart({ data }: { data: BarChartData }) {
               />
               <Bar
                 dataKey="value"
-                radius={0}
+                radius={[0, 0, 6, 6]}
                 isAnimationActive={!prefersReduced}
                 animationDuration={900}
                 animationEasing="ease-out"

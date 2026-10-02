@@ -14,45 +14,30 @@ import {
 import type { LineChartData } from "@/app/lib/appInsightsTypes";
 import { useInView } from "@/app/hooks/useInView";
 import { usePrefersReducedMotion } from "@/app/hooks/usePrefersReducedMotion";
+import {
+  AXIS_STROKE,
+  GRID_STROKE,
+  NAVY,
+  NAVY_MUTED,
+  TICK_STYLE,
+  TOOLTIP_ITEM_STYLE,
+  TOOLTIP_LABEL_STYLE,
+  TOOLTIP_STYLE,
+  Y_LABEL_CLASS,
+  ZERO_LINE_LABEL_STYLE,
+  ZERO_LINE_STROKE,
+} from "./chartTheme";
 
-const WITHOUT_CONKA_COLOR = "rgba(255, 255, 255, 0.35)";
-const WITH_CONKA_COLOR = "rgba(255, 255, 255, 0.95)";
+const WITHOUT_CONKA_COLOR = NAVY_MUTED;
+const WITH_CONKA_COLOR = NAVY;
 
-const TICK_STYLE = {
-  fill: "rgba(255, 255, 255, 0.85)",
-  fontSize: 10,
-  fontFamily: "var(--font-jetbrains-mono)",
-  letterSpacing: "0.18em",
-};
 
-const TOOLTIP_STYLE = {
-  backgroundColor: "rgba(20, 20, 20, 0.95)",
-  border: "1px solid rgba(255, 255, 255, 0.15)",
-  borderRadius: 0,
-  fontFamily: "var(--font-jetbrains-mono)",
-  fontSize: 11,
-  color: "rgba(255, 255, 255, 0.9)",
-};
 
-const TOOLTIP_LABEL_STYLE = {
-  color: "rgba(255, 255, 255, 0.6)",
-  fontSize: 10,
-  textTransform: "uppercase" as const,
-  letterSpacing: "0.18em",
-  marginBottom: 4,
-};
 
-const ZERO_LINE_LABEL_STYLE = {
-  fontSize: 9,
-  fill: "rgba(255, 255, 255, 0.55)",
-  fontFamily: "var(--font-jetbrains-mono)",
-  letterSpacing: "0.16em",
-  textTransform: "uppercase" as const,
-};
 
 /**
  * Both curves draw left-to-right when the chart scrolls into view: the
- * faint without-CONKA curve first, the bright with-CONKA curve chasing it.
+ * muted without-CONKA curve first, the navy with-CONKA curve chasing it.
  * Mounting is deferred until near-visible (reserved height, no CLS);
  * reduced motion renders immediately with no animation.
  */
@@ -69,9 +54,7 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
 
   return (
     <div className="w-full">
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/55 tabular-nums mb-3">
-        {`Y · ${data.yLabel}`}
-      </p>
+      <p className={Y_LABEL_CLASS}>{data.yLabel}</p>
       <div ref={inViewRef} className="w-full h-[280px] lg:h-[360px]">
         {inView ? (
           <ResponsiveContainer width="100%" height="100%">
@@ -92,7 +75,7 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
               ))}
 
               <CartesianGrid
-                stroke="rgba(255, 255, 255, 0.08)"
+                stroke={GRID_STROKE}
                 strokeDasharray="2 4"
                 vertical={false}
               />
@@ -100,7 +83,7 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
                 dataKey="hour"
                 tick={TICK_STYLE}
                 tickLine={false}
-                axisLine={{ stroke: "rgba(255, 255, 255, 0.15)" }}
+                axisLine={{ stroke: AXIS_STROKE }}
               />
               <YAxis
                 tick={TICK_STYLE}
@@ -110,9 +93,9 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
               />
               <ReferenceLine
                 y={0}
-                stroke="rgba(255, 255, 255, 0.3)"
+                stroke={ZERO_LINE_STROKE}
                 label={{
-                  value: "YOUR TYPICAL DAY",
+                  value: "Your typical day",
                   position: "insideTopRight",
                   style: ZERO_LINE_LABEL_STYLE,
                 }}
@@ -120,9 +103,9 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
               <Tooltip
                 contentStyle={TOOLTIP_STYLE}
                 labelStyle={TOOLTIP_LABEL_STYLE}
-                itemStyle={{ color: "rgba(255, 255, 255, 0.9)" }}
+                itemStyle={TOOLTIP_ITEM_STYLE}
                 cursor={{
-                  stroke: "rgba(255, 255, 255, 0.2)",
+                  stroke: AXIS_STROKE,
                   strokeDasharray: "2 4",
                 }}
               />
@@ -156,17 +139,17 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
       </div>
 
       {/* Performance legend */}
-      <div className="flex items-center justify-center gap-6 mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-white/55 tabular-nums">
+      <div className="mt-3 flex items-center justify-center gap-6 text-xs font-medium text-black/60">
         <span className="flex items-center gap-2">
           <span
-            className="inline-block w-4 h-px"
+            className="inline-block h-0.5 w-4 rounded-full"
             style={{ backgroundColor: WITHOUT_CONKA_COLOR }}
           />
           Without CONKA
         </span>
         <span className="flex items-center gap-2">
           <span
-            className="inline-block w-4 h-0.5"
+            className="inline-block h-1 w-4 rounded-full"
             style={{ backgroundColor: WITH_CONKA_COLOR }}
           />
           With CONKA
@@ -175,26 +158,26 @@ export default function DataLineChart({ data }: { data: LineChartData }) {
 
       {/* Dosing key card — only when dosing bands are present */}
       {data.dosingBands && data.dosingBands.length > 0 && (
-        <div className="mt-4 border border-white/15 bg-white/[0.05] p-4 lg:p-5">
-          <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/45 tabular-nums mb-4">
-            {"// When to take each shot"}
+        <div className="mt-4 rounded-md bg-[#eef0f5] p-4 lg:p-5">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-black/50">
+            When to take each shot
           </p>
           <div className="grid grid-cols-2 gap-3 lg:gap-5">
             {data.dosingBands.map((band) => (
               <div key={band.label} className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
                   <span
-                    className="inline-block w-8 h-2 shrink-0"
+                    className="inline-block h-2 w-8 shrink-0 rounded-full"
                     style={{ backgroundColor: band.swatchColor }}
                   />
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white">
+                  <span className="text-sm font-bold text-[var(--brand-navy)]">
                     {band.label}
                   </span>
                 </div>
-                <p className="font-mono text-[11px] tabular-nums text-white/80">
+                <p className="text-xs font-medium tabular-nums text-black/70">
                   {band.window}
                 </p>
-                <p className="text-xs text-white/55 leading-snug">
+                <p className="text-xs leading-snug text-black/60">
                   {band.description}
                 </p>
               </div>

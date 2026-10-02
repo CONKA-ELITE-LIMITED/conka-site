@@ -22,6 +22,8 @@ const timeOfDay: ReportData = {
     "Your sharpest hours are 9am to 3pm. By 9pm, scores drop nearly a full point below your daily average.",
   sampleSize: "712 users · 7,593 tests · 30 months",
   evidenceStrength: "Strong",
+  glance: { value: "9am–3pm", label: "Your sharpest hours" },
+  sampleShort: "712 users",
   laymanAnchors: [
     {
       stat: "Peak to trough: ~1.5 points",
@@ -45,8 +47,8 @@ const timeOfDay: ReportData = {
         label: "CONKA Flow",
         window: "06:00 – 12:00",
         description: "Morning focus. Take with or after breakfast.",
-        fillColor: "rgba(255, 220, 140, 0.08)",
-        swatchColor: "rgba(255, 210, 100, 0.85)",
+        fillColor: "rgba(232, 160, 40, 0.10)",
+        swatchColor: "rgba(222, 150, 30, 0.9)",
       },
       {
         x1: "13",
@@ -54,8 +56,8 @@ const timeOfDay: ReportData = {
         label: "CONKA Clear",
         window: "12:00 – 18:00",
         description: "Afternoon reset. Take with or after lunch.",
-        fillColor: "rgba(160, 200, 255, 0.08)",
-        swatchColor: "rgba(160, 200, 255, 0.80)",
+        fillColor: "rgba(80, 125, 230, 0.09)",
+        swatchColor: "rgba(80, 125, 230, 0.85)",
       },
     ],
     points: [
@@ -114,6 +116,8 @@ const mentalFatigue: ReportData = {
     "When you feel foggy, the data agrees. Fatigued days cost about 1.8 points off your personal best.",
   sampleSize: "260 users · 1,248 fatigued tests · 18 months",
   evidenceStrength: "Strong",
+  glance: { value: "-1.8 pts", label: "On days you feel foggy" },
+  sampleShort: "260 users",
   laymanAnchors: [
     {
       stat: "+24ms slower reaction",
@@ -207,6 +211,9 @@ const stress: ReportData = {
     "Moderate stress costs more than a heavy night's drinking. About 5 points off your calm-day baseline.",
   sampleSize: "12 users · 44 stress-day tests · 891 stress entries",
   evidenceStrength: "Moderate",
+  glance: { value: "-5.4 pts", label: "On moderately stressed days" },
+  sampleShort: "12 users",
+  earlySignal: true,
   laymanAnchors: [
     {
       stat: "+41ms slower under stress",
@@ -304,6 +311,9 @@ const alcohol: ReportData = {
     "Under 6 drinks: no clear signal. Six or more: nearly 5 points off your sober baseline the next morning.",
   sampleSize: "27 users · 113 hangover tests · 638 entries",
   evidenceStrength: "Moderate",
+  glance: { value: "-4.9 pts", label: "The morning after 6+ drinks" },
+  sampleShort: "27 users",
+  earlySignal: true,
   laymanAnchors: [
     {
       stat: "+29ms slower the morning after",
@@ -372,6 +382,8 @@ const coffee: ReportData = {
     "Coffee on its own barely moved our users' cognitive scores. Every gain in the data tracked with CONKA, not caffeine.",
   sampleSize: "501 tests with both logged · 19 months",
   evidenceStrength: "Moderate",
+  glance: { value: "+4.0 pts", label: "Adding CONKA to coffee", positive: true },
+  sampleShort: "22 users",
   laymanAnchors: [
     {
       stat: "Coffee alone: ~0 score change",

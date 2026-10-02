@@ -1,57 +1,88 @@
 import Navigation from "@/app/components/navigation";
 import Footer from "@/app/components/footer";
-import InsightFilteredSections from "@/app/components/insights/InsightFilteredSections";
-import InsightHeroDifferentiator from "@/app/components/insights/InsightHeroDifferentiator";
+import InsightFindingsHero from "@/app/components/insights/InsightFindingsHero";
 import HowThisIsPossibleModule from "@/app/components/insights/HowThisIsPossibleModule";
+import MethodologyInThirtySeconds from "@/app/components/insights/MethodologyInThirtySeconds";
 import AppDownloadSection from "@/app/components/app/AppDownloadSection";
 import ProfessionalTrialsBlock from "@/app/components/insights/ProfessionalTrialsBlock";
 import ReviewedDate from "@/app/components/ReviewedDate";
+import Reveal from "@/app/components/landing/Reveal";
+import TimeOfDaySection from "./sections/TimeOfDaySection";
+import MentalFatigueSection from "./sections/MentalFatigueSection";
+import StressSection from "./sections/StressSection";
+import AlcoholSection from "./sections/AlcoholSection";
+import CoffeeSection from "./sections/CoffeeSection";
+
+/* Light Simple DTC, findings first (SCRUM-1522; plan:
+   docs/development/featurePlans/app-insights-findings-first.md). The hero's
+   finding tiles are the navigation; each report is a glance layer with its
+   depth behind "See the full data". Report anchors are linked from other
+   pages, so their ids must not change. Coffee vs CONKA stays last: it is the
+   one report that bridges to a purchase. */
+const REPORTS = [
+  { id: "time-of-day", label: "Time of day report", Section: TimeOfDaySection },
+  { id: "mental-fatigue", label: "Mental fatigue and readiness report", Section: MentalFatigueSection },
+  { id: "stress", label: "Stress report", Section: StressSection },
+  { id: "alcohol", label: "Alcohol and hangover report", Section: AlcoholSection },
+  { id: "coffee", label: "Coffee versus CONKA report", Section: CoffeeSection },
+] as const;
 
 export default function AppInsightsPage() {
   return (
-    <div
-      className="brand-clinical min-h-screen text-white flex flex-col"
-      style={{
-        backgroundColor: "#0a0a0a",
-        backgroundImage:
-          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Crect x='11' y='11' width='2' height='2' fill='rgba(255%2C255%2C255%2C0.18)'/%3E%3C/svg%3E\")",
-        backgroundSize: "24px 24px",
-      }}
-    >
+    <div className="flex min-h-screen flex-col bg-white text-black">
       <Navigation />
 
-      {/* 1. HERO ─ what this page is and why we have this data */}
+      {/* HERO: the findings, as tiles that jump to each report */}
       <section
-        className="brand-section brand-hero-first"
-        style={{ paddingTop: "5rem" }}
+        className="brand-section brand-hero-first brand-bg-tint"
         aria-labelledby="app-insights-hero"
       >
         <div className="brand-track">
-          <InsightHeroDifferentiator />
+          <InsightFindingsHero />
         </div>
       </section>
 
-      {/* 2. HOW THIS IS POSSIBLE — three-step flow + validated-test credentials */}
+      {/* REPORTS: alternate white and tint, starting white under the hero */}
+      {REPORTS.map(({ id, label, Section }, i) => (
+        <section
+          key={id}
+          id={id}
+          className={`brand-section scroll-mt-24 ${
+            i % 2 === 0 ? "brand-bg-white" : "brand-bg-tint"
+          }`}
+          aria-label={label}
+        >
+          <div className="brand-track">
+            <Reveal>
+              <Section />
+            </Reveal>
+          </div>
+        </section>
+      ))}
+
+      {/* TEMPORARY DARK BAND (Phase 1 only): these sections still carry the
+          old dark styling until Phase 2 of SCRUM-1522 rebuilds them, so they
+          keep their dark canvas here rather than going unreadable. */}
+      <div
+        className="brand-clinical text-white"
+        style={{ backgroundColor: "#0a0a0a" }}
+      >
       <section
         className="brand-section"
         aria-label="How CONKA captures this data"
       >
-        <div className="brand-track">
+        <div className="brand-track flex flex-col gap-10">
           <HowThisIsPossibleModule />
+          <MethodologyInThirtySeconds />
         </div>
       </section>
 
-      {/* 3–6. FILTERED APP DATA SECTIONS */}
-      <InsightFilteredSections />
-
-      {/* 7. DOWNLOAD — final CTA */}
       <section className="brand-section" aria-label="Download the CONKA app">
         <div className="brand-track">
           <AppDownloadSection />
         </div>
       </section>
 
-      {/* 8. PROFESSIONAL TRIALS — B2B exit ramp */}
       <section
         className="brand-section"
         aria-label="Professional trials with sports clubs"
@@ -117,6 +148,7 @@ export default function AppInsightsPage() {
           </div>
         </div>
       </section>
+      </div>
 
       <Footer />
     </div>
