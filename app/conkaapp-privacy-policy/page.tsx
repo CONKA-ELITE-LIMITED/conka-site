@@ -29,7 +29,7 @@ export default function PrivacyPolicyPage() {
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               PRIVACY POLICY
             </h1>
-            <p className="text-sm opacity-70">Last updated August 28, 2025</p>
+            <p className="text-sm opacity-70">Last updated October 1, 2026</p>
           </div>
 
           {/* Introduction */}
@@ -188,6 +188,15 @@ export default function PrivacyPolicyPage() {
                 in accordance with applicable data protection laws.
               </p>
               <p>
+                <strong>How do you delete your account?</strong> You can delete
+                your account in the app, under Profile &gt; Settings &gt; Delete
+                account. You have 30 days to change your mind. Learn more about{" "}
+                <a href="#deleteaccount" className="text-teal-500 underline">
+                  deleting your account
+                </a>
+                .
+              </p>
+              <p>
                 Want to learn more about what we do with any information we
                 collect?{" "}
                 <a href="#toc" className="text-teal-500 underline">
@@ -269,6 +278,11 @@ export default function PrivacyPolicyPage() {
                 <a href="#request" className="text-teal-500 underline">
                   13. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT
                   FROM YOU?
+                </a>
+              </div>
+              <div>
+                <a href="#deleteaccount" className="text-teal-500 underline">
+                  14. HOW DO YOU DELETE YOUR ACCOUNT?
                 </a>
               </div>
             </div>
@@ -629,6 +643,14 @@ export default function PrivacyPolicyPage() {
                     Understand how our users use our products and services so we
                     can improve user experience
                   </li>
+                  <li>
+                    Keep de-identified test, wellness and health data after you
+                    delete your account, for research and to improve CONKA.
+                    Learn more in{" "}
+                    <a href="#deleteaccount" className="text-teal-500 underline">
+                      HOW DO YOU DELETE YOUR ACCOUNT?
+                    </a>
+                  </li>
                 </ul>
               </li>
               <li>
@@ -829,10 +851,20 @@ export default function PrivacyPolicyPage() {
               We will only keep your personal information for as long as it is
               necessary for the purposes set out in this Privacy Notice, unless
               a longer retention period is required or permitted by law (such as
-              tax, accounting, or other legal requirements). No purpose in this
-              notice will require us keeping your personal information for
-              longer than the period of time in which users have an account with
-              us.
+              tax, accounting, or other legal requirements).
+            </p>
+            <p className="text-base leading-relaxed mb-4">
+              We keep your account information while you have an account with
+              us. When you delete your account, we keep it for a further 30 days
+              so you can restore your account if you change your mind. After
+              that, we erase it. We keep some data in de-identified form after
+              that, for research and to improve the product. Learn more in{" "}
+              <a href="#deleteaccount" className="text-teal-500 underline">
+                HOW DO YOU DELETE YOUR ACCOUNT?
+              </a>
+            </p>
+            <p className="text-base leading-relaxed mb-4">
+              Erased data leaves our backups within 7 days.
             </p>
             <p className="text-base leading-relaxed mb-6">
               When we have no ongoing legitimate business need to process your
@@ -1045,6 +1077,20 @@ export default function PrivacyPolicyPage() {
               in your account or terminate your account, you can:
             </p>
             <ul className="list-disc list-inside space-y-2 ml-4 text-base mb-4">
+              <li>
+                Delete your account in the app, under Profile &gt; Settings &gt;
+                Delete account. Learn more in{" "}
+                <a href="#deleteaccount" className="text-teal-500 underline">
+                  HOW DO YOU DELETE YOUR ACCOUNT?
+                </a>
+              </li>
+              <li>
+                Ask us to delete your account without the app, by following the
+                steps at{" "}
+                <a href="/delete-account" className="text-teal-500 underline">
+                  conka.io/delete-account
+                </a>
+              </li>
               <li>Contact us using the contact information provided.</li>
             </ul>
             <p className="text-base leading-relaxed mb-6">
@@ -1333,13 +1379,36 @@ export default function PrivacyPolicyPage() {
               needed to provide the Services or for:
             </p>
             <ul className="list-disc list-inside space-y-2 ml-4 text-base mb-6">
-              <li>Category A - As long as the user has an account with us</li>
-              <li>Category B - As long as the user has an account with us</li>
-              <li>Category C - As long as the user has an account with us</li>
-              <li>Category D - As long as the user has an account with us</li>
-              <li>Category F - As long as the user has an account with us</li>
-              <li>Category I - As long as the user has an account with us</li>
-              <li>Category L - As long as the user has an account with us</li>
+              <li>
+                Category A - As long as the user has an account with us, plus
+                30 days after they delete it
+              </li>
+              <li>
+                Category B - As long as the user has an account with us, plus
+                30 days after they delete it
+              </li>
+              <li>
+                Category C - As long as the user has an account with us, plus 30
+                days after they delete it. Birth year and sex are kept in
+                de-identified form after that
+              </li>
+              <li>
+                Category D - As long as the user has an account with us, plus
+                30 days after they delete it
+              </li>
+              <li>
+                Category F - As long as the user has an account with us, plus
+                30 days after they delete it
+              </li>
+              <li>
+                Category I - As long as the user has an account with us, plus
+                30 days after they delete it
+              </li>
+              <li>
+                Category L - As long as the user has an account with us, plus 30
+                days after they delete it. Health data is kept in de-identified
+                form after that
+              </li>
             </ul>
 
             <h3 className="text-xl md:text-2xl font-semibold mb-4">
@@ -1636,8 +1705,13 @@ export default function PrivacyPolicyPage() {
               have processed it, correct inaccuracies, or delete your personal
               information. You may also have the right to withdraw your consent
               to our processing of your personal information. These rights may
-              be limited in some circumstances by applicable law. To request to
-              review, update, or delete your personal information, please visit:{" "}
+              be limited in some circumstances by applicable law. To delete your
+              account, see{" "}
+              <a href="#deleteaccount" className="text-teal-500 underline">
+                HOW DO YOU DELETE YOUR ACCOUNT?
+              </a>{" "}
+              below. To request to review, update, or delete your personal
+              information, please visit:{" "}
               <a
                 href={supportMailtoHref()}
                 className="text-teal-500 underline"
@@ -1646,6 +1720,61 @@ export default function PrivacyPolicyPage() {
               </a>
               .
             </p>
+          </section>
+          {/* Section 14: Deleting your account (SCRUM-1502) */}
+          <section id="deleteaccount" className="mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold mb-6">
+              14. HOW DO YOU DELETE YOUR ACCOUNT?
+            </h2>
+            <ul className="list-disc list-inside space-y-3 ml-4 text-base mb-6">
+              <li>
+                <strong>How.</strong> In the app, go to Profile &gt; Settings
+                &gt; Delete account and confirm with your password. You are
+                signed out on every device. Without the app, follow the steps at{" "}
+                <a href="/delete-account" className="text-teal-500 underline">
+                  conka.io/delete-account
+                </a>
+                . If you joined through a research study, such as a university
+                trial, withdraw through the research team instead.
+              </li>
+              <li>
+                <strong>30 days to change your mind.</strong> Sign back in within
+                30 days and your account is restored with everything in it.
+                Until then, your email address cannot be used for a new account.
+              </li>
+              <li>
+                <strong>What we erase after 30 days.</strong> Your login, name,
+                email address, phone number and date of birth; your friends,
+                nudges, notifications, leaderboard place and push tokens; your
+                notes and comments; all other app data stored against your
+                username; and the order references linking your app activity to
+                your shop orders. Your username is replaced with an internal
+                reference and stays reserved, so it cannot be used again. Your
+                email address is then free, and a new sign-up starts with an
+                empty account.
+              </li>
+              <li>
+                <strong>What we keep, de-identified.</strong> Your test results,
+                wellness answers, Apple Health data, birth year, sex, sport and
+                organisation. De-identified is not the same as anonymised: it is
+                still personal data in law. We use it for research and analysis
+                to improve our services and products.
+              </li>
+              <li>
+                <strong>Backups and analytics.</strong> Erased data leaves our
+                backups within 7 days. Analytics data held by Segment is covered
+                by the rest of this policy.
+              </li>
+              <li>
+                <strong>What deleting does not do.</strong> It does not cancel a
+                CONKA subscription, which you manage from your{" "}
+                <a href="/account" className="text-teal-500 underline">
+                  CONKA account
+                </a>
+                . It does not unsubscribe you from marketing emails; use the
+                unsubscribe link in any of our emails.
+              </li>
+            </ul>
           </section>
         </div>
       </main>

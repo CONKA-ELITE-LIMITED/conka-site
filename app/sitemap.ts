@@ -225,6 +225,12 @@ const ROUTES: Route[] = [
     changeFrequency: "yearly",
     sources: ["app/conkaapp-privacy-policy"],
   },
+  {
+    path: "/delete-account",
+    priority: 0.3,
+    changeFrequency: "yearly",
+    sources: ["app/delete-account"],
+  },
 ];
 
 /**
