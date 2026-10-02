@@ -61,6 +61,7 @@ export default function AppPage() {
           No Reveal: the island renders nothing until the breakpoint resolves,
           so wrapping it would animate an empty box. */}
       <section
+        id="try-the-test"
         className="brand-section brand-bg-white"
         aria-labelledby="cognitive-test-heading"
       >
@@ -69,7 +70,7 @@ export default function AppPage() {
         </div>
       </section>
 
-      {/* ===== SECTION 4: A SCORE YOU CAN TRUST ===== */}
+      {/* ===== SECTION 4: SIMPLE TO LEARN, IMPOSSIBLE TO CHEAT ===== */}
       <section
         className="brand-section brand-bg-tint"
         aria-label="Why the score is worth trusting"

@@ -17,10 +17,11 @@ export default function AppV2Download() {
         className="brand-h1 mb-4 max-w-[22ch] text-black"
         style={{ letterSpacing: "-0.02em" }}
       >
-        Start with your baseline.
+        Your baseline is 90 seconds away.
       </h2>
-      <p className="mb-7 text-lg leading-relaxed text-black/80 lg:text-xl">
-        Free on iOS and Android. No subscription needed.
+      <p className="mb-7 max-w-[44ch] text-lg leading-relaxed text-black/80 lg:text-xl">
+        Free on iOS and Android, no subscription needed. Test today and you
+        have a number to beat.
       </p>
       <AppInstallButtons
         variant="dtc"
