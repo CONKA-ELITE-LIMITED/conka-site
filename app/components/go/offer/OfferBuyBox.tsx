@@ -38,7 +38,15 @@ const TILE_COLUMNS: Record<number, string> = {
 /** The offer gradient shared with FlatPlanCard, CartUpsellTile and GiftValueStack. */
 const OFFER_GRADIENT = "linear-gradient(90deg, #cdeecf, #e9f5c9)";
 
-export default function OfferBuyBox({ conversionDays }: { conversionDays: number }) {
+export default function OfferBuyBox({
+  conversionDays,
+  ctaSection = "hero",
+}: {
+  conversionDays: number;
+  /** Analytics section for the CTA. "product" when embedded in a listicle,
+   *  whose own hero CTA already reports as "hero". */
+  ctaSection?: string;
+}) {
   const { options, selected, select } = useOfferPurchase();
   const saving = selected.referencePrice - selected.price;
 
@@ -80,7 +88,7 @@ export default function OfferBuyBox({ conversionDays }: { conversionDays: number
       </div>
 
       <div className="mt-4">
-        <OfferCtaButton section="hero" isTile>
+        <OfferCtaButton section={ctaSection} isTile>
           Start trial for {formatPrice(selected.price)}
         </OfferCtaButton>
         <OfferCheckoutError />
