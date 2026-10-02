@@ -125,10 +125,9 @@ export type ReportData = {
   topicCode: string;
   eyebrowConcept: string;
   hook: string;
-  subline: string;
-  /** One-line layman framing for the TL;DR strip and per-report callout. */
+  /** One-line layman framing, shown under each report's hook. */
   headlineFinding: string;
-  /** Display-formatted sample size for the per-report callout. */
+  /** Display-formatted sample size for the report's evidence line. */
   sampleSize: string;
   /** Evidence-strength badge, sourced from the report Summary tables. */
   evidenceStrength: EvidenceStrength;

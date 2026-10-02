@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Real cognitive data from real users | CONKA",
     description:
-      "We don't ask if Conka works. We measure it. 712 users, 7,593 tests, 30 months of data from inside the CONKA app.",
+      "What 7,593 brain tests tell us: 712 CONKA app users, 30 months, every finding with its sample size.",
   },
 };
 

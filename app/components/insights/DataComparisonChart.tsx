@@ -16,6 +16,7 @@ import { useInView } from "@/app/hooks/useInView";
 import { usePrefersReducedMotion } from "@/app/hooks/usePrefersReducedMotion";
 import {
   AXIS_STROKE,
+  BAR_CURSOR,
   GRID_STROKE,
   NAVY,
   NAVY_MUTED,
@@ -107,7 +108,7 @@ export default function DataComparisonChart({
                 contentStyle={TOOLTIP_STYLE}
                 labelStyle={TOOLTIP_LABEL_STYLE}
                 itemStyle={TOOLTIP_ITEM_STYLE}
-                cursor={{ fill: "rgba(27, 39, 87, 0.04)" }}
+                cursor={BAR_CURSOR}
                 formatter={(value: number, _name, item) => {
                   const meta = item?.payload?.meta;
                   return [

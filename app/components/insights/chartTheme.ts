@@ -41,5 +41,8 @@ export const TOOLTIP_LABEL_STYLE = {
 
 export const TOOLTIP_ITEM_STYLE = { color: NAVY };
 
+/** Hover band behind the active bar. */
+export const BAR_CURSOR = { fill: "rgba(27, 39, 87, 0.04)" };
+
 /** Small caption above a chart naming its y-axis. */
 export const Y_LABEL_CLASS = "mb-2 text-xs font-medium text-black/50";
