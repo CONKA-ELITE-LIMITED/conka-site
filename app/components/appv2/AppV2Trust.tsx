@@ -16,8 +16,8 @@ import { APP_INSIGHTS_TOTALS } from "@/app/lib/appInsightsData";
  * from the app's ungameable list (conkaApp
  * docs/app/features/cognitive-testing/cognica-game.md). The research stats,
  * Humphrey's origin and the /app-insights link follow as the supporting
- * proof. On mobile the reasons collapse to a +/- accordion so the
- * section stays short; from lg they are open cards beside the filmstrip.
+ * proof. The reasons are a +/- accordion at every size, one open at a time
+ * with the first open, so the section stays short.
  *
  * Stats and reason surfaces are white because the page gives this section the
  * tint background. Content-only; the page owns the section.
@@ -186,13 +186,18 @@ export default function AppV2Trust() {
           </figure>
         </div>
 
-        {/* Mobile: titles only, tap + to open. */}
-        <ul className="flex flex-col gap-2 lg:hidden">
-          {REASONS.map((reason) => (
+        {/* One accordion at every size: native details sharing a name, so
+            opening one closes the others. The first starts open. */}
+        <ul className="flex flex-col gap-2 lg:self-center">
+          {REASONS.map((reason, i) => (
             <li key={reason.title}>
-              <details className="group rounded-md bg-white text-black">
-                <summary className="flex min-h-[52px] cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 [&::-webkit-details-marker]:hidden">
-                  <h3 className="text-base font-bold leading-tight text-[var(--brand-navy)]">
+              <details
+                name="app-trust-reasons"
+                open={i === 0}
+                className="group rounded-md bg-white text-black"
+              >
+                <summary className="flex min-h-[52px] cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 lg:px-5 lg:py-4 [&::-webkit-details-marker]:hidden">
+                  <h3 className="text-base font-bold leading-tight text-[var(--brand-navy)] lg:text-lg">
                     {reason.title}
                   </h3>
                   <span
@@ -202,25 +207,10 @@ export default function AppV2Trust() {
                     +
                   </span>
                 </summary>
-                <div className="px-4 pb-4">
+                <div className="px-4 pb-4 lg:px-5 lg:pb-5">
                   <ReasonBody reason={reason} />
                 </div>
               </details>
-            </li>
-          ))}
-        </ul>
-
-        {/* Desktop: open cards beside the filmstrip. */}
-        <ul className="hidden grid-cols-1 gap-3 self-center lg:grid xl:grid-cols-2">
-          {REASONS.map((reason) => (
-            <li
-              key={reason.title}
-              className="rounded-md bg-white p-5 text-black"
-            >
-              <h3 className="mb-1.5 text-base font-bold leading-tight text-[var(--brand-navy)]">
-                {reason.title}
-              </h3>
-              <ReasonBody reason={reason} />
             </li>
           ))}
         </ul>
