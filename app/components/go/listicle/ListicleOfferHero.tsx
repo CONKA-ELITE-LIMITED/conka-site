@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import OfferHero from "@/app/components/go/offer/OfferHero";
 import { OfferPurchaseProvider } from "@/app/components/go/offer/OfferPurchase";
+import TrialPackSeen from "@/app/components/go/offer/TrialPackSeen";
 import {
   buildOptionView,
   getTrialFromPrice,
@@ -18,7 +19,9 @@ import { SECTION } from "./listicleAnalytics";
  * The provider takes the listicle's slug, not the offer's, so option picks and
  * the order's `_listicle_origin` (`<slug>-product`) report against this page.
  * The heading drops to h2 under the listicle's own h1. No offer sticky bar:
- * the listicle keeps its own.
+ * the listicle keeps its own. TrialPackSeen marks the tab with the listicle's
+ * slug, as the offer page does with its own, so a later PDP order from a
+ * visitor who saw the offer here still carries `_trial_pack_seen`.
  */
 export default function ListicleOfferHero({
   slug,
@@ -38,6 +41,7 @@ export default function ListicleOfferHero({
       options={options}
       defaultOption={offer.defaultOption}
     >
+      <TrialPackSeen slug={slug} />
       <OfferHero
         config={offer}
         fromPrice={fromPrice}

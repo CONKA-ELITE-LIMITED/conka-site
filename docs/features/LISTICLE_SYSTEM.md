@@ -67,7 +67,7 @@ The `source` above lands the origin in Vercel, but the Shopify order needs it to
 
 1. **Persist.** `captureListicleSrc()` writes `?src=` to `sessionStorage` on PDP landing (the three PDP pages call it on mount), so the origin survives a within-PDP navigation that drops the param. `getListicleSrc()` reads the live URL first, then falls back to the stored value.
 2. **Carry.** `CartContext` writes the origin as a hidden, cart-level `_listicle_origin` attribute on every add-to-cart (sourced from `getPurchaseOrigin()`, exactly like `_fbp` / `_fbc`, so a later origin-less add cannot wipe it). The `_` prefix keeps it off the customer's checkout.
-3. **Read.** The attribute lands on the order as a note attribute, visible in Shopify admin under "Additional details" and readable through the Admin API. conka-lab's pipeline reads exactly this field; `/go/trial-pack` rides the same key (SCRUM-1381), so a slug in `_listicle_origin` is no longer necessarily a listicle.
+3. **Read.** The attribute lands on the order as a note attribute, visible in Shopify admin under "Additional details" and readable through the Admin API. conka-lab's pipeline reads exactly this field; the trial pack offer page rides the same key (SCRUM-1381), so a slug in `_listicle_origin` is no longer necessarily a listicle.
 
 An organic purchase (no `?src=` ever) carries no attribute.
 
