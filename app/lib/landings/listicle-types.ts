@@ -462,10 +462,23 @@ export interface Im8ListicleConfig extends ListicleBase {
   body: ListicleBodyBlock[];
   /** Dark CTA card bridging the last reason into the product zone */
   bridge?: { headline: string; cta: string };
-  /** Buy box zone. Renders ProductHeroV2 (via ListicleProductHero). */
+  /** Buy box zone. Renders the PDP hero (ListicleProductHero), or the offer's
+   *  hero (ListicleOfferHero) when `offer` is set. */
   product: {
-    /** Which product the buy box sells ("01" Flow, "02" Clear, "03" Both) */
+    /** Which product the buy box sells ("01" Flow, "02" Clear, "03" Both).
+     *  With `offer` set it still drives the body's prices (coffee compare,
+     *  proof tier), so an offer copy of a page reads identically above the
+     *  buy zone. */
     productHeroId?: ProductHeroId;
+    /**
+     * Sell a /go offer instead of a PDP product (SCRUM-1514). The buy zone
+     * renders that offer page's hero and pack selector (ListicleOfferHero),
+     * the hero, bridge and sticky CTAs link to `/go/<offer slug>`, and
+     * `{trialPrice}` in their copy resolves to the cheapest pack's price (bare
+     * number; the copy owns the "£"). Use the "button" sticky layout: the
+     * "offer" layout's per-shot line quotes the PDP product, not the offer.
+     */
+    offer?: "trial-pack";
     /** @deprecated no longer rendered since the ProductHeroV2 buy-zone swap;
      *  ProductHeroV2 supplies its own heading + accordions. Retained so
      *  existing configs keep type-checking until the copy is removed. */

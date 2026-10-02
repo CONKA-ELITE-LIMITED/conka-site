@@ -10,22 +10,12 @@ import {
   TrackedSection,
 } from "@/app/components/go/listicle/listicleAnalytics";
 import { BOTH_PDP_FAQ_ITEMS } from "@/app/lib/faqContent";
-import { getHeroProductType } from "@/app/lib/productHeroHelpers";
-import { MM_GALLERY_ASSETS } from "@/app/lib/mmPdpData";
-import {
-  getChargedPrice,
-  getOfferPricing,
-  getOfferVariant,
-} from "@/app/lib/offerData";
-import type {
-  OfferConfig,
-  OfferOption,
-  OfferOptionView,
-} from "@/app/lib/landings/offer-types";
+import type { OfferConfig } from "@/app/lib/landings/offer-types";
 import OfferCountdownBanner from "./OfferCountdownBanner";
 import OfferHero from "./OfferHero";
 import { OfferPurchaseProvider, OfferStickyBar } from "./OfferPurchase";
 import TrialPackSeen from "./TrialPackSeen";
+import { buildOptionView, getTrialFromPrice } from "./offerOptionView";
 
 /**
  * /go offer format (SCRUM-1343): the CONKA trial pack page for paid traffic.
@@ -42,57 +32,10 @@ import TrialPackSeen from "./TrialPackSeen";
  * order is attributable to the page.
  */
 
-/**
- * An option plus everything the client needs, derived from offerData so the
- * monthly and one-time figures match the rest of the site. Throws at build time
- * rather than shipping an option whose buy-once link cannot check out.
- */
-function buildOptionView(option: OfferOption): OfferOptionView {
-  const product = getHeroProductType(option.heroId);
-  const monthly = getOfferPricing(product, "monthly-sub");
-  const oneTimePricing = getOfferPricing(product, "monthly-otp");
-  const oneTimeVariant = getOfferVariant(product, "monthly-otp");
-  if (!oneTimeVariant) {
-    throw new Error(`Offer page: no one-time variant for "${product}"`);
-  }
-
-  const oneTimePrice = getChargedPrice(oneTimePricing);
-
-  const galleryImages = [
-    ...(option.galleryLead ? [option.galleryLead] : []),
-    ...MM_GALLERY_ASSETS[option.heroId],
-  ];
-  // The explainer goes 2nd, straight after the lead: how the trial works is the
-  // first question the offer raises.
-  if (option.explainerSlide) galleryImages.splice(1, 0, option.explainerSlide);
-
-  const gifts = monthly.gifts ?? [];
-  return {
-    ...option,
-    product,
-    galleryImages,
-    monthly: { price: monthly.price, shots: monthly.shotCount },
-    oneTime: {
-      variantId: oneTimeVariant.variantId,
-      price: oneTimePrice,
-      shots: oneTimePricing.shotCount,
-    },
-    starterPack: {
-      shots: monthly.firstOrderShots ?? monthly.shotCount,
-      freeShots: monthly.freeShots ?? 0,
-      gifts: gifts.map((gift) => gift.label),
-      value:
-        (monthly.compareAtPrice ?? monthly.price) +
-        (monthly.freeShotsValue ?? 0) +
-        gifts.reduce((total, gift) => total + gift.rrp, 0),
-    },
-  };
-}
-
 export default function OfferRenderer({ config }: { config: OfferConfig }) {
   const options = config.options.map(buildOptionView);
   // The cheapest trial price, shared by the banner and the hero headline.
-  const fromPrice = Math.min(...options.map((o) => o.price));
+  const fromPrice = getTrialFromPrice(options);
   const offerFaqSection = config.offerFaqs;
   const offerFaqItems = offerFaqSection?.build(options, config.conversionDays);
   const defaultView = options.find((o) => o.id === config.defaultOption);

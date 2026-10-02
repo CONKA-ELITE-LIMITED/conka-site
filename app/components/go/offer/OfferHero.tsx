@@ -28,11 +28,18 @@ const OFFER_GRADIENT = "linear-gradient(90deg, #cdeecf, #e9f5c9)";
 export default function OfferHero({
   config,
   fromPrice,
+  headingLevel = "h1",
+  ctaSection,
 }: {
   config: OfferConfig;
   /** The cheapest trial price, for the headline. */
   fromPrice: number;
+  /** "h2" when embedded below a page that already has its own h1 (listicle). */
+  headingLevel?: "h1" | "h2";
+  /** Passed to OfferBuyBox; see there. */
+  ctaSection?: string;
 }) {
+  const Heading = headingLevel;
   return (
     <div className="flex flex-col gap-[var(--brand-space-m)]">
       <div className="grid grid-cols-1 gap-6 text-black lg:grid-cols-[minmax(0,760px)_minmax(0,400px)] lg:items-start lg:justify-center lg:gap-x-12">
@@ -44,12 +51,12 @@ export default function OfferHero({
           >
             Limited-time trial offer
           </span>
-          <h1
+          <Heading
             className="brand-h1 !mb-0 !leading-none lg:!text-[3.25rem]"
             style={{ letterSpacing: "-0.02em" }}
           >
             Try CONKA from {formatPrice(fromPrice)}
-          </h1>
+          </Heading>
         </div>
 
         <div className="lg:sticky lg:top-24 lg:col-start-1 lg:row-span-6 lg:row-start-1 lg:self-start">
@@ -66,7 +73,7 @@ export default function OfferHero({
         </div>
 
         <div className="lg:col-start-2 lg:row-start-3">
-          <OfferBuyBox conversionDays={config.conversionDays} />
+          <OfferBuyBox conversionDays={config.conversionDays} ctaSection={ctaSection} />
         </div>
 
         {/* Social proof straight after the price and buy-once link, where doubt

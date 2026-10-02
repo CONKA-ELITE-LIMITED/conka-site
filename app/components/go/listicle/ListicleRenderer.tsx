@@ -13,6 +13,9 @@ import { videoTrio } from "@/app/lib/landings/videoTrio";
 import LaurelBadge from "@/app/components/landing/LaurelBadge";
 import Link from "next/link";
 import ListicleProductHero from "./ListicleProductHero";
+import ListicleOfferHero from "./ListicleOfferHero";
+import { trialPack } from "@/app/lib/landings/trial-pack";
+import { getTrialFromPrice } from "@/app/components/go/offer/offerOptionView";
 import CognitionBars from "@/app/components/landing/CognitionBars";
 import ScoreByGroup from "@/app/components/landing/ScoreByGroup";
 import AthleteQuoteCard from "@/app/components/landing/AthleteQuoteCard";
@@ -101,7 +104,8 @@ const NAVY = "var(--brand-navy, #1b2757)";
 /* Marketing CTAs (hero, bridge, sticky) navigate to the PDP for the product
    this page sells, following the buy box's productHeroId, rather than scrolling
    to the in-page buy zone. Flow "01" -> /conka-flow, Clear "02" -> /conka-clarity,
-   Both "03" (and the default) -> /conka-both. */
+   Both "03" (and the default) -> /conka-both. A page with `product.offer` goes
+   to that offer's /go page instead (see OFFERS). */
 /** The buy-box product, in the vocabulary `offerData` uses. */
 const OFFER_PRODUCT: Record<ProductHeroId, OfferProduct> = {
   "01": "flow",
@@ -182,6 +186,10 @@ const PDP_HREF: Record<ProductHeroId, string> = {
   "02": "/conka-clarity",
   "03": "/conka-both",
 };
+
+/** Offers a page can sell in place of a PDP product (`product.offer`). */
+const OFFERS = { "trial-pack": trialPack } as const;
+
 /* Light-navy tint strip (Simple DTC tint, not soft-blue). */
 const TINT = "var(--brand-tint, #f4f5f8)";
 /* Flat sibling of HERO_WASH for the sticky bar: the same Neuro Blue over white,
@@ -1259,8 +1267,21 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
     (config.proof.logoBand || config.proof.pressBand),
   );
 
-  // Marketing CTAs follow the product this page sells (see PDP_HREF).
-  const buyHref = PDP_HREF[heroId];
+  // An offer page sells a /go offer in place of the PDP product: its buy zone,
+  // CTA destination and `{trialPrice}` all follow the offer.
+  const trialOffer = config.product.offer ? OFFERS[config.product.offer] : null;
+  const trialPrice = trialOffer
+    ? getTrialFromPrice(trialOffer.options).toFixed(2)
+    : null;
+  const ctaLabel = (text: string) =>
+    resolveOfferTokens(
+      trialPrice ? text.replaceAll("{trialPrice}", trialPrice) : text,
+      heroId,
+    );
+
+  // Marketing CTAs follow the product this page sells (see PDP_HREF), or the
+  // offer page when it sells one.
+  const buyHref = trialOffer ? `/go/${trialOffer.slug}` : PDP_HREF[heroId];
 
   // The FAQ section carries the sticky-bar clearance (pb-32). If a config
   // supplies no faqIds that section does not render, so the clearance moves to
@@ -1347,7 +1368,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               className="mb-4 inline-flex w-full items-center justify-center gap-2 rounded-full px-8 py-4 text-center text-base font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-navy)] md:w-auto"
               style={{ background: NAVY }}
             >
-              {resolveOfferTokens(config.hero.cta, heroId)}
+              {ctaLabel(config.hero.cta)}
               <svg
                 width="18"
                 height="18"
@@ -1469,7 +1490,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
               onClick={() => fireCta(SECTION.bridge)}
               className="inline-block shrink-0 rounded-full bg-white px-7 py-3 text-[15px] font-bold text-[#111]"
             >
-              {resolveOfferTokens(config.bridge.cta, heroId)}
+              {ctaLabel(config.bridge.cta)}
             </Link>
           </div>
         </TrackedSection>
@@ -1485,7 +1506,11 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
         {/* max-w-7xl (not 6xl): ProductHeroV3's two-column grid is ~1208px at
             its natural width, so the narrower container would squeeze it. */}
         <TrackedSection section={SECTION.product} className="mx-auto max-w-7xl">
-          <ListicleProductHero productHeroId={config.product.productHeroId} />
+          {trialOffer ? (
+            <ListicleOfferHero slug={config.slug} offer={trialOffer} />
+          ) : (
+            <ListicleProductHero productHeroId={config.product.productHeroId} />
+          )}
         </TrackedSection>
       </section>
 
@@ -1551,7 +1576,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
                 className="flex min-h-[52px] w-full items-center justify-center rounded-full px-6 text-center text-[16px] font-bold text-white transition-opacity hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-navy)]"
                 style={{ background: NAVY }}
               >
-                {resolveOfferTokens(config.stickyBar.cta, heroId)}
+                {ctaLabel(config.stickyBar.cta)}
               </Link>
               {config.hero.socialProof ? (
                 // One line at 375px: the bare rating ("Excellent 4.7" -> "4.7")
@@ -1616,7 +1641,7 @@ function ListicleBody({ config }: { config: Im8ListicleConfig }) {
                 className="flex min-h-[48px] shrink-0 items-center justify-center rounded-full border-2 border-[var(--brand-navy)] bg-white px-7 text-center text-[var(--brand-navy)] transition-colors duration-200 hover:bg-[var(--brand-navy)] hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-navy)]"
               >
                 <span className="text-[15px] font-bold leading-tight">
-                  {resolveOfferTokens(config.stickyBar.cta, heroId)}
+                  {ctaLabel(config.stickyBar.cta)}
                 </span>
               </Link>
             </div>
