@@ -91,6 +91,8 @@ The attribution design shipped under SCRUM-1177 / SCRUM-1178; its plan doc has b
 | `app/lib/landings/index.ts` | The registry. Add your config here. |
 | `app/lib/landings/general-listicle.ts` | **The `mm` model config.** Copy this to start an MM page. |
 | `app/lib/landings/{adhd,productivity,brain-ageing}-listicle.ts` | **The `im8` model configs.** Copy one to start an IM8 page. |
+| `app/lib/landings/pl-v1.ts`, `pl-v2.ts` | The productivity page selling the trial pack (`product.offer`), live and staging. |
+| `app/components/go/listicle/ListicleOfferHero.tsx` | The `im8` buy zone in offer mode: the /go/trial-pack hero inside the listicle. |
 | `app/components/go/listicle/SimpleListicleRenderer.tsx` | Renders `mm`. |
 | `app/components/go/listicle/ListicleRenderer.tsx` | Renders `im8`. |
 | `app/go/[slug]/page.tsx` | Route: slug -> config -> renderer. |
@@ -187,7 +189,7 @@ The hero is text-only (no image, no CTA button); the sticky bar carries the pers
   //      `cta` supports a `{percent}` token: see "Offer tokens" below
   reasonsHeader?: { eyebrow, headline },
   body: [ /* the section-block library, in order */ ],
-  bridge?, product: { headline, subline?, productHeroId?, whoItsFor? },
+  bridge?, product: { headline, subline?, productHeroId?, offer?, whoItsFor? },
   // shared proof + faqIds + stickyBar
 }
 ```
@@ -373,6 +375,24 @@ switches `productHeroId` gets the right number with no copy edit.
 If the offer ever carries no anchor price to compare against, the resolver drops
 the savings clause rather than rendering "Save 0%".
 
+### Selling a /go offer instead of a PDP product (SCRUM-1514)
+
+`product.offer: "trial-pack"` makes an `im8` page sell the trial pack:
+
+- The `#product` zone renders `ListicleOfferHero` (the /go/trial-pack hero with its
+  pack selector, default pack preselected) instead of the PDP hero. Its CTA goes
+  straight to Shopify checkout through `offerCheckout`, so the order carries
+  `_source=trial_pack` and `_listicle_origin=<slug>-product` (or `<slug>-otp` for
+  the buy-once link).
+- The hero, bridge and sticky CTAs link to `/go/trial-pack?src=<slug>-<section>`
+  instead of the PDP.
+- `{trialPrice}` in those CTAs resolves to the cheapest pack's price from
+  `trial-pack.ts` (bare number; the copy owns the `£`).
+- `productHeroId` still drives everything above the buy zone (coffee compare,
+  `{perDay}`, proof tier), so an offer copy of a page reads identically to the
+  original until the buy zone. Use the `"button"` sticky layout: the `"offer"`
+  layout's per-shot line quotes the PDP product, not the offer.
+
 ## `im8` zone anatomy
 
 The eight zones the IM8 template was modelled on, top to bottom. Background
@@ -412,6 +432,8 @@ never the presence of evidence or interaction.
 - **Unknown `faqId` fails the build.** Deliberate: it stops a page shipping with a broken FAQ. Add the id to `faqContent.ts` first if it does not exist.
 - **`mm` reasons are photos only.** The type enforces it. Put the file in `public/` and reference it as `/path.jpg`.
 - **Do not register a scaffold.** There is no lorem-ipsum template file any more; copy a real model config instead.
+- **A live page and its staging copy are two configs.** `productivity-listicle` (live) / `productivity-v2` (staging) and `pl-v1` (live) / `pl-v2` (staging): ads point at the live slug, work happens on the staging one, and a winning change is copied across in one deliberate commit so ad URLs never move. The duplication is intended.
+- **Offer-mode CTA orders report as the trial pack page.** The CTAs land on `/go/trial-pack?src=...`, and that page's checkout writes `_listicle_origin=trial-pack-<section>` regardless of `?src`. Only buy-zone orders on the listicle itself carry the listicle's slug.
 - **Adding a third template?** Turn the route's `template === "mm" ? ... : ...` into a lookup map at that point, not before. Two templates do not need a registry.
 
 ## References
