@@ -86,7 +86,7 @@ const BOTTLES = [
 
 function StatTile({ stat }: { stat: Stat }) {
   const tile =
-    "absolute bottom-4 left-3 rounded-lg bg-white px-3.5 py-2.5 text-left shadow-[0_8px_24px_rgba(27,39,87,0.16)] lg:left-4";
+    "absolute bottom-4 left-3 rounded-lg bg-white px-3.5 py-2.5 text-left app-tile-shadow-sm lg:left-4";
 
   if ("check" in stat) {
     return (
@@ -134,7 +134,7 @@ function Bottles() {
       {BOTTLES.map((bottle) => (
         <figure
           key={bottle.name}
-          className={`w-[38%] max-w-[170px] rounded-lg bg-white p-[3%] pb-3 shadow-[0_12px_32px_rgba(27,39,87,0.18)] ${bottle.className}`}
+          className={`w-[38%] max-w-[170px] rounded-lg bg-white p-[3%] pb-3 app-tile-shadow ${bottle.className}`}
         >
           <Image
             src={bottle.src}

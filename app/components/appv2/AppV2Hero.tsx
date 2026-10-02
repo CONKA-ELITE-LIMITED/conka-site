@@ -104,7 +104,7 @@ export default function AppV2Hero() {
         {TILES.map((tile) => (
           <figure
             key={tile.id}
-            className={`app-hero-tile absolute w-[34%] max-w-[170px] rounded-lg bg-white p-[3%] pb-[2%] shadow-[0_12px_32px_rgba(27,39,87,0.18)] ${tile.className}`}
+            className={`app-hero-tile absolute w-[34%] max-w-[170px] rounded-lg bg-white p-[3%] pb-[2%] app-tile-shadow ${tile.className}`}
             style={{ animationDelay: tile.delay }}
           >
             <Image

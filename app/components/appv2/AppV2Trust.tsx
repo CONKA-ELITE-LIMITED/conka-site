@@ -10,13 +10,13 @@ import { APP_INSIGHTS_TOTALS } from "@/app/lib/appInsightsData";
  * store's own line. Deliberately after the loop and the live test, so the
  * page invites before it lectures.
  *
- * It answers the why before it shows the data: one trial as a filmstrip
- * (an image for a fraction of a second, a noise mask, your tap; exact timings
- * stay off the page) built from the
- * test's own image and mask, then four reasons from the app's ungameable list
- * (conkaApp docs/app/features/cognitive-testing/cognica-game.md). The
- * research stats, Humphrey's origin and the /app-insights link follow as the
- * supporting proof. On mobile the reasons collapse to a +/- accordion so the
+ * It answers the why before it shows the data: one trial as a filmstrip built
+ * from the test's own image and mask (an image for a fraction of a second, a
+ * noise mask, your tap; exact timings stay off the page), then four reasons
+ * from the app's ungameable list (conkaApp
+ * docs/app/features/cognitive-testing/cognica-game.md). The research stats,
+ * Humphrey's origin and the /app-insights link follow as the supporting
+ * proof. On mobile the reasons collapse to a +/- accordion so the
  * section stays short; from lg they are open cards beside the filmstrip.
  *
  * Stats and reason surfaces are white because the page gives this section the
@@ -143,7 +143,7 @@ export default function AppV2Trust() {
                         &rarr;
                       </span>
                     )}
-                    <div className="aspect-square overflow-hidden rounded-lg bg-white p-1.5 shadow-[0_8px_24px_rgba(27,39,87,0.12)]">
+                    <div className="aspect-square overflow-hidden rounded-lg bg-white p-1.5 app-tile-shadow-sm">
                       {frame.kind === "tap" ? (
                         <div className="flex h-full w-full flex-col items-center justify-center gap-1.5 rounded-md bg-[var(--brand-navy)] p-2">
                           <span className="w-full rounded-full bg-white/15 py-1 text-center text-[clamp(0.65rem,2.6vw,0.8rem)] font-semibold text-white">
