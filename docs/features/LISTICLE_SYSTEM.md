@@ -92,7 +92,7 @@ The attribution design shipped under SCRUM-1177 / SCRUM-1178; its plan doc has b
 | `app/lib/landings/general-listicle.ts` | **The `mm` model config.** Copy this to start an MM page. |
 | `app/lib/landings/{adhd,productivity,brain-ageing}-listicle.ts` | **The `im8` model configs.** Copy one to start an IM8 page. |
 | `app/lib/landings/pl-v1.ts`, `pl-v2.ts` | The productivity page selling the trial pack (`product.offer`), live (trial pack Meta campaign) and staging. |
-| `app/components/go/listicle/ListicleOfferHero.tsx` | The `im8` buy zone in offer mode: the /go/trial-pack hero inside the listicle. |
+| `app/components/go/listicle/ListicleOfferHero.tsx` | The `im8` buy zone in offer mode: the trial pack offer page hero inside the listicle. |
 | `app/components/go/listicle/SimpleListicleRenderer.tsx` | Renders `mm`. |
 | `app/components/go/listicle/ListicleRenderer.tsx` | Renders `im8`. |
 | `app/go/[slug]/page.tsx` | Route: slug -> config -> renderer. |
@@ -379,12 +379,12 @@ the savings clause rather than rendering "Save 0%".
 
 `product.offer: "trial-pack"` makes an `im8` page sell the trial pack:
 
-- The `#product` zone renders `ListicleOfferHero` (the /go/trial-pack hero with its
+- The `#product` zone renders `ListicleOfferHero` (the trial pack offer page hero with its
   pack selector, default pack preselected) instead of the PDP hero. Its CTA goes
   straight to Shopify checkout through `offerCheckout`, so the order carries
   `_source=trial_pack` and `_listicle_origin=<slug>-product` (or `<slug>-otp` for
   the buy-once link).
-- The hero, bridge and sticky CTAs link to `/go/trial-pack?src=<slug>-<section>`
+- The hero, bridge and sticky CTAs link to the offer page, `/go/trial-pack-v2?src=<slug>-<section>`
   instead of the PDP.
 - `{trialPrice}` in those CTAs resolves to the cheapest pack's price from
   `trial-pack.ts` (bare number; the copy owns the `£`).
@@ -433,7 +433,7 @@ never the presence of evidence or interaction.
 - **`mm` reasons are photos only.** The type enforces it. Put the file in `public/` and reference it as `/path.jpg`.
 - **Do not register a scaffold.** There is no lorem-ipsum template file any more; copy a real model config instead.
 - **A live page and its staging copy are two configs.** `productivity-listicle` (live) / `productivity-v2` (staging), selling Flow, and `pl-v1` (live) / `pl-v2` (staging), selling the trial pack: ads point at the live slug, work happens on the staging one, and a winning change is copied across in one deliberate commit so ad URLs never move. The duplication is intended.
-- **Offer-mode CTA orders carry the listicle's token.** The CTAs land on `/go/trial-pack?src=<slug>-<section>`, and that page's checkout uses a valid `?src` on the URL as `_listicle_origin` (SCRUM-1516), falling back to `trial-pack-<section>` without one. Read from the URL only, never sessionStorage.
+- **Offer-mode CTA orders carry the listicle's token.** The CTAs land on `/go/trial-pack-v2?src=<slug>-<section>`, and that page's checkout uses a valid `?src` on the URL as `_listicle_origin` (SCRUM-1516), falling back to `trial-pack-<section>` without one. Read from the URL only, never sessionStorage.
 - **Adding a third template?** Turn the route's `template === "mm" ? ... : ...` into a lookup map at that point, not before. Two templates do not need a registry.
 
 ## References

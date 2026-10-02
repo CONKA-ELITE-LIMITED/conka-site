@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-10-02** | The trial pack Meta campaign URL /go/trial-pack now redirects to the productivity trial pack listicle /go/pl-v1, and the trial pack offer page moved to /go/trial-pack-v2, where the listicle's CTAs land (SCRUM-1518)
 - **2026-10-02** | /go/productivity-listicle is back on Flow (the trial pack switch earlier today was a mistake); the trial pack version of the productivity page returns at /go/pl-v1 (live, for the trial pack Meta ads) and /go/pl-v2 (staging), and its CTA orders credit pl-v1 (SCRUM-1517)
 - **2026-10-02** | /go/productivity-listicle (the live productivity Meta page) now sells the Both trial pack: trial pack buy box in the product section and "Try CONKA from £12.99" CTAs to /go/trial-pack, in place so ad URLs are unchanged; trial pack orders arriving from a listicle CTA now credit that listicle; the unused /go/pl-v1 and /go/pl-v2 are removed (SCRUM-1516)
 - **2026-10-02** | New ad landings /go/pl-v1 (live) and /go/pl-v2 (staging): the productivity listicle unchanged except it sells the Both trial pack, with the trial pack buy box in the product section (2 boxes preselected) and CTAs reading "Try CONKA from £12.99" that go to /go/trial-pack (SCRUM-1514)

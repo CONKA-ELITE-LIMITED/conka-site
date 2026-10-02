@@ -24,7 +24,7 @@ This supersedes the quiz/protocol-era `LTV_TAGGING_PLAN.md`, now in [`featurePla
 | `whats_inside` | Add from a "what's inside" ingredients section. |
 | `cart_upsell` | Add from an upsell offer inside the cart drawer. |
 | `listicle` | Add from a `/go/[slug]` listicle landing page. |
-| `trial_pack` | Checkout from the `/go/trial-pack` offer page (sent as the `_source` line attribute, see below). Earlier offer-page orders carry `trial_box`. |
+| `trial_pack` | Checkout from the trial pack offer page (`/go/trial-pack-v2`; `/go/trial-pack` before 2 Oct 2026) (sent as the `_source` line attribute, see below). Earlier offer-page orders carry `trial_box`. |
 | `win_free_month` | Add from the win-a-free-month promo surface. |
 
 > **Removed sources.** `quiz` and `protocol_page` were retired with the `/quiz`

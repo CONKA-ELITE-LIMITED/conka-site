@@ -26,7 +26,9 @@ import { buildTrialPackFaqs } from "./trial-pack-faq";
  */
 export const trialPack: OfferConfig = {
   format: "offer",
-  slug: "trial-pack",
+  // /go/trial-pack (the Meta campaign URL) redirects to the /go/pl-v1
+  // listicle, whose CTAs land here (next.config.ts).
+  slug: "trial-pack-v2",
   title: "CONKA Trial Pack",
   conversionDays: 7,
   defaultOption: "both_8shot",
