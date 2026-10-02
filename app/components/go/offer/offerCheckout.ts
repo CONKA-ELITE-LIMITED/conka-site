@@ -18,7 +18,8 @@
  * line attributes at all (SCRUM-1382). So the CART also carries
  * `_listicle_origin`, the order-level key the pipeline already parses, which is
  * what lets the Landing Pages view count this page's orders without waiting on
- * that ingest change (SCRUM-1381).
+ * that ingest change (SCRUM-1381). When a listicle CTA sent the visitor here
+ * with `?src=`, that token is the origin instead (SCRUM-1516).
  */
 
 import {
@@ -28,7 +29,11 @@ import {
   trackMetaInitiateCheckout,
 } from "@/app/lib/metaPixel";
 import { trackAddToCart as trackTripleWhaleAddToCart } from "@/app/lib/tripleWhale";
-import { trackCartCheckoutClicked, trackPurchaseAddToCart } from "@/app/lib/analytics";
+import {
+  getIncomingListicleSrc,
+  trackCartCheckoutClicked,
+  trackPurchaseAddToCart,
+} from "@/app/lib/analytics";
 import type { OfferProduct } from "@/app/lib/offerData";
 import type { OfferOptionId } from "@/app/lib/landings/offer-types";
 
@@ -64,11 +69,15 @@ export async function offerCheckout(args: OfferCheckoutArgs): Promise<void> {
   }
 
   // `<slug>-<section>`, the same shape the listicles' useListicleSrc builds, so
-  // conka-lab's known-slug split reads it without a special case. Ordered after
-  // the Meta identity attributes purely for readability; Shopify does not care.
+  // conka-lab's known-slug split reads it without a special case. A listicle
+  // CTA that sent the visitor here passes its own token as `?src=`, and that
+  // wins, so the order counts against the listicle rather than this page
+  // (SCRUM-1516). Ordered after the Meta identity attributes purely for
+  // readability; Shopify does not care.
+  const origin = getIncomingListicleSrc() ?? `${args.slug}-${args.section}`;
   const cartAttributes = [
     ...buildMetaCartAttributes(),
-    { key: "_listicle_origin", value: `${args.slug}-${args.section}` },
+    { key: "_listicle_origin", value: origin },
   ];
 
   const res = await fetch("/api/cart", {

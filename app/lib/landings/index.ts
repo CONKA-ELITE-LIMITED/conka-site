@@ -11,8 +11,6 @@ import { brainAgeQuiz } from "./brain-age";
 import { adhdListicle } from "./adhd-listicle";
 import { productivityListicle } from "./productivity-listicle";
 import { productivityV2Listicle } from "./productivity-v2-listicle";
-import { plV1Listicle } from "./pl-v1";
-import { plV2Listicle } from "./pl-v2";
 import { brainAgeingListicle } from "./brain-ageing-listicle";
 import { generalListicle } from "./general-listicle";
 import type { OfferConfig } from "./offer-types";
@@ -30,9 +28,6 @@ const registry: Record<string, AnyLandingConfig> = {
   [adhdListicle.slug]: adhdListicle,
   [productivityListicle.slug]: productivityListicle,
   [productivityV2Listicle.slug]: productivityV2Listicle,
-  // Productivity listicle selling the trial pack (SCRUM-1514): live + staging.
-  [plV1Listicle.slug]: plV1Listicle,
-  [plV2Listicle.slug]: plV2Listicle,
   [brainAgeingListicle.slug]: brainAgeingListicle,
   [generalListicle.slug]: generalListicle,
   // Offer pages (SCRUM-1343): one config per offer, see offer-types.ts.
