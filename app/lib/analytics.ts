@@ -670,6 +670,19 @@ function isValidListicleSrc(raw: string): boolean {
 }
 
 /**
+ * The `?src=` token on the current URL only, validated, with no sessionStorage
+ * fallback. The single URL reader for the helpers below, and used directly by
+ * /go/trial-pack, which checks out on the same page load the listicle CTA
+ * landed on: a stored token from earlier in the tab could belong
+ * to a different journey, so it is deliberately not consulted (SCRUM-1516).
+ */
+export function getIncomingListicleSrc(): string | null {
+  if (typeof window === "undefined") return null;
+  const raw = new URLSearchParams(window.location.search).get("src");
+  return raw && isValidListicleSrc(raw) ? raw : null;
+}
+
+/**
  * Persist the `?src=` token a /go listicle appended to its outbound PDP link.
  *
  * Called on landing so the origin survives a within-PDP navigation that drops
@@ -677,28 +690,14 @@ function isValidListicleSrc(raw: string): boolean {
  * a no-op when there is no valid `src` in the URL.
  */
 export function captureListicleSrc(): void {
-  if (typeof window === "undefined") return;
-
-  const raw = new URLSearchParams(window.location.search).get("src");
-  if (!raw || !isValidListicleSrc(raw)) return;
+  const raw = getIncomingListicleSrc();
+  if (!raw) return;
 
   try {
     window.sessionStorage.setItem(LISTICLE_SRC_KEY, raw);
   } catch {
     // sessionStorage unavailable (private mode); attribution simply degrades.
   }
-}
-
-/**
- * The `?src=` token on the current URL only, validated, with no sessionStorage
- * fallback. For /go/trial-pack, which checks out on the same page load the
- * listicle CTA landed on: a stored token from earlier in the tab could belong
- * to a different journey, so it is deliberately not consulted (SCRUM-1516).
- */
-export function getIncomingListicleSrc(): string | null {
-  if (typeof window === "undefined") return null;
-  const raw = new URLSearchParams(window.location.search).get("src");
-  return raw && isValidListicleSrc(raw) ? raw : null;
 }
 
 /**
@@ -711,8 +710,8 @@ export function getIncomingListicleSrc(): string | null {
 function getListicleSrc(): string | null {
   if (typeof window === "undefined") return null;
 
-  const raw = new URLSearchParams(window.location.search).get("src");
-  if (raw && isValidListicleSrc(raw)) {
+  const raw = getIncomingListicleSrc();
+  if (raw) {
     // Write-through so a later add-to-cart on this same tab still has it.
     try {
       window.sessionStorage.setItem(LISTICLE_SRC_KEY, raw);
