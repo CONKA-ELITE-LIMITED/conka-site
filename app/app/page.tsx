@@ -70,7 +70,7 @@ export default function AppPage() {
         </div>
       </section>
 
-      {/* ===== SECTION 4: A SCORE YOU CAN TRUST ===== */}
+      {/* ===== SECTION 4: SIMPLE TO LEARN, IMPOSSIBLE TO CHEAT ===== */}
       <section
         className="brand-section brand-bg-tint"
         aria-label="Why the score is worth trusting"
