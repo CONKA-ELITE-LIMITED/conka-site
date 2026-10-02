@@ -9,6 +9,10 @@ import type { ListicleConfig } from "./listicle-types";
  * copy it back here in one deliberate change (and flag it on the Notion
  * timeline). The original v1 copy lives in git history.
  *
+ * Sells the Both trial pack since 2 Oct 2026 (SCRUM-1516): `product.offer`
+ * swaps the buy zone and CTAs; the Flow monthly/quarterly version is in git
+ * history.
+ *
  * Duplication with v2 is intended, not debt: sharing one config would push
  * every experiment straight to paid traffic.
  */
@@ -30,7 +34,7 @@ export const productivityListicle: ListicleConfig = {
     // Trustpilot star boxes (4.7 is our Trustpilot score) in place of the
     // gold stars and the review and user counts.
     socialProof: { label: "Excellent 4.7", trustpilot: true },
-    cta: "Save {percent}% and try it risk-free",
+    cta: "Try CONKA from £{trialPrice}",
     // Purpose-shot hero (round 2): overloaded desk worker, hands offering CONKA shots from every side.
     asset: {
       kind: "image",
@@ -256,10 +260,13 @@ export const productivityListicle: ListicleConfig = {
   ],
   bridge: {
     headline: "Make it part of your routine. 100 days, risk-free.",
-    cta: "Try CONKA Risk-Free →",
+    cta: "Try CONKA from £{trialPrice} →",
   },
   product: {
+    // The buy zone and CTAs sell the Both trial pack (SCRUM-1516); Flow still
+    // drives the prices above the buy zone (coffee compare, proof tier).
     productHeroId: "01",
+    offer: "trial-pack",
   },
   faqIds: [
     "caffeine",
@@ -271,5 +278,5 @@ export const productivityListicle: ListicleConfig = {
     "guarantee",
   ],
   // Same line as the hero CTA, so the page makes one ask.
-  stickyBar: { cta: "Save {percent}% and try it risk-free", layout: "button" },
+  stickyBar: { cta: "Try CONKA from £{trialPrice}", layout: "button" },
 };

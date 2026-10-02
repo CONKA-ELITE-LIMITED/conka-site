@@ -690,6 +690,18 @@ export function captureListicleSrc(): void {
 }
 
 /**
+ * The `?src=` token on the current URL only, validated, with no sessionStorage
+ * fallback. For /go/trial-pack, which checks out on the same page load the
+ * listicle CTA landed on: a stored token from earlier in the tab could belong
+ * to a different journey, so it is deliberately not consulted (SCRUM-1516).
+ */
+export function getIncomingListicleSrc(): string | null {
+  if (typeof window === "undefined") return null;
+  const raw = new URLSearchParams(window.location.search).get("src");
+  return raw && isValidListicleSrc(raw) ? raw : null;
+}
+
+/**
  * The `?src=` origin token a /go listicle appended to its outbound PDP links.
  *
  * Reads the live URL first, falling back to the value captured into

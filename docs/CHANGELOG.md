@@ -5,6 +5,7 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-10-02** | /go/productivity-listicle (the live productivity Meta page) now sells the Both trial pack: trial pack buy box in the product section and "Try CONKA from £12.99" CTAs to /go/trial-pack, in place so ad URLs are unchanged; trial pack orders arriving from a listicle CTA now credit that listicle; the unused /go/pl-v1 and /go/pl-v2 are removed (SCRUM-1516)
 - **2026-10-02** | New ad landings /go/pl-v1 (live) and /go/pl-v2 (staging): the productivity listicle unchanged except it sells the Both trial pack, with the trial pack buy box in the product section (2 boxes preselected) and CTAs reading "Try CONKA from £12.99" that go to /go/trial-pack (SCRUM-1514)
 - **2026-09-30** | Trustpilot invite script removed from conka.io: Trustpilot verified through the Shopify checkout instead, and review invites now go out from the Trustpilot Shopify app (service reviews, ~5 weeks after fulfilment, max once per customer per 90 days), so the site script had no job left. The conka.io Trustpilot profile link stays (SCRUM-1487)
 - **2026-09-30** | Trustpilot invite script added sitewide (deferred until first interaction, production only) so Trustpilot can verify conka.io; footer and schema Trustpilot link now point to the merged conka.io profile; /cookies lists Trustpilot (SCRUM-1487)
