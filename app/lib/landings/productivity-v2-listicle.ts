@@ -33,7 +33,7 @@ export const productivityV2Listicle: ListicleConfig = {
     // Trustpilot star boxes (4.7 is our Trustpilot score) in place of the
     // gold stars and the review and user counts.
     socialProof: { label: "Excellent 4.7", trustpilot: true },
-    cta: "Try CONKA from £{trialPrice}",
+    cta: "Save {percent}% and try it risk-free",
     // Purpose-shot hero (round 2): overloaded desk worker, hands offering CONKA shots from every side.
     asset: {
       kind: "image",
@@ -259,13 +259,10 @@ export const productivityV2Listicle: ListicleConfig = {
   ],
   bridge: {
     headline: "Make it part of your routine. 100 days, risk-free.",
-    cta: "Try CONKA from £{trialPrice} →",
+    cta: "Try CONKA Risk-Free →",
   },
   product: {
-    // The buy zone and CTAs sell the Both trial pack (SCRUM-1516); Flow still
-    // drives the prices above the buy zone (coffee compare, proof tier).
     productHeroId: "01",
-    offer: "trial-pack",
   },
   faqIds: [
     "caffeine",
@@ -277,5 +274,5 @@ export const productivityV2Listicle: ListicleConfig = {
     "guarantee",
   ],
   // Same line as the hero CTA, so the page makes one ask.
-  stickyBar: { cta: "Try CONKA from £{trialPrice}", layout: "button" },
+  stickyBar: { cta: "Save {percent}% and try it risk-free", layout: "button" },
 };

@@ -1,19 +1,14 @@
 import type { ListicleConfig } from "./listicle-types";
 
 /**
- * /go/productivity-listicle: the live Meta campaign slug (SCRUM-1470).
+ * /go/pl-v2: staging copy of pl-v1.ts (SCRUM-1514).
  *
- * A frozen copy of productivity-v2-listicle.ts as of 29 Sep 2026 (round 3,
- * Henry's Figma notes), kept as its own config on purpose: the ads point here, so this page must not move when
- * v2 is iterated on. Work on /go/productivity-v2; when an iteration wins,
- * copy it back here in one deliberate change (and flag it on the Notion
- * timeline). The original v1 copy lives in git history.
- *
- * Duplication with v2 is intended, not debt: sharing one config would push
- * every experiment straight to paid traffic.
+ * Iterate and review here; no ads point at it. When a change wins, copy it to
+ * pl-v1.ts so the live ad URL never moves. Duplication is intended, as with
+ * productivity-v2-listicle.ts.
  */
-export const productivityListicle: ListicleConfig = {
-  slug: "productivity-listicle",
+export const plV2Listicle: ListicleConfig = {
+  slug: "pl-v2",
   persona: "productivity",
   format: "listicle",
   template: "im8",
@@ -30,7 +25,7 @@ export const productivityListicle: ListicleConfig = {
     // Trustpilot star boxes (4.7 is our Trustpilot score) in place of the
     // gold stars and the review and user counts.
     socialProof: { label: "Excellent 4.7", trustpilot: true },
-    cta: "Save {percent}% and try it risk-free",
+    cta: "Try CONKA from £{trialPrice}",
     // Purpose-shot hero (round 2): overloaded desk worker, hands offering CONKA shots from every side.
     asset: {
       kind: "image",
@@ -256,10 +251,13 @@ export const productivityListicle: ListicleConfig = {
   ],
   bridge: {
     headline: "Make it part of your routine. 100 days, risk-free.",
-    cta: "Try CONKA Risk-Free →",
+    cta: "Try CONKA from £{trialPrice} →",
   },
   product: {
+    // Kept as Flow so every price above the buy zone matches
+    // productivity-listicle; `offer` swaps the buy zone and CTAs.
     productHeroId: "01",
+    offer: "trial-pack",
   },
   faqIds: [
     "caffeine",
@@ -271,5 +269,5 @@ export const productivityListicle: ListicleConfig = {
     "guarantee",
   ],
   // Same line as the hero CTA, so the page makes one ask.
-  stickyBar: { cta: "Save {percent}% and try it risk-free", layout: "button" },
+  stickyBar: { cta: "Try CONKA from £{trialPrice}", layout: "button" },
 };
