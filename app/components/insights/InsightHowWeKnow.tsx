@@ -2,6 +2,12 @@
 
 import { useEffect, useRef } from "react";
 import { track } from "@vercel/analytics/react";
+import {
+  Bottles,
+  PhoneScreen,
+  StatTile,
+  type LoopStat,
+} from "@/app/components/appv2/AppLoopVisuals";
 
 /* ============================================================================
  * InsightHowWeKnow (SCRUM-1522, Simple DTC)
@@ -10,9 +16,9 @@ import { track } from "@vercel/analytics/react";
  * supplement brand have this data, and why trust it? Merges the old "How
  * this is possible" module and "Methodology in 30 seconds".
  *
- * Glance layer: the method as a headline (we compare you to you), three icon
- * steps, and the test's four credentials as stat tiles. Depth, in two
- * one-at-a-time accordions: the per-user delta method with its limits, and
+ * Glance layer: the method as a headline (we compare you to you), three
+ * visual steps in the /app loop banner style, and the test's four
+ * credentials as stat tiles. Depth, in two one-at-a-time accordions: the per-user delta method with its limits, and
  * the verbatim validation note (cited references kept exact).
  *
  * Events kept from the old modules: `insights_credibility_view` when the
@@ -20,40 +26,42 @@ import { track } from "@vercel/analytics/react";
  * accordion opens. Content-only.
  * ========================================================================== */
 
-const STEPS = [
+/* The banners reuse the /app loop visuals (AppLoopVisuals). Outcome tiles
+   are checks, not numbers: an illustrative score would sit badly next to
+   the real findings above. */
+const STEPS: {
+  title: string;
+  body: string;
+  visual:
+    | { kind: "phone"; src: string; alt: string; stat: LoopStat }
+    | { kind: "product" };
+}[] = [
   {
     title: "Take CONKA",
     body: "Flow in the morning, Clear in the afternoon, or both.",
-    icon: (
-      <>
-        <path d="M9 3h6" />
-        <path d="M10 3v3l-2 3v10a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V9l-2-3V3" />
-        <path d="M8 13h8" />
-      </>
-    ),
+    visual: { kind: "product" },
   },
   {
     title: "Test in the app",
     body: "A 90-second cognitive test, FDA cleared and built on Cambridge research.",
-    icon: (
-      <>
-        <rect x="6" y="2.5" width="12" height="19" rx="2.5" />
-        <path d="M10.5 18.5h3" />
-        <path d="M9.5 10.5l2 2 3.5-4" />
-      </>
-    ),
+    visual: {
+      kind: "phone",
+      src: "/app/AppHomeCapture.webp",
+      alt: "CONKA app home screen showing a cognitive score of 92",
+      stat: { check: "Test done" },
+    },
   },
   {
     title: "See your change",
     body: "Every test plots against your own baseline, so the data shows what moved you.",
-    icon: (
-      <>
-        <path d="M3 17l5-5 4 3 7-8" />
-        <path d="M15 7h4v4" />
-      </>
-    ),
+    visual: {
+      kind: "phone",
+      src: "/app/AppTrendsCapture.webp",
+      alt: "CONKA app chart of cognitive score over time against a personal baseline",
+      stat: { check: "Against your baseline" },
+    },
   },
-] as const;
+];
 
 const CREDENTIALS = [
   { value: "93%", label: "Sensitivity detecting cognitive change", source: "ADePT Study, PMC10533908" },
@@ -153,37 +161,33 @@ export default function InsightHowWeKnow() {
         </p>
       </div>
 
-      <ol className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+      <ol className="grid grid-cols-1 gap-3 lg:grid-cols-3 lg:gap-4">
         {STEPS.map((step, i) => (
           <li
             key={step.title}
-            className="flex items-start gap-4 rounded-md bg-white p-5 text-black ring-1 ring-black/5"
+            className="flex flex-col overflow-hidden rounded-md bg-white text-black ring-1 ring-black/5"
           >
-            <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#eef0f5] text-[var(--brand-navy)]">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.75"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-                className="h-5 w-5"
-              >
-                {step.icon}
-              </svg>
-              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--brand-navy)] text-[11px] font-bold text-white">
-                {i + 1}
+            <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#eef0f5]">
+              {step.visual.kind === "phone" ? (
+                <>
+                  <PhoneScreen src={step.visual.src} alt={step.visual.alt} />
+                  <StatTile stat={step.visual.stat} />
+                </>
+              ) : (
+                <Bottles />
+              )}
+              <span className="absolute left-3 top-3 rounded-full bg-white px-3 py-1 text-xs font-semibold text-black">
+                Step {i + 1}
               </span>
-            </span>
-            <span>
-              <span className="mb-1 block text-base font-bold text-[var(--brand-navy)]">
+            </div>
+            <div className="p-5 lg:p-6">
+              <h3 className="mb-1.5 text-lg font-bold leading-tight text-[var(--brand-navy)]">
                 {step.title}
-              </span>
-              <span className="block text-sm leading-relaxed text-black/75">
+              </h3>
+              <p className="text-base leading-relaxed text-black/80">
                 {step.body}
-              </span>
-            </span>
+              </p>
+            </div>
           </li>
         ))}
       </ol>

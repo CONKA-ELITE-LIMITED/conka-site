@@ -72,7 +72,7 @@ export default function AppInsightsPage() {
         </div>
       </section>
 
-      {/* DOWNLOAD: get your own curve */}
+      {/* DOWNLOAD: now see what moves your score */}
       <section
         className="brand-section brand-bg-white"
         aria-label="Download the CONKA app"

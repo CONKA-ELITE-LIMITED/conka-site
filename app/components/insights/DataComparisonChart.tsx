@@ -30,9 +30,6 @@ import {
 const BAR_COLOR_HIGHLIGHT = NAVY;
 const BAR_COLOR_BASE = NAVY_MUTED;
 
-
-
-
 const LABEL_STYLE = {
   fill: NAVY,
   fontSize: 12,

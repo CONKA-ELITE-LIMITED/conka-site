@@ -32,10 +32,6 @@ import {
 const BAR_COLOR = NAVY;
 const BAR_COLOR_NOISE = NAVY_FAINT;
 
-
-
-
-
 function colorForValue(value: number): string {
   // Near-zero / noise bars rendered very dim so they don't compete with real signal
   if (Math.abs(value) < 0.5) return BAR_COLOR_NOISE;

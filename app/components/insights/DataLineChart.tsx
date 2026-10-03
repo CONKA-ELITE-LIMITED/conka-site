@@ -31,10 +31,6 @@ import {
 const WITHOUT_CONKA_COLOR = NAVY_MUTED;
 const WITH_CONKA_COLOR = NAVY;
 
-
-
-
-
 /**
  * Both curves draw left-to-right when the chart scrolls into view: the
  * muted without-CONKA curve first, the navy with-CONKA curve chasing it.
