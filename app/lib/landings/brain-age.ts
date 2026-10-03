@@ -47,7 +47,7 @@ export const brainAgeQuiz: LandingConfig = {
       id: "hook",
       title: "What's your real",
       titleAccent: "brain age?",
-      subtitle: "Take the 2-minute test and find out.",
+      subtitle: "Take the 90-second test and find out.",
       video: "/videos/misc/BrainScan.mp4",
       videoAspect: "square",
       // PLACEHOLDER: needs a defensible customer figure before scaled spend
@@ -343,7 +343,7 @@ export const brainAgeQuiz: LandingConfig = {
       variant: "education",
       title: "Track it, don't guess it.",
       body: [
-        "The CONKA app gives you a 2-minute brain test whenever you want.",
+        "The CONKA app gives you a 90-second brain test whenever you want.",
         "Watch your score move over time, like a Garmin for your mind.",
       ],
       images: [

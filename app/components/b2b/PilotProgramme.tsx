@@ -91,7 +91,7 @@ const STAGES: Stage[] = [
     short: "Baseline",
     title: "Set the baseline",
     detail:
-      "Before anyone takes a shot, each athlete runs a short two-minute cognitive test, backed by NHS clinical validation, to set their starting scores. The change becomes measurable, not anecdotal.",
+      "Before anyone takes a shot, each athlete runs a short 90-second cognitive test, backed by NHS clinical validation, to set their starting scores. The change becomes measurable, not anecdotal.",
     icon: (
       <svg {...svgProps}>
         <path d="M3 20h18" />

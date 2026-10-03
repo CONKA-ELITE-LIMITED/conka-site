@@ -1,6 +1,6 @@
 # Motion Guide — GSAP on the CONKA site
 
-How we animate. The shared layer lives in `app/lib/motion.ts`; this doc is the contract for using it. The goal is a consistent, premium motion feel across pages without re-inventing patterns per page. `/app` was the original reference page; since its light rebuild (SCRUM-1361) it uses only the CSS `Reveal` entrance. The live GSAP references are now `/our-story`, `/app-insights` and the home `WhatToExpectV2`.
+How we animate. The shared layer lives in `app/lib/motion.ts`; this doc is the contract for using it. The goal is a consistent, premium motion feel across pages without re-inventing patterns per page. `/app` was the original reference page; since its light rebuild (SCRUM-1361) it uses only the CSS `Reveal` entrance. `/app-insights` followed in SCRUM-1522: CSS `Reveal` for sections, and its charts animate with recharts' own draw-in (curves draw, bars drop from the baseline), gated by `useInView` and reduced motion. The live GSAP references are now `/our-story` and the home `WhatToExpectV2`.
 
 **Scope discipline:** this guide grows only when a pattern actually ships. Do not add speculative helpers.
 

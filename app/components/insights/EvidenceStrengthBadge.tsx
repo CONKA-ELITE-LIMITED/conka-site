@@ -1,65 +1,47 @@
 import type { EvidenceStrength } from "@/app/lib/appInsightsTypes";
 
 /**
- * Small all-caps mono pill that surfaces evidence strength inline next
- * to a finding. Three variants. Monochrome by design: the visual ramp
- * communicates rigor without color-coding "good" vs "bad".
+ * The evidence line every finding carries: strength pill, an optional
+ * "Early signal" chip for small samples, and the sample size. This is what
+ * keeps the light page serious, so it sits beside every number, not behind
+ * a disclosure. Monochrome by design: the dot ramp communicates rigour
+ * without colour-coding "good" vs "bad".
  */
 
-type Tone = "dark" | "light";
-
-const DOT_BY_STRENGTH: Record<Tone, Record<EvidenceStrength, string>> = {
-  dark: {
-    Strong: "bg-white",
-    Moderate: "bg-white/55",
-    "Early signal": "bg-transparent border border-white/55",
-  },
-  light: {
-    Strong: "bg-[#0a0a0a]",
-    Moderate: "bg-[#0a0a0a]/55",
-    "Early signal": "bg-transparent border border-[#0a0a0a]/55",
-  },
-};
-
-const RING_BY_STRENGTH: Record<Tone, Record<EvidenceStrength, string>> = {
-  dark: {
-    Strong: "border-white/35",
-    Moderate: "border-white/22",
-    "Early signal": "border-white/15",
-  },
-  light: {
-    Strong: "border-[#0a0a0a]/40",
-    Moderate: "border-[#0a0a0a]/25",
-    "Early signal": "border-[#0a0a0a]/18",
-  },
-};
-
-const TEXT_BY_TONE: Record<Tone, string> = {
-  dark: "text-white/80",
-  light: "text-[#0a0a0a]/85",
+const DOT_BY_STRENGTH: Record<EvidenceStrength, string> = {
+  Strong: "bg-[var(--brand-navy)]",
+  Moderate: "bg-[var(--brand-navy)]/45",
+  "Early signal": "border border-[var(--brand-navy)]/55",
 };
 
 export default function EvidenceStrengthBadge({
   strength,
-  tone = "dark",
+  earlySignal = false,
+  sample,
 }: {
   strength: EvidenceStrength;
-  tone?: Tone;
+  earlySignal?: boolean;
+  /** Sample label shown after the pills, e.g. "712 users". */
+  sample?: string;
 }) {
-  const dot = DOT_BY_STRENGTH[tone][strength];
-  const ring = RING_BY_STRENGTH[tone][strength];
-  const text = TEXT_BY_TONE[tone];
-
   return (
-    <span
-      className={`inline-flex items-center gap-2 px-2.5 py-1 border ${ring} font-mono text-[9px] uppercase tracking-[0.18em] ${text} tabular-nums`}
-      aria-label={`Evidence strength: ${strength}`}
-    >
+    <span className="inline-flex flex-wrap items-center gap-1.5 text-xs font-medium text-black/60">
       <span
-        className={`block w-1.5 h-1.5 rounded-full ${dot}`}
-        aria-hidden="true"
-      />
-      Evidence: {strength}
+        className="inline-flex items-center gap-1.5 rounded-full bg-[#eef0f5] px-2.5 py-1 font-semibold text-[var(--brand-navy)]"
+        aria-label={`Evidence strength: ${strength}`}
+      >
+        <span
+          className={`block h-1.5 w-1.5 rounded-full ${DOT_BY_STRENGTH[strength]}`}
+          aria-hidden="true"
+        />
+        {strength}
+      </span>
+      {earlySignal && (
+        <span className="rounded-full border border-dashed border-[var(--brand-navy)]/40 px-2.5 py-[3px] font-semibold text-[var(--brand-navy)]">
+          Early signal
+        </span>
+      )}
+      {sample && <span className="tabular-nums">{sample}</span>}
     </span>
   );
 }

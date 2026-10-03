@@ -35,7 +35,7 @@ Use these across all copy. Always back claims with specifics.
 | Finn Russell improvement | +28.96% |
 | Patrick Bamford improvement | +27.93% |
 | Jade Shekells (Paris 2024 Olympic) | +36.72% |
-| Companion app | Cognitive testing — measurable scores, not just claims |
+| Companion app | 90-second cognitive test — measurable scores, not just claims |
 | Guarantee | 100-day money-back (subscribers) |
 | Daily cost | £2.29/day (28-pack subscription) |
 | Research investment | £500,000+ · 25+ clinical trials |

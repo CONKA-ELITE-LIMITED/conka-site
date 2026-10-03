@@ -154,7 +154,7 @@ const faqs = [
   },
   {
     q: "Is the cognitive test an IQ test?",
-    a: "No. It’s a two-minute cognitive assessment, an FDA-cleared task used in clinical settings, that measures things like processing speed and attention. It tracks how your own performance changes over time against your baseline, rather than scoring your intelligence or ranking you against anyone else. A bad night’s sleep or a stressful week will show up in it, which is exactly the point.",
+    a: "No. It’s a 90-second cognitive assessment, an FDA-cleared task used in clinical settings, that measures things like processing speed and attention. It tracks how your own performance changes over time against your baseline, rather than scoring your intelligence or ranking you against anyone else. A bad night’s sleep or a stressful week will show up in it, which is exactly the point.",
   },
   {
     q: "Can I take CONKA with caffeine?",
@@ -239,7 +239,7 @@ export default function NikeTrialPage() {
                   mind. The best performers don&rsquo;t guess whether they&rsquo;re
                   getting sharper, they measure it. For the next 14 days
                   you&rsquo;ll do the same with your focus: two CONKA shots a day,
-                  a two-minute test in the app, and a straight read on how
+                  a 90-second test in the app, and a straight read on how
                   you&rsquo;re actually performing.
                 </p>
 
@@ -328,7 +328,7 @@ export default function NikeTrialPage() {
             <div className="mx-auto mt-6 max-w-[520px]">
               <h3 className="text-[20px] font-semibold">The test</h3>
               <p className="mt-2 text-[15px] leading-relaxed text-white">
-                Two minutes in the app scores how sharp you are. Take it daily and
+                Ninety seconds in the app scores how sharp you are. Take it daily and
                 it becomes a trend, so you can see the shots working on your own
                 numbers.
               </p>

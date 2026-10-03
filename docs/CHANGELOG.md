@@ -5,6 +5,8 @@
 ---
 
 <!-- changelog:newest - new entries are inserted directly below this line, newest first, one line each -->
+- **2026-10-02** | /app-insights rebuilt light and findings first: the hero is five finding tiles that jump to each report, each report shows its finding, evidence and a light chart with the depth behind "See the full data", stress and alcohol carry an "Early signal" chip, a "How we know" section replaces the long method read, and Coffee vs CONKA ends with a Try CONKA link (SCRUM-1522)
+- **2026-10-02** | /app hero leads with one readable demo (the score screen with real test images labelled Animal / Not an animal), the loop and trust sections use the same floating tiles, and "Simple to learn. Impossible to cheat." explains why the test can't be gamed (SCRUM-1520)
 - **2026-10-02** | Trial pack ad visitors landing on /go/pl-v1 are now marked as having seen the trial pack, so a later regular-product order still carries `_trial_pack_seen` (SCRUM-1518 review fix)
 - **2026-10-02** | The trial pack Meta campaign URL /go/trial-pack now redirects to the productivity trial pack listicle /go/pl-v1, and the trial pack offer page moved to /go/trial-pack-v2, where the listicle's CTAs land (SCRUM-1518)
 - **2026-10-02** | /go/productivity-listicle is back on Flow (the trial pack switch earlier today was a mistake); the trial pack version of the productivity page returns at /go/pl-v1 (live, for the trial pack Meta ads) and /go/pl-v2 (staging), and its CTA orders credit pl-v1 (SCRUM-1517)

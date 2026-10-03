@@ -14,39 +14,26 @@ import {
 import type { ComparisonChartData } from "@/app/lib/appInsightsTypes";
 import { useInView } from "@/app/hooks/useInView";
 import { usePrefersReducedMotion } from "@/app/hooks/usePrefersReducedMotion";
+import {
+  AXIS_STROKE,
+  BAR_CURSOR,
+  GRID_STROKE,
+  NAVY,
+  NAVY_MUTED,
+  TICK_STYLE,
+  TOOLTIP_ITEM_STYLE,
+  TOOLTIP_LABEL_STYLE,
+  TOOLTIP_STYLE,
+  Y_LABEL_CLASS,
+} from "./chartTheme";
 
-const BAR_COLOR_HIGHLIGHT = "rgba(255, 255, 255, 0.95)";
-const BAR_COLOR_BASE = "rgba(255, 255, 255, 0.38)";
-
-const TICK_STYLE = {
-  fill: "rgba(255, 255, 255, 0.85)",
-  fontSize: 10,
-  fontFamily: "var(--font-jetbrains-mono)",
-  letterSpacing: "0.12em",
-};
-
-const TOOLTIP_STYLE = {
-  backgroundColor: "rgba(20, 20, 20, 0.95)",
-  border: "1px solid rgba(255, 255, 255, 0.15)",
-  borderRadius: 0,
-  fontFamily: "var(--font-jetbrains-mono)",
-  fontSize: 11,
-  color: "rgba(255, 255, 255, 0.9)",
-};
-
-const TOOLTIP_LABEL_STYLE = {
-  color: "rgba(255, 255, 255, 0.6)",
-  fontSize: 10,
-  textTransform: "uppercase" as const,
-  letterSpacing: "0.18em",
-  marginBottom: 4,
-};
+const BAR_COLOR_HIGHLIGHT = NAVY;
+const BAR_COLOR_BASE = NAVY_MUTED;
 
 const LABEL_STYLE = {
-  fill: "rgba(255, 255, 255, 0.9)",
+  fill: NAVY,
   fontSize: 12,
-  fontFamily: "var(--font-jetbrains-mono)",
-  fontWeight: 600,
+  fontWeight: 700,
 };
 
 /**
@@ -84,8 +71,8 @@ export default function DataComparisonChart({
 
   return (
     <div className="w-full">
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/55 tabular-nums mb-3">
-        {`Y · ${data.yLabel}${data.lowerIsBetter ? " · lower is better" : ""}`}
+      <p className={Y_LABEL_CLASS}>
+        {`${data.yLabel}${data.lowerIsBetter ? " · lower is better" : ""}`}
       </p>
       <div ref={inViewRef} className="w-full h-[300px] lg:h-[360px]">
         {inView ? (
@@ -96,7 +83,7 @@ export default function DataComparisonChart({
               barCategoryGap="28%"
             >
               <CartesianGrid
-                stroke="rgba(255, 255, 255, 0.08)"
+                stroke={GRID_STROKE}
                 strokeDasharray="2 4"
                 vertical={false}
               />
@@ -104,7 +91,7 @@ export default function DataComparisonChart({
                 dataKey="label"
                 tick={TICK_STYLE}
                 tickLine={false}
-                axisLine={{ stroke: "rgba(255, 255, 255, 0.15)" }}
+                axisLine={{ stroke: AXIS_STROKE }}
                 interval={0}
               />
               <YAxis
@@ -117,8 +104,8 @@ export default function DataComparisonChart({
               <Tooltip
                 contentStyle={TOOLTIP_STYLE}
                 labelStyle={TOOLTIP_LABEL_STYLE}
-                itemStyle={{ color: "rgba(255, 255, 255, 0.9)" }}
-                cursor={{ fill: "rgba(255, 255, 255, 0.04)" }}
+                itemStyle={TOOLTIP_ITEM_STYLE}
+                cursor={BAR_CURSOR}
                 formatter={(value: number, _name, item) => {
                   const meta = item?.payload?.meta;
                   return [
@@ -129,7 +116,7 @@ export default function DataComparisonChart({
               />
               <Bar
                 dataKey="value"
-                radius={0}
+                radius={[6, 6, 0, 0]}
                 isAnimationActive={!prefersReduced}
                 animationDuration={900}
                 animationEasing="ease-out"

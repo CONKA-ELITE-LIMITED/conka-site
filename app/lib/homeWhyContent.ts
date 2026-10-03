@@ -53,12 +53,11 @@ export const HOME_WHY_ROWS: HomeWhyRow[] = [
     title: "Measure It Yourself",
     lede: "No need to leave it to chance.",
     // "FDA-cleared" is established site copy, not a new claim: see
-    // app/case-studies/layout.tsx, InsightHeroDifferentiator and
-    // HowThisIsPossibleModule, the last of which cites FDA 21 CFR 882.1470.
-    // Two minutes is the canonical duration (faqContent x6, CaseStudiesHero,
-    // PilotProgramme, the listicles). Two files said five and were corrected
-    // 2026-08-27: HowThisIsPossibleModule and whyConkaData.
-    body: "The CONKA app has a two-minute FDA-cleared cognitive test built in, derived from Cambridge research and used in NHS memory clinics. Test on CONKA and off it, and watch your own score rather than trusting ours.",
+    // app/case-studies/layout.tsx and the /app-insights validation note
+    // (InsightHowWeKnow).
+    // The test takes about 90 seconds site-wide (2026-10-03, SCRUM-1522;
+    // see docs/features/COGNITIVE_TEST.md).
+    body: "The CONKA app has a 90-second FDA-cleared cognitive test built in, derived from Cambridge research and used in NHS memory clinics. Test on CONKA and off it, and watch your own score rather than trusting ours.",
   },
 ];
 

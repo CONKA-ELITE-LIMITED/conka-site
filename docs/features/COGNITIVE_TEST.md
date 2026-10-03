@@ -8,6 +8,8 @@
 
 A visitor sees images flashed for a split second and taps left (non-animal) or right (animal) as fast as they can. They get a score with speed and accuracy, a product recommendation and the app promo, and their result goes to Klaviyo. It is the "measure it yourself" proof on `/app` ("See CONKA working") and the entry point to a CONKA baseline.
 
+**Copy rule: the test takes about 90 seconds.** Every surface says "90-second" or "about 90 seconds" (standardised 2026-10-03, SCRUM-1522; it previously read "two minutes" in most copy). There is no shared constant, so a change is a repo-wide find and replace. Customer testimonials keep their own words.
+
 The test is our own engine, a React port of the mobile app's test, scored by the CONKA app server (SCRUM-1456, SCRUM-1457). It replaced the Cognetivity iframe, so the website makes no request to any `cognetivity.com` host. Tests and scores live in our Postgres, not Cognetivity's AWS.
 
 ## How it works

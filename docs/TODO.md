@@ -507,6 +507,8 @@ Two files disagreed and have been corrected:
 - `app/components/insights/HowThisIsPossibleModule.tsx` said "a five-minute cognitive test" (renders on `/app-insights`)
 - `app/lib/whyConkaData.ts` said "a 5-minute Cambridge-built cognitive test" (renders on `/why-conka`)
 
+**Superseded 2026-10-03 (SCRUM-1522):** the duration is now **about 90 seconds** everywhere, the canonical rule lives in `docs/features/COGNITIVE_TEST.md`. The two-minute references above were all moved to 90 seconds.
+
 Recorded rather than dropped because the number is scattered across a dozen files with no single source. **If it ever changes, it is a repo-wide find and replace, not a one-line edit.** Worth pulling into a shared constant if a third value ever appears.
 
 ---

@@ -345,7 +345,7 @@ export const adhdListicle: ListicleConfig = {
     productHeroId: "01",
     whoItsFor: [
       "You've got an ADHD brain that won't get going in the morning. Flow gives you calm, caffeine-free drive to start the things you've been putting off.",
-      "You're done running on coffee and willpower. A caffeine-free daily shot supports steady focus without the jitters, and the 2-minute app test lets you watch it working instead of guessing.",
+      "You're done running on coffee and willpower. A caffeine-free daily shot supports steady focus without the jitters, and the 90-second app test lets you watch it working instead of guessing.",
     ],
   },
   // Persona-curated canonical FAQ ids (resolved in the renderer). Order:
