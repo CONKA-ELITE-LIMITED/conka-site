@@ -55,11 +55,9 @@ export const HOME_WHY_ROWS: HomeWhyRow[] = [
     // "FDA-cleared" is established site copy, not a new claim: see
     // app/case-studies/layout.tsx and the /app-insights validation note
     // (InsightHowWeKnow).
-    // Two minutes is the duration most site copy uses (faqContent x6,
-    // CaseStudiesHero, PilotProgramme, the listicles); /app and /app-insights
-    // say about 90 seconds. whyConkaData said five and was corrected
-    // 2026-08-27.
-    body: "The CONKA app has a two-minute FDA-cleared cognitive test built in, derived from Cambridge research and used in NHS memory clinics. Test on CONKA and off it, and watch your own score rather than trusting ours.",
+    // The test takes about 90 seconds site-wide (2026-10-03, SCRUM-1522;
+    // see docs/features/COGNITIVE_TEST.md).
+    body: "The CONKA app has a 90-second FDA-cleared cognitive test built in, derived from Cambridge research and used in NHS memory clinics. Test on CONKA and off it, and watch your own score rather than trusting ours.",
   },
 ];
 

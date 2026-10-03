@@ -26,7 +26,7 @@ export default function CaseStudiesHero() {
 
       <p className="text-base lg:text-lg text-black/70 leading-relaxed max-w-[64ch] mb-10">
         Most people take a supplement and wonder if it is working. These high
-        performers decided to find out. Each ran the same 2-minute FDA-cleared
+        performers decided to find out. Each ran the same 90-second FDA-cleared
         cognitive test on themselves daily, comparing their performance on CONKA
         days against off days. No paid study. No coached testimonials. At the
         end of each case you will find the exact formula they used.

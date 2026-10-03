@@ -322,9 +322,9 @@ export const SCIENCE_PEOPLE: SciencePerson[] = [
 
 export const SCIENCE_MEASURE = {
   heading: "We don't stop at the trials",
-  body: "The CONKA app puts a two-minute FDA-cleared cognitive test in your pocket, derived from Cambridge research and used in NHS memory clinics. Every test adds to our real-world research on how sleep, stress, caffeine and CONKA affect the brain, and shows you your own score week by week.",
+  body: "The CONKA app puts a 90-second FDA-cleared cognitive test in your pocket, derived from Cambridge research and used in NHS memory clinics. Every test adds to our real-world research on how sleep, stress, caffeine and CONKA affect the brain, and shows you your own score week by week.",
   points: [
-    "Free, and takes two minutes",
+    "Free, and takes 90 seconds",
     "Reads processing speed from natural images, so it cannot be gamed",
     "Tracks your score week over week, on CONKA and off it",
   ],

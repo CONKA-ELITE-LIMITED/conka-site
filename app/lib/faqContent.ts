@@ -244,14 +244,14 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "do-nootropics-work",
     question: "Do nootropics actually work?",
     answer:
-      "It depends entirely on the ingredient and the dose, and most of the category deserves its scepticism. Plenty of nootropics are proprietary blends in a capsule, where the ingredient is named but the amount is a fraction of what the research used, so the study the label leans on does not apply to the product in your hand. What we did instead was build the formulas around the doses used in published trials, put them in liquid so they are absorbed rather than sitting in a capsule shell, and then measure the result: the CONKA app runs a two-minute cognitive test so you can see your own scores rather than trusting ours.",
+      "It depends entirely on the ingredient and the dose, and most of the category deserves its scepticism. Plenty of nootropics are proprietary blends in a capsule, where the ingredient is named but the amount is a fraction of what the research used, so the study the label leans on does not apply to the product in your hand. What we did instead was build the formulas around the doses used in published trials, put them in liquid so they are absorbed rather than sitting in a capsule shell, and then measure the result: the CONKA app runs a 90-second cognitive test so you can see your own scores rather than trusting ours.",
     category: "efficacy",
   },
   {
     id: "placebo",
     question: "Is it just placebo?",
     answer:
-      "It is a fair question, and it is the reason we built the app. Every CONKA customer can run a two-minute FDA-cleared cognitive test on and off CONKA and watch their own scores, which is not something you can do with a supplement that only offers you a feeling. Across 150+ tested users and more than 5,000 cognitive tests, the average score improvement was +28.96%. You do not have to take that number on trust either: run the test yourself and see what your own line does.",
+      "It is a fair question, and it is the reason we built the app. Every CONKA customer can run a 90-second FDA-cleared cognitive test on and off CONKA and watch their own scores, which is not something you can do with a supplement that only offers you a feeling. Across 150+ tested users and more than 5,000 cognitive tests, the average score improvement was +28.96%. You do not have to take that number on trust either: run the test yourself and see what your own line does.",
     category: "efficacy",
   },
   {
@@ -394,14 +394,14 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "what-is-app",
     question: "What is the CONKA app?",
     answer:
-      "The CONKA app is a free companion app built around a two-minute cognitive test. You take the test, and it tracks how your processing speed and attention change over time against your own baseline, so you can see the effect of things like sleep, caffeine or CONKA on your own numbers rather than guessing. The test is a clinically validated, FDA-cleared assessment, and the anonymised patterns from across all users are published openly on our app-insights page.",
+      "The CONKA app is a free companion app built around a 90-second cognitive test. You take the test, and it tracks how your processing speed and attention change over time against your own baseline, so you can see the effect of things like sleep, caffeine or CONKA on your own numbers rather than guessing. The test is a clinically validated, FDA-cleared assessment, and the anonymised patterns from across all users are published openly on our app-insights page.",
     category: "app",
   },
   {
     id: "app-different",
     question: "How is the CONKA app different to other brain-training apps?",
     answer:
-      "Most brain-training apps sell you games you get better at with practice, which tells you nothing about your cognition, only that you have learned the game. The CONKA app is the opposite. It is built around a two-minute, FDA-cleared cognitive assessment designed to be effectively ungameable, so the score reflects genuine processing speed and attention rather than how often you have played. It measures change against your own baseline and lines it up against the real-world factors around each test, so it is a measurement instrument, not a game.",
+      "Most brain-training apps sell you games you get better at with practice, which tells you nothing about your cognition, only that you have learned the game. The CONKA app is the opposite. It is built around a 90-second, FDA-cleared cognitive assessment designed to be effectively ungameable, so the score reflects genuine processing speed and attention rather than how often you have played. It measures change against your own baseline and lines it up against the real-world factors around each test, so it is a measurement instrument, not a game.",
     category: "app",
   },
   {
@@ -429,7 +429,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "app-optional",
     question: "Do I have to use the app to benefit from CONKA?",
     answer:
-      "No. The two daily CONKA shots work entirely on their own, with no app required. The CONKA app is an optional, free companion built around a two-minute cognitive test, there if you want to see your focus change in numbers over time rather than guessing. You do not need to be technical or log anything by hand to get the benefit of CONKA; the app is a way to measure it, not a condition of it.",
+      "No. The two daily CONKA shots work entirely on their own, with no app required. The CONKA app is an optional, free companion built around a 90-second cognitive test, there if you want to see your focus change in numbers over time rather than guessing. You do not need to be technical or log anything by hand to get the benefit of CONKA; the app is a way to measure it, not a condition of it.",
     category: "app",
   },
   {
@@ -443,7 +443,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "app-iq-test",
     question: "Is the cognitive test an IQ test?",
     answer:
-      "No. It is a two-minute cognitive assessment, an FDA-cleared task used in clinical settings, that measures things like processing speed and attention. It tracks how your own performance changes over time against your baseline, rather than scoring your intelligence or ranking you against anyone else. A bad night's sleep or a stressful week will show up in it, which is exactly the point.",
+      "No. It is a 90-second cognitive assessment, an FDA-cleared task used in clinical settings, that measures things like processing speed and attention. It tracks how your own performance changes over time against your baseline, rather than scoring your intelligence or ranking you against anyone else. A bad night's sleep or a stressful week will show up in it, which is exactly the point.",
     category: "app",
   },
 ];

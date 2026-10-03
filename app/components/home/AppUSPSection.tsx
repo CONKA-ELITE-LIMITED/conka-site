@@ -16,7 +16,7 @@ import ConkaCTAButton from "@/app/components/landing/ConkaCTAButton";
 const POINTS = [
   {
     label: "A test, not a promise.",
-    body: "A free two-minute cognitive test, Cambridge-derived and NHS-validated. It reads your processing speed from natural images, so it cannot be gamed.",
+    body: "A free 90-second cognitive test, Cambridge-derived and NHS-validated. It reads your processing speed from natural images, so it cannot be gamed.",
   },
   {
     label: "Your data, not averages.",

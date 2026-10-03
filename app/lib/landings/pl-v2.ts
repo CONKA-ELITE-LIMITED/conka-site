@@ -188,7 +188,7 @@ export const plV2Listicle: ListicleConfig = {
       tag: "Proof",
       headline: "Tested by the Best. Built for You.",
       intro:
-        "Why are we so confident? The results speak for themselves: athletes, executives and professionals, all tested while taking CONKA. Now it's your turn: take the free two-minute test in the CONKA app to measure the change.",
+        "Why are we so confident? The results speak for themselves: athletes, executives and professionals, all tested while taking CONKA. Now it's your turn: take the free 90-second test in the CONKA app to measure the change.",
       payoff:
         "If your score and your days haven't moved within 100 days, you get every penny back.",
       appStores: true,
